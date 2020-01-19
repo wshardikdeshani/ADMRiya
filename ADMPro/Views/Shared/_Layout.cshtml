@@ -17,6 +17,10 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.css" />
     <link rel="stylesheet" href="~/Content/plugins/toastr/toastr.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Content/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
     @RenderSection("styles", required: false)
     <style>
         .loader {
@@ -111,17 +115,18 @@
                 </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item"><a href="/Home/Index" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
+                        <li class="nav-item"><a href="/Home/Index?eid=1&enm=Hardik&role=1" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
+                        <li class="nav-item"><a href="/Home/Index?eid=2&enm=Piyush&bnm=Tiruchirapally&role=2" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
                         <li class="nav-item">
                             <a href="/ADMHeader/Index" class="nav-link @(ControllerName == "ADMHeader" ? "active" : string.Empty)"><i class="nav-icon fas fa-plane-departure"></i><p>ADM</p></a>
                         </li>
                         <li class="nav-item has-treeview @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "menu-open" : string.Empty)">
                             <a href="javascript:void(0)" class="nav-link @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "active" : string.Empty)"><i class="nav-icon fas fa-copy"></i><p>Master <i class="fas fa-angle-left right"></i></p></a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
+                                <li class="nav-item" style="display:none">
                                     <a href="/BranchMaster/Index" class="nav-link @(ControllerName == "BranchMaster" ? "active" : string.Empty)"><i class="far fa-building nav-icon"></i><p>Branch</p></a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" style="display:none">
                                     <a href="/OfficeMaster/Index" class="nav-link @(ControllerName == "OfficeMaster" ? "active" : string.Empty)"><i class="fas fa-desktop nav-icon"></i><p>Office</p></a>
                                 </li>
                                 <li class="nav-item">
@@ -174,5 +179,9 @@
     <script src="~/Content/plugins/toastr/toastr.min.js"></script>
     <!--form validation-->
     <script src="~/Content/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Date Picker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 </body>
 </html>

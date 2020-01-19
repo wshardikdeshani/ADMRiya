@@ -1,6 +1,13 @@
 ﻿@{
     ViewBag.Title = "Status Master";
 }
+@section styles{
+    <style>
+        .error {
+            color: #dc3545 !important;
+        }
+    </style>
+}
 <div class="modal fade" id="Default">
     <div class="modal-dialog">
         <form role="form" id="ApplicationForm" method="post" class="modal-content">
@@ -15,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="StatusName" class="control-label">Status Name</label>
+                            <label for="StatusName" class="control-label">Status Name<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="StatusName" name="StatusName">
                         </div>
                     </div>
@@ -23,7 +30,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" onclick="Save()" class="btn btn-primary">Save changes</button>
+                <button type="submit" onclick="Save()" class="btn btn-primary">Save</button>
             </div>
         </form>
     </div>
@@ -67,6 +74,8 @@
 
         function AddNew() {
             ClearControls();
+
+            $("#StatusName").focus();
 
             $("#Default").modal('show');
         }
@@ -173,7 +182,7 @@
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
                             iHTML += "<td>" + obj[i].StatusName + "</td>";
-                            iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].StatusIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") +'</button></td>';
+                            iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].StatusIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") + '</button></td>';
                             iHTML += "<td>";
                             iHTML += '<button class="btn btn-success" onclick="Get(' + obj[i].StatusIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';
                             iHTML += '&nbsp;<button class="btn btn-danger" onclick="GeneralAction(' + obj[i].StatusIDP + ',1)"><i class="fa fa-trash nav-icon"></i>&nbsp;Delete</button>';

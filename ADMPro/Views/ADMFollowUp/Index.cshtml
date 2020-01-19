@@ -3,62 +3,74 @@
 }
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Follow Up Detail</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+        <h3 class="card-title">Ticket Detail</h3>
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
                 <div class="row">
-                    <div class="col-12">
-                        <div class="post">
-                            <div class="user-block">
-                                <img class="img-circle img-bordered-sm" src="~/Content/dist/img/user1-128x128.jpg" alt="user image">
-                                <span class="username">
-                                    <a href="#">Jonathan Burke Jr.</a>
-                                </span>
-                                <span class="description">Shared publicly - 7:45 PM today</span>
-                            </div>
-                            <p>
-                                Lorem ipsum represents a long-held tradition for designers,
-                                typographers and the like. Some people hate it and argue for
-                                its demise, but others ignore.
-                            </p>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="TicketID" class="control-label">Ticket ID</label>
+                            <input type="text" class="form-control numeric" id="TicketID" name="TicketID" disabled>
                         </div>
-                        <div class="post clearfix">
-                            <div class="user-block">
-                                <img class="img-circle img-bordered-sm" src="~/Content/dist/img/user7-128x128.jpg" alt="User Image">
-                                <span class="username">
-                                    <a href="#">Sarah Ross</a>
-                                </span>
-                                <span class="description">Sent you a message - 3 days ago</span>
-                            </div>
-                            <p>
-                                Lorem ipsum represents a long-held tradition for designers,
-                                typographers and the like. Some people hate it and argue for
-                                its demise, but others ignore.
-                            </p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="IATANumber" class="control-label">IATA Number</label>
+                            <input type="text" class="form-control" id="IATANumber" name="IATANumber" disabled>
                         </div>
-                        <div class="post">
-                            <div class="user-block">
-                                <img class="img-circle img-bordered-sm" src="~/Content/dist/img/user1-128x128.jpg" alt="user image">
-                                <span class="username">
-                                    <a href="#">Jonathan Burke Jr.</a>
-                                </span>
-                                <span class="description">Shared publicly - 5 days ago</span>
-                            </div>
-                            <p>
-                                Lorem ipsum represents a long-held tradition for designers,
-                                typographers and the like. Some people hate it and argue for
-                                its demise, but others ignore.
-                            </p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="ADMNumber" class="control-label">ADM Number</label>
+                            <input type="text" class="form-control" id="ADMNumber" name="ADMNumber" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="ADMAmount" class="control-label">ADM Amount</label>
+                            <input type="text" class="form-control numeric" id="ADMAmount" name="ADMAmount" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="OfficeID" class="control-label">Office ID</label>
+                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="BranchID" class="control-label">Branch</label>
+                            <input type="text" class="form-control" id="BranchID" name="BranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
+                            <input type="text" class="form-control" id="TicketIssueBranchID" name="TicketIssueBranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
+                            <input type="text" class="form-control" id="TicketAmount" name="TicketAmount" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ReasonName" class="control-label">Reason</label>
+                            <input type="text" class="form-control" id="ReasonName" name="ReasonName" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="RemarksAddByAudit" class="control-label">Remarks Add By Audit User/Manager</label>
+                            <input type="text" class="form-control" id="RemarksAddByAudit" name="RemarksAddByAudit" disabled>
                         </div>
                     </div>
                 </div>
@@ -66,3 +78,102 @@
         </div>
     </div>
 </div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Follow Up Detail</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
+                <div class="row">
+                    <div class="col-12" id="FollowUps">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            GetAll();
+            GetTicketDetail();
+        });
+
+        function GetTicketDetail() {
+            var mData = { id: @ViewBag.ID }
+
+            $.ajax({
+                type: "POST",
+                url: "/ADMHeader/Get_GetAll",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    var obj = JSON.parse(mRes);
+
+                    $("#TicketID").val(obj[0].TicketID);
+                    $("#IATANumber").val(obj[0].IATANumber);
+                    $("#ADMNumber").val(obj[0].ADMNumber);
+                    $("#ADMAmount").val(obj[0].ADMAmount);
+                    $("#OfficeID").val(obj[0].OfficeID);
+                    $("#BranchID").val(obj[0].BranchID);
+                    $("#ReasonName").val(obj[0].ReasonName);
+                    $("#RemarksAddByAudit").val(obj[0].Remarks);
+                }
+            });
+        }
+
+        function GetAll() {
+            var mData = { id: @ViewBag.ID }
+
+            $.ajax({
+                type: "POST",
+                url: "/ADMFollowUp/GetAllFollowUp",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    var obj = JSON.parse(mRes);
+                    var iHTML = "";
+
+                    if (obj.length === 0) {
+                        $("#FollowUps").html("No Data");
+                    }
+                    else {
+                        var Counter = 0;
+
+                        for (var i = 0; i < obj.length; i++) {
+                            if (Counter == 0) {
+                                iHTML += "<div class='post'>";
+                            }
+                            else if (Counter == 1) {
+                                iHTML += "<div class='post clearfix'>";
+
+                                Counter = -1;
+                            }
+
+                            iHTML += "<div class='user-block'>";
+                            iHTML += "<img class='img-circle img-bordered-sm' src='/Content/dist/img/avatar.png' alt='user image'>";
+                            iHTML += "<span class='username'><a href='#'>Jonathan Burke Jr.</a></span>";
+                            iHTML += "<span class='description'>Follow Up Date: " + obj[i].FolloUpDate + "</span>";
+                            iHTML += "</div>";
+                            iHTML += "<p><strong>Remarks</strong>: " + obj[i].Remarks + "</p>";
+                            iHTML += "<p><strong>Status</strong>: " + obj[i].StatusName + "</p>";
+                            if (obj[i].NextFollowUpDate != '') { 
+                                iHTML += "<p>Next Follow Up Date: " + obj[i].NextFollowUpDate + "</p>";
+                            }
+                            iHTML += "</div>";
+
+                            Counter++;
+                        }
+
+                        $("#FollowUps").html(iHTML);
+                    }
+                }
+            });
+        }
+    </script>
+}

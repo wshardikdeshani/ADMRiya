@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SQLClass;
+using SQLHelper;
+using SQLLogic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +13,27 @@ namespace ADMPro.Controllers
     {
         public ActionResult Index()
         {
+            object dataStatus = new StatusMasterLogic().StatusMaster_Get_GetAll(0, true);
+
+            if (dataStatus != null)
+            {
+                ViewBag.StatusList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<StatusMasterClass>>(dataStatus.ToString());
+            }
+
+            if (Request.QueryString.Count == 4) // Branch
+            {
+                ViewBag.EmployeeID = Request.QueryString["eid"].ToString();
+                ViewBag.EmployeeName = Request.QueryString["enm"].ToString();
+                ViewBag.BranchID = Request.QueryString["bnm"].ToString();
+                ViewBag.Role = Request.QueryString["role"].ToString();
+            }
+            else if (Request.QueryString.Count == 3) // Audit
+            {
+                ViewBag.EmployeeID = Request.QueryString["eid"].ToString();
+                ViewBag.EmployeeName = Request.QueryString["enm"].ToString();
+                ViewBag.Role = Request.QueryString["role"].ToString();
+            }
+
             return View();
         }
 
@@ -25,6 +49,43 @@ namespace ADMPro.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult GetAllTicket(string BranchID, int? Role, int RowsPerPage, int PageNumber
+            , string TicketID, string FromDate, string ToDate, int? StatusIDF)
+        {
+            object data = new ADMHeaderLogic().ADMHeader_Dashboard(BranchID
+                , Role
+                , RowsPerPage
+                , PageNumber
+                , TicketID
+                , FromDate
+                , ToDate
+                , StatusIDF);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Save(ADMFollowUpClass obj)
+        {
+            MEMBERS.SQLReturnValue mRes = new ADMFollowUpLogic().ADMFollowUp_Insert_Update(obj);
+            return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount)
+        {
+            MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_UpdateACMDetail(ADMIDP, ACMNumber, ACMAmount);
+            return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetDashboardCount()
+        {
+            object data = new UtilityLogic().DashboardCount();
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace SQLLogic
 
         public object StatusMaster_Get_GetAll(int StatusIDP, bool? IsActive)
         {
-            return new SqlHelper().GetJsonResult("StatusMaster_Get_GetAll", new object[,] { { "StatusIDP", StatusIDP }, { "StatusIDP", StatusIDP } });
+            return new SqlHelper().GetJsonResult("StatusMaster_Get_GetAll", new object[,] { { "StatusIDP", StatusIDP }, { "IsActive", IsActive } });
         }
 
         public MEMBERS.SQLReturnValue StatusMaster_GeneralAction(int StatusIDP, int ActionType)

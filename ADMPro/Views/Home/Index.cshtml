@@ -1,7 +1,21 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
 }
+@section styles{
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 5px !important;
+        }
 
+        .select2-container--default .select2-selection--single {
+            height: 38px !important;
+        }
+
+        .error {
+            color: #dc3545 !important;
+        }
+    </style>
+}
 <div class="modal fade" id="Default">
     <div class="modal-dialog modal-lg">
         <form role="form" id="ApplicationForm" method="post" class="modal-content">
@@ -12,364 +26,499 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="ADMIDP" name="ADMIDP" value="0" />
+                <input type="hidden" id="ADMIDF" name="ADMIDF" value="0" />
+                <input type="hidden" id="OfficeID" name="OfficeID" value="" />
+                <input type="hidden" id="BranchID" name="BranchID" value="" />
+                <input type="hidden" id="ADMFollowUpIDP" name="ADMFollowUpIDP" value="0" />
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Ticket ID</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="TicketID" class="control-label">Ticket ID</label>
+                            <input type="text" class="form-control" id="TicketID" name="TicketID" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Status</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="ADMNumber" class="control-label">ADM Number</label>
+                            <input type="text" class="form-control" id="ADMNumber" name="ADMNumber" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="BranchIDF" class="control-label">Remarks</label>
-                            <textarea class="form-control"></textarea>
+                            <label for="ReasonName" class="control-label">Reason</label>
+                            <input type="text" class="form-control" id="ReasonName" name="ReasonName" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Next Follow Up Date</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="RemarksAddByAudit" class="control-label">Remarks Add By Audit User/Manager<span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="RemarksAddByAudit" name="RemarksAddByAudit" disabled></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Remarks" class="control-label">Remarks<span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="Remarks" name="Remarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="NextFollowUpDate" class="control-label">Next Follow Up Date</label>
+                            <input type="text" class="form-control" id="NextFollowUpDate" name="NextFollowUpDate">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
+                                <option value="0" selected>Select Status</option>
+                                @{
+                                    if (ViewBag.StatusList != null)
+                                    {
+                                        foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                        {
+                                            <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                        }
+                                    }
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" onclick="Save()" class="btn btn-primary">Save changes</button>
+                <button type="submit" onclick="SaveFollowUp()" class="btn btn-primary">Save</button>
             </div>
         </form>
     </div>
 </div>
+<div class="modal fade" id="ACMReceivedDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add ACM Received Detail</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ACM_ADMIDF" name="ACM_ADMIDF" value="0" />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ACMNumber" class="control-label">ACM Number</label>
+                            <input type="text" class="form-control" id="ACMNumber" name="ACMNumber">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ACMAmount" class="control-label">ACM Amount</label>
+                            <input type="text" class="form-control numeric" id="ACMAmount" name="ACMAmount">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" onclick="UpdateACMDetail()" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>150</h3>
-                    <p>New</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-bag"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
+    <input type="hidden" id="SearchStatusIDF" name="SearchStatusIDF" value="0" />
+    <div class="row" id="DashboardStatusCount">
+
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Search</h3>
         </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>
-                        53
-                        <sup style="font-size: 20px">%</sup>
-                    </h3>
-                    <p>Pending</p>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="SearchTicketID" class="control-label">Ticket ID</label>
+                                <input type="text" class="form-control" id="SearchTicketID" name="SearchTicketID">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="FromDate" class="control-label">From Date</label>
+                                <input type="text" class="form-control" id="FromDate" name="FromDate">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="ToDate" class="control-label">To Date</label>
+                                <input type="text" class="form-control" id="ToDate" name="ToDate">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="ADMNumber" class="control-label">&nbsp;</label><br />
+                                <button id="DetailButton" type="button" onclick="FilterTicketDetail(0)" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-warning">
-                <div class="inner">
-                    <h3>44</h3>
-                    <p>User Registrations</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-person-add"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>65</h3>
-                    <p>Unique Visitors</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Projects</h3>
+            <h3 class="card-title">ADM Ticket(s) Detail</h3>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped projects">
                 <thead>
                     <tr>
                         <th style="width: 1%">#</th>
-                        <th style="width: 20%">Project Name</th>
-                        <th style="width: 30%">Team Members</th>
-                        <th>Project Progress</th>
-                        <th style="width: 8%" class="text-center">Status</th>
-                        <th style="width: 22%"></th>
+                        <th style="width: 19%">Ticket ID</th>
+                        <th style="width: 30%">Reason</th>
+                        <th style="width: 14%" class="text-center">Status</th>
+                        <th style="width: 36%"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="data">
                     <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar2.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar3.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar04.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="57" aria-volumemin="0" aria-volumemax="100" style="width: 57%">
-                                </div>
-                            </div>
-                            <small>57% Complete</small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-success">Success</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar2.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="47" aria-volumemin="0" aria-volumemax="100" style="width: 47%">
-                                </div>
-                            </div>
-                            <small>47% Complete</small>
-                        </td>
-                        <td class="project-state"><span class="badge badge-success">Success</span></td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar2.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar3.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="77" aria-volumemin="0" aria-volumemax="100" style="width: 77%">
-                                </div>
-                            </div>
-                            <small>
-                                77% Complete
-                            </small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-success">Success</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar2.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar3.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar04.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="60" aria-volumemin="0" aria-volumemax="100" style="width: 60%">
-                                </div>
-                            </div>
-                            <small>
-                                60% Complete
-                            </small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-danger">Pending</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar04.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar5.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="12" aria-volumemin="0" aria-volumemax="100" style="width: 12%">
-                                </div>
-                            </div>
-                            <small>
-                                12% Complete
-                            </small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-info">New</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar2.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar3.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar04.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="35" aria-volumemin="0" aria-volumemax="100" style="width: 35%">
-                                </div>
-                            </div>
-                            <small>
-                                35% Complete
-                            </small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-danger">Pending</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar04.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar5.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="87" aria-volumemin="0" aria-volumemax="100" style="width: 87%">
-                                </div>
-                            </div>
-                            <small>
-                                87% Complete
-                            </small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-danger">Pending</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar3.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar04.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="77" aria-volumemin="0" aria-volumemax="100" style="width: 77%">
-                                </div>
-                            </div>
-                            <small>
-                                77% Complete
-                            </small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-danger">Pending</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#</td>
-                        <td><a>ADM Ticket</a><br /><small>Created 01.01.2020</small></td>
-                        <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar3.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar04.png"></li>
-                                <li class="list-inline-item"><img alt="Avatar" class="table-avatar" src="~/Content/dist/img/avatar5.png"></li>
-                            </ul>
-                        </td>
-                        <td class="project_progress">
-                            <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-volumenow="77" aria-volumemin="0" aria-volumemax="100" style="width: 77%">
-                                </div>
-                            </div>
-                            <small>
-                                77% Complete
-                            </small>
-                        </td>
-                        <td class="project-state">
-                            <span class="badge badge-info">New</span>
-                        </td>
-                        <td class="project-actions text-right">
-                            <a class="btn btn-primary btn-sm" href="/ADMFollowUp/Index" target="_blank"><i class="fas fa-folder"></i>&nbsp;View</a>
-                            <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="AddNewFollowUp()"><i class="fas fa-pencil-alt"></i>&nbsp;New Follow Up</a>
-                        </td>
+                        <td colspan="5" align="center"><div class="loader"></div></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div class="row p-2">
+            <div class="col-md-12">
+                <div style="float: left;">
+                    <label class="form-label" style="padding-top:5px">
+                        Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
+                    </label>
+                </div>
+                <div style="float: right;text-align: right;">
+                    <button id="LeftEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
+                    <button id="Left" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+                    Page
+                    <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
+                    <button id="goBtn" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'C')">Go</button> &nbsp;
+                    <button id="Right" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
+                    <button id="RightEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
     </div>
 </div>
-@section scripts{
-    <script>
-        function AddNewFollowUp() {
-            $("#Default").modal('show');
+    @section scripts{
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+        <script>
+        $(document).ready(function () {
+            jQuery.validator.addMethod("notEqualTo", function (v, e, p) {
+                return this.optional(e) || v != p;
+            }, "Please specify a different value");
+
+            $('#NextFollowUpDate, #FromDate, #ToDate').datepicker({
+                format: 'mm/dd/yyyy',
+                todayHighlight: true,
+                autoclose: true
+            });
+
+            //Initialize Select2 Elements
+            $('.select2').select2();
+
+            $(".numeric").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+                    // Allow: Ctrl+A, Command+A
+                    (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                    // Allow: home, end, left, right, down, up
+                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                    // let it happen, don't do anything
+                    return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+            GetData(10, 1, '');
+        });
+
+        function FilterTicketDetail(id) {
+            $("#SearchStatusIDF").val(id);
+
+            GetData(10, 1, '');
         }
-    </script>
-}
+
+        function GetData(RowPerPage, PageNo, NavigationType) {
+            var navValue = parseInt($("#NavigationValue").val());
+            var totalPage = parseInt($("#TotalPages").text());
+
+            if (NavigationType === 'L') {
+                if (navValue > 1) {
+                    PageNo = navValue - 1;
+                }
+
+                $("#Left").removeClass("btn-info").addClass("btn-warning");
+                $("#LeftEnd, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'LE') {
+                PageNo = 1;
+
+                $("#LeftEnd").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'C') {
+                PageNo = navValue;
+
+                $("#goBtn").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #LeftEnd, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'R') {
+                if (totalPage > navValue)
+                    PageNo = navValue + 1;
+                else
+                    PageNo = totalPage;
+
+                $("#Right").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #LeftEnd, #goBtn, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'RE') {
+                PageNo = totalPage;
+
+                $("#RightEnd").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #LeftEnd, #goBtn, #Right").removeClass("btn-warning").addClass("btn-info");
+            }
+
+            $("#NavigationValue").val(PageNo);
+
+            var mData = {
+                BranchID: '@ViewBag.BranchID',
+                Role: @ViewBag.Role,
+                RowsPerPage: RowPerPage,
+                PageNumber: PageNo,
+                TicketID: $("#SearchTicketID").val(),
+                FromDate: $("#FromDate").val(),
+                ToDate: $("#ToDate").val(),
+                StatusIDF: $("#SearchStatusIDF").val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/GetAllTicket",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    $("#FirstRecord").text(mRes.FirstRecord);
+                    $("#LastRecord").text(mRes.LastRecord);
+                    $("#TotalRecords").text(mRes.TotalRecords);
+                    $("#TotalPages").text(mRes.TotalPage);
+
+                    var obj = JSON.parse(mRes.Data);
+                    var iHTML = "";
+
+                    if (obj.length === 0) {
+                        $("#data").html("<tr><td colspan='5' align='center'>No Data</td></tr>");
+                    }
+                    else {
+                        for (var i = 0; i < obj.length; i++) {
+                            iHTML += "<tr>";
+                            iHTML += "<td>" + obj[i].SrNo + "</td>";
+                            iHTML += "<td><a>" + obj[i].TicketID + "</a><br /><small>Created " + obj[i].CreatedDateTime+"</small></td>";
+                            iHTML += "<td>" + obj[i].ReasonName + "</td>";
+
+                            if (obj[i].StatusName == 'New') {
+                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-success btn-sm'>" + obj[i].StatusName + "</button></td>";
+                            }
+                            else if (obj[i].StatusName == 'Pending') {
+                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-primary btn-sm'>" + obj[i].StatusName + "</button></td>";
+                            }
+                            else if (obj[i].StatusName == 'Dispute') {
+                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-danger btn-sm'>" + obj[i].StatusName + "</button></td>";
+                            }
+                            else {
+                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-warning btn-sm'>" + obj[i].StatusName + "</button></td>";
+                            }
+
+                            iHTML += "<td class='project-actions text-right'>";
+                            iHTML += "<a class='btn btn-primary btn-sm' href='/ADMFollowUp/Index/" + obj[i].ADMIDP + "' target='_blank'><i class='fas fa-eye'></i>&nbsp;View</a>";
+                            if (@ViewBag.Role== 2) {
+                                iHTML += "&nbsp;<a class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;New Follow Up</a>";
+                            }
+                            else if (@ViewBag.Role== 1 && obj[i].StatusName == 'Dispute') {
+                                iHTML += "&nbsp;<a class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;New Follow Up</a>";
+                            }
+                            if (obj[i].StatusName == 'ACM Received') {
+                                iHTML += "&nbsp;<a class='btn btn-warning btn-sm' href='javascript:void(0)' onclick='AddNewACMReceived(" + obj[i].ADMIDP + ", &quot;" + obj[i].ACMNumber + "&quot;," + obj[i].ACMAmount + ")'><i class='fas fa-hand-holding-usd'></i>&nbsp;ACM Received</a>";
+                            }
+                            iHTML += "</td>";
+                            iHTML += "</tr>";
+                        }
+
+                        $("#data").html(iHTML);
+                    }
+
+                    GetDashboardCount();
+                }
+            });
+        }
+
+        function AddNewFollowUp(id) {
+            $("#Default").modal('show');
+
+            var mData = { id: id }
+
+            $.ajax({
+                type: "POST",
+                url: "/ADMHeader/Get_GetAll",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    var obj = JSON.parse(mRes);
+
+                    $("#ADMIDF").val(obj[0].ADMIDP);
+                    $("#TicketID").val(obj[0].TicketID);
+                    $("#ADMNumber").val(obj[0].ADMNumber);
+                    $("#OfficeID").val(obj[0].OfficeID);
+                    $("#BranchID").val(obj[0].BranchID);
+                    $("#ReasonName").val(obj[0].ReasonName);
+                    $("#RemarksAddByAudit").val(obj[0].Remarks);
+                    $("#StatusIDF").val(obj[0].StatusIDF);
+                    $('#StatusIDF').trigger('change');
+                }
+            });
+        }
+
+        function SaveFollowUp() {
+            $("#ApplicationForm").validate({
+                rules: {
+                    TicketID: "required",
+                    StatusIDF: {
+                        required: true,
+                        notEqualTo: "0"
+                    },
+                    Remarks: "required",
+                },
+                messages: {
+                    TicketID: "Ticket id require.",
+                    StatusIDF: {
+                        required: "Status require.",
+                        notEqualTo: "Status require."
+                    },
+                    Remarks: "Remarks require.",
+                },
+                submitHandler: function (form) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/Save",
+                        data: $("#ApplicationForm").serialize(),
+                        success: function (mRes) {
+                            toastr.success(mRes);
+
+                            ClearControls();
+
+                            $("#Default").modal('hide');
+
+                            GetData(10, 1, '');
+                        },
+                        error: function (err) {
+                            Swal.fire('Error', err, 'error');
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
+
+        function ClearControls() {
+            $("#ADMIDF, #ADMFollowUpIDP").val(0);
+            $("#OfficeID, #BranchID, #TicketID, #Remarks, #NextFollowUpDate").val('');
+
+            $("#StatusIDF").val(0);
+            $('#StatusIDF').trigger('change');
+        }
+
+        function AddNewACMReceived(id, ACMNo,ACMAmount) {
+            $("#ACM_ADMIDF").val(id);
+            $("#ACMNumber").val(ACMNo);
+            $("#ACMAmount").val(ACMAmount);
+
+            $("#ACMReceivedDefault").modal('show');
+        }
+
+        function UpdateACMDetail() {
+            var mData = {
+                ADMIDP: $("#ACM_ADMIDF").val()
+                , ACMNumber: $("#ACMNumber").val()
+                , ACMAmount: $("#ACMAmount").val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/UpdateACMDetail",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    toastr.success(mRes);
+
+                    ClearACMControls();
+
+                    $("#ACMReceivedDefault").modal('hide');
+                },
+                error: function (err) {
+                    Swal.fire('Error', err, 'error');
+                }
+            });
+        }
+
+        function ClearACMControls() {
+            $("#ACM_ADMIDF").val(0);
+
+            $("#ACMNumber, #ACMAmount").val('');
+        }
+
+        function GetDashboardCount() {
+            $.ajax({
+                type: "POST",
+                url: "/Home/GetDashboardCount",
+                data: "",
+                success: function (mRes) {
+                    var obj = JSON.parse(mRes);
+
+                    var iHTML = "";
+
+                    for (var i = 0; i < obj.length; i++) {
+                        iHTML += "<div class='col-lg-2 col-2 text-center'>";
+                        iHTML += "<div class='small-box bg-info'>";
+                        iHTML += "<div class='inner'>";
+                        iHTML += "<h3>" + obj[i].Request + "</h3>";
+                        iHTML += "<p>" + obj[i].StatusName +"</p>";
+                        iHTML += "</div>";
+                        iHTML += "<a href='javascript:void(0)' onclick='FilterTicketDetail(" + obj[i].StatusIDF + ")' class='small-box-footer'>More info <i class='fas fa-arrow-circle-right'></i></a>";
+                        iHTML += "</div>";
+                        iHTML += "</div>";
+                    }
+
+                    $("#DashboardStatusCount").html(iHTML);
+                },
+                error: function (err) {
+                    Swal.fire('Error', err, 'error');
+                }
+            });
+        }
+        </script>
+    }

@@ -24,5 +24,9 @@ namespace SQLLogic
         {
             return new SqlHelper().ExecuteProceduerWithValue("ADMFollowUp_GeneralAction", new object[,] { { "ADMFollowUpIDP", ADMFollowUpIDP }, { "ActionType", ActionType } }, 3);
         }
+        public object ADMFollowUp_GetAll_ByADMIDF(long ADMIDF)
+        {
+            return new SqlHelper().GetJsonResult("ADMFollowUp_GetAll_ByADMIDF", new object[,] { { "ADMIDF", ADMIDF } });
+        }
     }
 }

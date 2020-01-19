@@ -15,14 +15,48 @@ namespace SQLLogic
             return new SqlHelper().ExecuteProceduerWithValueSpecial("ADMHeader_Insert_Update", model);
         }
 
-        public object ADMHeader_Get_GetAll(long ADMIDP,bool? IsActive)
+        public object ADMHeader_Get_GetAll(long ADMIDP, bool? IsActive)
         {
             return new SqlHelper().GetJsonResult("ADMHeader_Get_GetAll", new object[,] { { "ADMIDP", ADMIDP }, { "IsActive", IsActive } });
+        }
+
+        public MEMBERS.PagingResponse ADMHeader_GetAllPaging(int RowsPerPage, int PageNumber)
+        {
+            return new SqlHelper().Paging_GetAll_DataTable("ADMHeader_GetAllPaging", new object[,] {
+                { "RowsPerPage", RowsPerPage }
+                , { "PageNumber", PageNumber }
+            });
+        }
+
+        public MEMBERS.PagingResponse ADMHeader_Dashboard(string BranchID, int? Role
+            , int RowsPerPage, int PageNumber
+            , string TicketID, string FromDate, string ToDate, int? StatusIDF)
+        {
+            return new SqlHelper().Paging_GetAll_DataTable("ADMHeader_Dashboard", new object[,] {
+                { "BranchID", BranchID }
+                , { "Role", Role }
+                , { "RowsPerPage", RowsPerPage }
+                , { "PageNumber", PageNumber }
+                , { "TicketID", TicketID }
+                , { "FromDate", FromDate }
+                , { "ToDate", ToDate }
+                , { "StatusIDF", StatusIDF }
+            });
         }
 
         public MEMBERS.SQLReturnValue ADMHeader_GeneralAction(long ADMIDP, int ActionType)
         {
             return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_GeneralAction", new object[,] { { "ADMIDP", ADMIDP }, { "ActionType", ActionType } }, 3);
+        }
+
+        public object ADM_GetTicketDetail_DSR_ERP_ByTicketID(string TicketID)
+        {
+            return new SqlHelper().GetJsonResult("ADM_GetTicketDetail_DSR_ERP_ByTicketID", new object[,] { { "TicketID", TicketID } });
+        }
+
+        public MEMBERS.SQLReturnValue ADMHeader_UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount)
+        {
+            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_UpdateACMDetail", new object[,] { { "ADMIDP", ADMIDP }, { "ACMNumber", ACMNumber }, { "ACMAmount", ACMAmount } }, 3);
         }
     }
 }

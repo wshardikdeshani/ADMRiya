@@ -1,6 +1,21 @@
 ﻿@{
     ViewBag.Title = "ADM Header";
 }
+@section styles{
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 5px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px !important;
+        }
+
+        .error {
+            color: #dc3545 !important;
+        }
+    </style>
+}
 <div class="modal fade" id="Default">
     <div class="modal-dialog modal-lg">
         <form role="form" id="ApplicationForm" method="post" class="modal-content">
@@ -15,20 +30,34 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">ICUS Number</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="TicketID" class="control-label">Ticket ID<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control numeric" id="TicketID" name="TicketID">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-1">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">ADM Number</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label class="control-label">&nbsp;</label><br />
+                            <button id="DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Ticket ID</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="IATANumber" class="control-label">IATA Number</label>
+                            <input type="text" class="form-control" id="IATANumber" name="IATANumber" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ADMNumber" class="control-label">ADM Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ADMNumber" name="ADMNumber">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ADMAmount" class="control-label">ADM Amount<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control numeric" id="ADMAmount" name="ADMAmount">
                         </div>
                     </div>
                 </div>
@@ -36,42 +65,59 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="OfficeID" class="control-label">Office ID</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Office Branch</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="BranchID" class="control-label">Branch</label>
+                            <input type="text" class="form-control" id="BranchID" name="BranchID" disabled>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Ticket Issued Branch</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
+                            <input type="text" class="form-control" id="TicketIssueBranchID" name="TicketIssueBranchID" disabled>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Ticket Amount</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID">
+                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
+                            <input type="text" class="form-control" id="TicketAmount" name="TicketAmount" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="BranchIDF" class="control-label">Reason</label>
-                            <select class="form-control" id="BranchIDF" name="BranchIDF">
-                                <option value="0" selected>Select Branch</option>
+                            <label for="ReasonIDF" class="control-label">Reason<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="ReasonIDF" name="ReasonIDF">
+                                <option value="0" selected>Select Reason</option>
+                                @{
+                                    if (ViewBag.ReasonList != null)
+                                    {
+                                        foreach (SQLClass.ReasonMasterClass rm in ViewBag.ReasonList)
+                                        {
+                                            <option value="@rm.ReasonIDP">@rm.ReasonName</option>
+                                        }
+                                    }
+                                }
                             </select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="BranchIDF" class="control-label">Status</label>
-                            <select class="form-control" id="BranchIDF" name="BranchIDF">
-                                <option value="0" selected>Select Branch</option>
+                            <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
+                                @{
+                                    if (ViewBag.StatusList != null)
+                                    {
+                                        foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                        {
+                                            <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                        }
+                                    }
+                                }
                             </select>
                         </div>
                     </div>
@@ -79,15 +125,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="BranchIDF" class="control-label">Remarks</label>
-                            <textarea class="form-control"></textarea>
+                            <label for="Remarks" class="control-label">Remarks<span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="Remarks" name="Remarks"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" onclick="Save()" class="btn btn-primary">Save changes</button>
+                <button type="submit" onclick="Save()" class="btn btn-primary">Save</button>
             </div>
         </form>
     </div>
@@ -109,34 +155,70 @@
             <thead>
                 <tr>
                     <th style="width: 10px">#</th>
-                    <th>Office ID</th>
-                    <th>Branch</th>
+                    <th>Ticket ID</th>
+                    <th>Office/Branch</th>
                     <th>IATA Number</th>
-                    <th>Status</th>
+                    <th>Reason</th>
+                    <th>Ticket Status</th>
+                    <th>Action</th>
                     <th>Operation</th>
                 </tr>
             </thead>
             <tbody id="data">
                 <tr>
-                    <td colspan="6" align="center"><div class="loader"></div></td>
+                    <td colspan="8" align="center"><div class="loader"></div></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div class="row p-2">
+        <div class="col-md-12">
+            <div style="float: left;">
+                <label class="form-label" style="padding-top:5px">
+                    Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
+                </label>
+            </div>
+            <div style="float: right;text-align: right;">
+                <button id="LeftEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
+                <button id="Left" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+                Page
+                <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
+                <button id="goBtn" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'C')">Go</button> &nbsp;
+                <button id="Right" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
+                <button id="RightEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
     </div>
 </div>
 @section scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
     <script>
         $(document).ready(function () {
-            AddNew();
-
             jQuery.validator.addMethod("notEqualTo", function (v, e, p) {
                 return this.optional(e) || v != p;
             }, "Please specify a different value");
 
-            GetAllBranch();
+            //Initialize Select2 Elements
+            $('.select2').select2()
 
-            GetAll();
+            $(".numeric").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+                    // Allow: Ctrl+A, Command+A
+                    (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                    // Allow: home, end, left, right, down, up
+                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                    // let it happen, don't do anything
+                    return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+            GetData(10, 1, '');
         });
 
         function AddNew() {
@@ -148,34 +230,78 @@
         function Save() {
             $("#ApplicationForm").validate({
                 rules: {
+                    TicketID: "required",
+                    IATANumber: "required",
+                    ADMNumber: "required",
+                    ADMAmount: "required",
                     OfficeID: "required",
-                    BranchIDF: {
+                    BranchID: "required",
+                    TicketIssueBranchID: "required",
+                    TicketAmount: "required",
+                    Remarks: "required",
+                    ReasonIDF: {
                         required: true,
                         notEqualTo: "0"
                     },
-                    IATANumber: "required"
+                    StatusIDF: {
+                        required: true,
+                        notEqualTo: "0"
+                    }
                 },
                 messages: {
-                    OfficeID: "Office ID require.",
-                    BranchIDF: {
-                        required: "Branch require.",
-                        notEqualTo: "Branch require."
+                    TicketID: "Ticket ID require.",
+                    IATANumber: "IATA number require.",
+                    ADMNumber: "ADM number require.",
+                    ADMAmount: "ADM amount require.",
+                    OfficeID: "Office id require.",
+                    BranchID: "Branch id require.",
+                    TicketIssueBranchID: "Ticket issue branch id require.",
+                    TicketAmount: "Ticket amount require.",
+                    Remarks: "Remarks require.",
+                    ReasonIDF: {
+                        required: "Reason require.",
+                        notEqualTo: "Reason require."
                     },
-                    IATANumber: "IATA number require"
+                    StatusIDF: {
+                        required: "Status require.",
+                        notEqualTo: "Status require."
+                    }
                 },
                 submitHandler: function (form) {
+                    var mData = {
+                        ADMIDP: $("#ADMIDP").val()
+                        , IATANumber: $("#IATANumber").val()
+                        , ADMNumber: $("#ADMNumber").val()
+                        , ADMAmount: $("#ADMAmount").val()
+                        , TicketID: $("#TicketID").val()
+                        , OfficeID: $("#OfficeID").val()
+                        , BranchID: $("#BranchID").val()
+                        , TicketIssueBranchID: $("#TicketIssueBranchID").val()
+                        , TicketAmount: $("#TicketAmount").val()
+                        , ReasonIDF: $("#ReasonIDF").val()
+                        , Remarks: $("#Remarks").val()
+                        , StatusIDF: $("#StatusIDF").val()
+                    }
+
                     $.ajax({
                         type: "POST",
-                        url: "/OfficeMaster/Save",
-                        data: $("#ApplicationForm").serialize(),
+                        url: "/ADMHeader/Save",
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify(mData),
                         success: function (mRes) {
-                            toastr.success(mRes);
+                            if (mRes == 'Ticket already added in ADM.') {
+                                toastr.error(mRes);
+                            }
+                            else {
+                                toastr.success(mRes);
 
-                            ClearControls();
+                                ClearControls();
 
-                            $("#Default").modal('hide');
+                                $("#Default").modal('hide');
 
-                            GetAll();
+                                GetData(10, 1, '');
+                            }
                         },
                         error: function (err) {
                             Swal.fire('Error', err, 'error');
@@ -193,16 +319,28 @@
 
             $.ajax({
                 type: "POST",
-                url: "/OfficeMaster/Get_GetAll",
+                url: "/ADMHeader/Get_GetAll",
                 data: JSON.stringify(mData),
                 contentType: "application/json",
                 dataType: "json",
                 success: function (mRes) {
                     var obj = JSON.parse(mRes);
                     $("#ADMIDP").val(obj[0].ADMIDP);
-                    $("#OfficeID").val(obj[0].OfficeID);
-                    $("#BranchIDF").val(obj[0].BranchIDF);
                     $("#IATANumber").val(obj[0].IATANumber);
+                    $("#ADMNumber").val(obj[0].ADMNumber);
+                    $("#ADMAmount").val(obj[0].ADMAmount);
+                    $("#TicketID").val(obj[0].TicketID);
+                    $("#OfficeID").val(obj[0].OfficeID);
+                    $("#BranchID").val(obj[0].BranchID);
+                    $("#TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
+                    $("#TicketAmount").val(obj[0].TicketAmount);
+                    $("#Remarks").val(obj[0].Remarks);
+
+                    $("#ReasonIDF").val(obj[0].ReasonIDF);
+                    $('#ReasonIDF').trigger('change');
+
+                    $("#StatusIDF").val(obj[0].StatusIDF);
+                    $('#StatusIDF').trigger('change');
                 }
             });
         }
@@ -224,44 +362,95 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/OfficeMaster/GeneralAction",
+                        url: "/ADMHeader/GeneralAction",
                         data: JSON.stringify(mData),
                         contentType: "application/json",
                         dataType: "json",
                         success: function (mRes) {
                             toastr.success(mRes);
 
-                            GetAll();
+                            GetData(10, 1, '');
                         }
                     });
                 }
             })
         }
 
-        function GetAll() {
-            var mData = { id: 0 }
+        function GetData(RowPerPage, PageNo, NavigationType) {
+            var navValue = parseInt($("#NavigationValue").val());
+            var totalPage = parseInt($("#TotalPages").text());
+
+            if (NavigationType === 'L') {
+                if (navValue > 1) {
+                    PageNo = navValue - 1;
+                }
+
+                $("#Left").removeClass("btn-info").addClass("btn-warning");
+                $("#LeftEnd, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'LE') {
+                PageNo = 1;
+
+                $("#LeftEnd").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'C') {
+                PageNo = navValue;
+
+                $("#goBtn").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #LeftEnd, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'R') {
+                if (totalPage > navValue)
+                    PageNo = navValue + 1;
+                else
+                    PageNo = totalPage;
+
+                $("#Right").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #LeftEnd, #goBtn, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+            }
+            else if (NavigationType === 'RE') {
+                PageNo = totalPage;
+
+                $("#RightEnd").removeClass("btn-info").addClass("btn-warning");
+                $("#Left, #LeftEnd, #goBtn, #Right").removeClass("btn-warning").addClass("btn-info");
+            }
+
+            $("#NavigationValue").val(PageNo);
+
+            var mData = {
+                RowsPerPage: RowPerPage,
+                PageNumber: PageNo
+            }
 
             $.ajax({
                 type: "POST",
-                url: "/OfficeMaster/Get_GetAll",
+                url: "/ADMHeader/GetAllPaging",
                 data: JSON.stringify(mData),
                 contentType: "application/json",
                 dataType: "json",
                 success: function (mRes) {
-                    var obj = JSON.parse(mRes);
+                    $("#FirstRecord").text(mRes.FirstRecord);
+                    $("#LastRecord").text(mRes.LastRecord);
+                    $("#TotalRecords").text(mRes.TotalRecords);
+                    $("#TotalPages").text(mRes.TotalPage);
+
+                    var obj = JSON.parse(mRes.Data);
                     var iHTML = "";
 
                     if (obj.length === 0) {
-                        $("#data").html("<tr><td colspan='6' align='center'>No Data</td></tr>");
+                        $("#data").html("<tr><td colspan='8' align='center'>No Data</td></tr>");
                     }
                     else {
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
-                            iHTML += "<td>" + obj[i].OfficeID + "</td>";
-                            iHTML += "<td>" + obj[i].BranchName + "</td>";
+                            iHTML += "<td>" + obj[i].TicketID + "</td>";
+                            iHTML += "<td>" + obj[i].OfficeID + "/" + obj[i].BranchID + "</td>";
                             iHTML += "<td>" + obj[i].IATANumber + "</td>";
-                            iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].ADMIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") +'</button></td>';
+                            iHTML += "<td>" + obj[i].ReasonName + "</td>";
+                            iHTML += "<td>" + obj[i].StatusName + "</td>";
+                            iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].ADMIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") + '</button></td>';
                             iHTML += "<td>";
                             iHTML += '<button class="btn btn-success" onclick="Get(' + obj[i].ADMIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';
                             iHTML += '&nbsp;<button class="btn btn-danger" onclick="GeneralAction(' + obj[i].ADMIDP + ',1)"><i class="fa fa-trash nav-icon"></i>&nbsp;Delete</button>';
@@ -277,23 +466,48 @@
 
         function ClearControls() {
             $("#ADMIDP").val(0);
-            $("#OfficeID").val('');
-            $("#BranchIDF").val('0');
-            $("#IATANumber").val('');
+            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount").val('');
+
+            $("#ReasonIDF").val(0);
+            $('#ReasonIDF').trigger('change');
+
+            $("#StatusIDF").val(1);
+            $('#StatusIDF').trigger('change');
         }
 
-        function GetAllBranch() {
+        function FetchTicketDetail() {
+            if ($("#TicketID").val().length <= 0) {
+                toastr.error('Please enter ticket id');
+                return false;
+            }
+
+            $("#DetailButton").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
+
+            var mData = {
+                TicketID: $("#TicketID").val()
+            }
+
             $.ajax({
                 type: "POST",
-                url: "/OfficeMaster/GetAllBranch",
-                data: "",
+                url: "/ADMHeader/GetTicketDetail",
+                data: JSON.stringify(mData),
                 contentType: "application/json",
                 dataType: "json",
                 success: function (mRes) {
                     var obj = JSON.parse(mRes);
-                    for (var i = 0; i < obj.length; i++) {
-                        $("#BranchIDF").append("<option value=" + obj[i].BranchIDP + ">" + obj[i].BranchName + "</option>");
+                    if (obj.length > 0) {
+                        $("#IATANumber").val(obj[0].IATANumber);
+                        $("#OfficeID").val(obj[0].OfficeID);
+                        $("#BranchID").val(obj[0].BranchID);
+                        $("#TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
+                        $("#TicketAmount").val(obj[0].TicketAmount);
                     }
+                    else {
+                        toastr.error('No ticket detail found. Please try again.');
+
+                        $("#IATANumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount").val('');
+                    }
+                    $("#DetailButton").html('<i class="fas fa-search"></i>');
                 }
             });
         }

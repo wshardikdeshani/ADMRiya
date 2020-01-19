@@ -12,30 +12,17 @@ namespace ADMPro.Controllers
     public class ADMFollowUpController : Controller
     {
         // GET: ADMFollowUp
-        public ActionResult Index()
+        public ActionResult Index(long id)
         {
+            ViewBag.ID = id;
             return View();
         }
 
         [HttpPost]
-        public JsonResult Save(ADMFollowUpClass model)
+        public JsonResult GetAllFollowUp(long id)
         {
-            MEMBERS.SQLReturnValue mRes = new ADMFollowUpLogic().ADMFollowUp_Insert_Update(model);
-            return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public JsonResult Get_GetAll(long id)
-        {
-            object data = new ADMFollowUpLogic().ADMFollowUp_Get_GetAll(id);
+            object data = new ADMFollowUpLogic().ADMFollowUp_GetAll_ByADMIDF(id);
             return Json(data, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public JsonResult GeneralAction(long id, int ActionType)
-        {
-            MEMBERS.SQLReturnValue mRes = new ADMFollowUpLogic().ADMFollowUp_GeneralAction(id, ActionType);
-            return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
         }
     }
 }

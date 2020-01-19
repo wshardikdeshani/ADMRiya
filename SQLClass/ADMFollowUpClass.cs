@@ -10,6 +10,8 @@ namespace SQLClass
     {
         public long ADMFollowUpIDP { get; set; }
         public int ADMIDF { get; set; }
+        public string OfficeID { get; set; }
+        public string BranchID { get; set; }
         public string Remarks { get; set; }
         public int StatusIDF { get; set; }
         public string NextFollowUpDate { get; set; }
