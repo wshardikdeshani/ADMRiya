@@ -20,7 +20,7 @@
     <div class="modal-dialog modal-lg">
         <form role="form" id="ApplicationForm" method="post" class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add New Ticket</h4>
+                <h4 class="modal-title">Add New ADM</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="ReasonIDF" class="control-label">Reason<span class="text-danger">*</span></label>
                             <select class="form-control select2" style="width: 100%;" id="ReasonIDF" name="ReasonIDF">
@@ -105,7 +105,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    @*<div class="col-md-6">
                         <div class="form-group">
                             <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
                             <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
@@ -120,7 +120,7 @@
                                 }
                             </select>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -159,8 +159,9 @@
                     <th>Office/Branch</th>
                     <th>IATA Number</th>
                     <th>Reason</th>
+                    <th>ADM Raised Date</th>
                     <th>Ticket Status</th>
-                    <th>Action</th>
+                    <th>Active/DeActive</th>
                     <th>Operation</th>
                 </tr>
             </thead>
@@ -171,23 +172,24 @@
             </tbody>
         </table>
     </div>
-    <div class="row p-2">
-        <div class="col-md-12">
-            <div style="float: left;">
-                <label class="form-label" style="padding-top:5px">
-                    Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
-                </label>
+    <div class="card-footer clearfix">
+        <div class="row">
+            <div class="col-md-12">
+                <div style="float: left;">
+                    <label class="form-label" style="padding-top:5px">
+                        Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
+                    </label>
+                </div>
+                <div style="float: right;text-align: right;">
+                    <button id="LeftEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
+                    <button id="Left" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+                    Page
+                    <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
+                    <button id="goBtn" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'C')">Go</button> &nbsp;
+                    <button id="Right" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
+                    <button id="RightEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                </div>
             </div>
-            <div style="float: right;text-align: right;">
-                <button id="LeftEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
-                <button id="Left" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
-                Page
-                <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
-                <button id="goBtn" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'C')">Go</button> &nbsp;
-                <button id="Right" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
-                <button id="RightEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
-            </div>
-            <div class="clearfix"></div>
         </div>
     </div>
 </div>
@@ -202,21 +204,21 @@
             //Initialize Select2 Elements
             $('.select2').select2()
 
-            $(".numeric").keydown(function (e) {
-                // Allow: backspace, delete, tab, escape, enter and .
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-                    // Allow: Ctrl+A, Command+A
-                    (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                    // Allow: home, end, left, right, down, up
-                    (e.keyCode >= 35 && e.keyCode <= 40)) {
-                    // let it happen, don't do anything
-                    return;
-                }
-                // Ensure that it is a number and stop the keypress
-                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                    e.preventDefault();
-                }
-            });
+            //$(".numeric").keydown(function (e) {
+            //    // Allow: backspace, delete, tab, escape, enter and .
+            //    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+            //        // Allow: Ctrl+A, Command+A
+            //        (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+            //        // Allow: home, end, left, right, down, up
+            //        (e.keyCode >= 35 && e.keyCode <= 40)) {
+            //        // let it happen, don't do anything
+            //        return;
+            //    }
+            //    // Ensure that it is a number and stop the keypress
+            //    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            //        e.preventDefault();
+            //    }
+            //});
 
             GetData(10, 1, '');
         });
@@ -242,11 +244,11 @@
                     ReasonIDF: {
                         required: true,
                         notEqualTo: "0"
-                    },
-                    StatusIDF: {
-                        required: true,
-                        notEqualTo: "0"
                     }
+                    //StatusIDF: {
+                    //    required: true,
+                    //    notEqualTo: "0"
+                    //}
                 },
                 messages: {
                     TicketID: "Ticket ID require.",
@@ -261,11 +263,11 @@
                     ReasonIDF: {
                         required: "Reason require.",
                         notEqualTo: "Reason require."
-                    },
-                    StatusIDF: {
-                        required: "Status require.",
-                        notEqualTo: "Status require."
                     }
+                    //StatusIDF: {
+                    //    required: "Status require.",
+                    //    notEqualTo: "Status require."
+                    //}
                 },
                 submitHandler: function (form) {
                     var mData = {
@@ -280,7 +282,7 @@
                         , TicketAmount: $("#TicketAmount").val()
                         , ReasonIDF: $("#ReasonIDF").val()
                         , Remarks: $("#Remarks").val()
-                        , StatusIDF: $("#StatusIDF").val()
+                        , StatusIDF: 1
                     }
 
                     $.ajax({
@@ -339,8 +341,8 @@
                     $("#ReasonIDF").val(obj[0].ReasonIDF);
                     $('#ReasonIDF').trigger('change');
 
-                    $("#StatusIDF").val(obj[0].StatusIDF);
-                    $('#StatusIDF').trigger('change');
+                    //$("#StatusIDF").val(obj[0].StatusIDF);
+                    //$('#StatusIDF').trigger('change');
                 }
             });
         }
@@ -449,11 +451,12 @@
                             iHTML += "<td>" + obj[i].OfficeID + "/" + obj[i].BranchID + "</td>";
                             iHTML += "<td>" + obj[i].IATANumber + "</td>";
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
+                            iHTML += "<td>" + obj[i].ADMRaisedDate + "</td>";
                             iHTML += "<td>" + obj[i].StatusName + "</td>";
                             iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].ADMIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") + '</button></td>';
                             iHTML += "<td>";
-                            iHTML += '<button class="btn btn-success" onclick="Get(' + obj[i].ADMIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';
-                            iHTML += '&nbsp;<button class="btn btn-danger" onclick="GeneralAction(' + obj[i].ADMIDP + ',1)"><i class="fa fa-trash nav-icon"></i>&nbsp;Delete</button>';
+                            iHTML += '<button style="display:block;margin-bottom:5px;" class="btn btn-success" onclick="Get(' + obj[i].ADMIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';
+                            iHTML += '<button class="btn btn-danger" onclick="GeneralAction(' + obj[i].ADMIDP + ',1)"><i class="fa fa-trash nav-icon"></i>&nbsp;Delete</button>';
                             iHTML += "</td>";
                             iHTML += "</tr>";
                         }
@@ -471,8 +474,8 @@
             $("#ReasonIDF").val(0);
             $('#ReasonIDF').trigger('change');
 
-            $("#StatusIDF").val(1);
-            $('#StatusIDF').trigger('change');
+            //$("#StatusIDF").val(1);
+            //$('#StatusIDF').trigger('change');
         }
 
         function FetchTicketDetail() {

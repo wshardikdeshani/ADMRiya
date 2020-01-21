@@ -14,6 +14,10 @@
         .error {
             color: #dc3545 !important;
         }
+
+        .projects td{
+            vertical-align:top;
+        }
     </style>
 }
 <div class="modal fade" id="Default">
@@ -137,7 +141,7 @@
 <div class="container-fluid">
     <input type="hidden" id="SearchStatusIDF" name="SearchStatusIDF" value="0" />
     <div class="row" id="DashboardStatusCount">
-
+        
     </div>
     <div class="card">
         <div class="card-header">
@@ -153,13 +157,13 @@
                                 <input type="text" class="form-control" id="SearchTicketID" name="SearchTicketID">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" style="display:none">
                             <div class="form-group">
                                 <label for="FromDate" class="control-label">From Date</label>
                                 <input type="text" class="form-control" id="FromDate" name="FromDate">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" style="display:none">
                             <div class="form-group">
                                 <label for="ToDate" class="control-label">To Date</label>
                                 <input type="text" class="form-control" id="ToDate" name="ToDate">
@@ -178,43 +182,49 @@
     </div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">ADM Ticket(s) Detail</h3>
+            <h3 class="card-title">ADM Details</h3>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped projects">
                 <thead>
                     <tr>
-                        <th style="width: 1%">#</th>
+                        <th id="FocusID" style="width: 1%">#</th>
                         <th style="width: 19%">Ticket ID</th>
                         <th style="width: 30%">Reason</th>
+                        <th style="width: 30%">Last Follow Up</th>
+                        <th style="width: 30%">ADM Detail</th>
+                        <th style="width: 30%">ACM Detail</th>
+                        <th style="width: 30%">Branch Name</th>
+                        <th style="width: 30%">Total Follow Ups</th>
                         <th style="width: 14%" class="text-center">Status</th>
-                        <th style="width: 36%"></th>
+                        <th style="width: 12%"></th>
                     </tr>
                 </thead>
                 <tbody id="data">
                     <tr>
-                        <td colspan="5" align="center"><div class="loader"></div></td>
+                        <td colspan="10" align="center"><div class="loader"></div></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="row p-2">
-            <div class="col-md-12">
-                <div style="float: left;">
-                    <label class="form-label" style="padding-top:5px">
-                        Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
-                    </label>
+        <div class="card-footer clearfix">
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="float: left;">
+                        <label class="form-label" style="padding-top:5px">
+                            Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
+                        </label>
+                    </div>
+                    <div style="float: right;text-align: right;">
+                        <button id="LeftEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
+                        <button id="Left" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+                        Page
+                        <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
+                        <button id="goBtn" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'C')">Go</button> &nbsp;
+                        <button id="Right" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
+                        <button id="RightEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                    </div>
                 </div>
-                <div style="float: right;text-align: right;">
-                    <button id="LeftEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
-                    <button id="Left" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
-                    Page
-                    <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
-                    <button id="goBtn" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'C')">Go</button> &nbsp;
-                    <button id="Right" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
-                    <button id="RightEnd" href="javascript:;" class="btn btn-warning" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
-                </div>
-                <div class="clearfix"></div>
             </div>
         </div>
     </div>
@@ -330,38 +340,44 @@
                     var iHTML = "";
 
                     if (obj.length === 0) {
-                        $("#data").html("<tr><td colspan='5' align='center'>No Data</td></tr>");
+                        $("#data").html("<tr><td colspan='10' align='center'>No Data</td></tr>");
                     }
                     else {
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
-                            iHTML += "<td><a>" + obj[i].TicketID + "</a><br /><small>Created " + obj[i].CreatedDateTime+"</small></td>";
+                            iHTML += "<td><a>" + obj[i].TicketID + "</a><br /><small>ADM Raised Date: " + obj[i].ADMRaisedDate + "</small></td>";
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
+                            iHTML += "<td>Date: <a>" + obj[i].LastFollowUpDate + "</a><br /><small>By: " + obj[i].LastFollowUpBy + "</small></td>";
+                            iHTML += "<td>Number: <a>" + obj[i].ADMNumber + "</a><br /><small>Amount: " + obj[i].ADMAmount + "</small></td>";
+                            iHTML += "<td>Number: <a>" + obj[i].ACMNumber + "</a><br /><small>Amount: " + obj[i].ACMAmount + "</small></td>";
+                            iHTML += "<td>" + obj[i].BranchID + "</td>";
+                            iHTML += "<td>" + obj[i].TotalFollowUp + "</td>";
 
                             if (obj[i].StatusName == 'New') {
-                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-success btn-sm'>" + obj[i].StatusName + "</button></td>";
+                                iHTML += "<td class='project-state'><span class='badge bg-success'>" + obj[i].StatusName + "</span></td>";
                             }
                             else if (obj[i].StatusName == 'Pending') {
-                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-primary btn-sm'>" + obj[i].StatusName + "</button></td>";
+                                iHTML += "<td class='project-state'><span class='badge bg-primary'>" + obj[i].StatusName + "</span></td>";
                             }
                             else if (obj[i].StatusName == 'Dispute') {
-                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-danger btn-sm'>" + obj[i].StatusName + "</button></td>";
+                                iHTML += "<td class='project-state'><span class='badge bg-danger'>" + obj[i].StatusName + "</span></td>";
                             }
                             else {
-                                iHTML += "<td class='project-state'><button type='button' class='btn btn-block btn-warning btn-sm'>" + obj[i].StatusName + "</button></td>";
+                                iHTML += "<td class='project-state'><span class='badge bg-warning'>" + obj[i].StatusName + "</span></td>";
                             }
 
                             iHTML += "<td class='project-actions text-right'>";
-                            iHTML += "<a class='btn btn-primary btn-sm' href='/ADMFollowUp/Index/" + obj[i].ADMIDP + "' target='_blank'><i class='fas fa-eye'></i>&nbsp;View</a>";
+                            iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-primary btn-sm' href='/ADMFollowUp/Index/" + obj[i].ADMIDP + "' target='_blank'><i class='fas fa-eye'></i>&nbsp;View All F-ups</a>";
                             if (@ViewBag.Role== 2) {
-                                iHTML += "&nbsp;<a class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;New Follow Up</a>";
+                                iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;Add Follow Up</a>";
                             }
-                            else if (@ViewBag.Role== 1 && obj[i].StatusName == 'Dispute') {
-                                iHTML += "&nbsp;<a class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;New Follow Up</a>";
+                            else if (@ViewBag.Role== 1) {
+                                if (obj[i].StatusName == 'Dispute' || obj[i].StatusName == 'ACM Received')
+                                    iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;Add Follow Up</a>";
                             }
                             if (obj[i].StatusName == 'ACM Received') {
-                                iHTML += "&nbsp;<a class='btn btn-warning btn-sm' href='javascript:void(0)' onclick='AddNewACMReceived(" + obj[i].ADMIDP + ", &quot;" + obj[i].ACMNumber + "&quot;," + obj[i].ACMAmount + ")'><i class='fas fa-hand-holding-usd'></i>&nbsp;ACM Received</a>";
+                                iHTML += "<a style='display:block;' class='btn btn-warning btn-sm' href='javascript:void(0)' onclick='AddNewACMReceived(" + obj[i].ADMIDP + ", &quot;" + obj[i].ACMNumber + "&quot;," + obj[i].ACMAmount + ")'><i class='fas fa-hand-holding-usd'></i>&nbsp;ACM Received</a>";
                             }
                             iHTML += "</td>";
                             iHTML += "</tr>";
@@ -508,7 +524,7 @@
                         iHTML += "<h3>" + obj[i].Request + "</h3>";
                         iHTML += "<p>" + obj[i].StatusName +"</p>";
                         iHTML += "</div>";
-                        iHTML += "<a href='javascript:void(0)' onclick='FilterTicketDetail(" + obj[i].StatusIDF + ")' class='small-box-footer'>More info <i class='fas fa-arrow-circle-right'></i></a>";
+                        iHTML += "<a href='#FocusID' onclick='FilterTicketDetail(" + obj[i].StatusIDF + ")' class='small-box-footer'>More <i class='fas fa-arrow-circle-right'></i></a>";
                         iHTML += "</div>";
                         iHTML += "</div>";
                     }
