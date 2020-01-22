@@ -1,4 +1,5 @@
-﻿using SQLClass;
+﻿using Newtonsoft.Json;
+using SQLClass;
 using SQLHelper;
 using SQLLogic;
 using System;
@@ -17,7 +18,21 @@ namespace ADMPro.Controllers
 
             if (dataStatus != null)
             {
-                ViewBag.StatusList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<StatusMasterClass>>(dataStatus.ToString());
+                ViewBag.StatusList = JsonConvert.DeserializeObject<List<StatusMasterClass>>(dataStatus.ToString());
+            }
+
+            object dataBranch = new UtilityLogic().GetAllBranch();
+
+            if (dataBranch != null)
+            {
+                ViewBag.BranchList = JsonConvert.DeserializeObject<List<UtilityClass>>(dataBranch.ToString());
+            }
+
+            object dataReason = new ReasonMasterLogic().ReasonMaster_Get_GetAll(0, true);
+
+            if (dataReason != null)
+            {
+                ViewBag.ReasonList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ReasonMasterClass>>(dataReason.ToString());
             }
 
             if (Request.QueryString.Count == 4) // Branch
@@ -82,9 +97,9 @@ namespace ADMPro.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetDashboardCount()
+        public JsonResult GetDashboardCount(string BranchID)
         {
-            object data = new UtilityLogic().DashboardCount();
+            object data = new UtilityLogic().DashboardCount(BranchID);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
     }

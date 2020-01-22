@@ -9,68 +9,60 @@
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="TicketID" class="control-label">Ticket ID</label>
-                            <input type="text" class="form-control numeric" id="TicketID" name="TicketID" disabled>
+                            <input type="text" class="form-control form-control-sm" id="TicketID" name="TicketID" disabled>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="IATANumber" class="control-label">IATA Number</label>
-                            <input type="text" class="form-control" id="IATANumber" name="IATANumber" disabled>
+                            <input type="text" class="form-control form-control-sm" id="IATANumber" name="IATANumber" disabled>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="ADMNumber" class="control-label">ADM Number</label>
-                            <input type="text" class="form-control" id="ADMNumber" name="ADMNumber" disabled>
+                            <input type="text" class="form-control form-control-sm" id="ADMNumber" name="ADMNumber" disabled>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="ADMAmount" class="control-label">ADM Amount</label>
-                            <input type="text" class="form-control numeric" id="ADMAmount" name="ADMAmount" disabled>
+                            <input type="text" class="form-control form-control-sm" id="ADMAmount" name="ADMAmount" disabled>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="OfficeID" class="control-label">Office ID</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
+                            <input type="text" class="form-control form-control-sm" id="OfficeID" name="OfficeID" disabled>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="BranchID" class="control-label">Branch</label>
-                            <input type="text" class="form-control" id="BranchID" name="BranchID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
-                            <input type="text" class="form-control" id="TicketIssueBranchID" name="TicketIssueBranchID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
-                            <input type="text" class="form-control" id="TicketAmount" name="TicketAmount" disabled>
+                            <input type="text" class="form-control form-control-sm" id="BranchID" name="BranchID" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-2">
                         <div class="form-group">
-                            <label for="ReasonName" class="control-label">Reason</label>
-                            <input type="text" class="form-control" id="ReasonName" name="ReasonName" disabled>
+                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
+                            <input type="text" class="form-control form-control-sm" id="TicketAmount" name="TicketAmount" disabled>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="ReasonName" class="control-label">Reason</label>
+                            <input type="text" class="form-control form-control-sm" id="ReasonName" name="ReasonName" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label for="RemarksAddByAudit" class="control-label">Remarks Add By Audit User/Manager</label>
-                            <input type="text" class="form-control" id="RemarksAddByAudit" name="RemarksAddByAudit" disabled>
+                            <input type="text" class="form-control form-control-sm" id="RemarksAddByAudit" name="RemarksAddByAudit" disabled>
                         </div>
                     </div>
                 </div>
@@ -122,6 +114,7 @@
                     $("#BranchID").val(obj[0].BranchID);
                     $("#ReasonName").val(obj[0].ReasonName);
                     $("#RemarksAddByAudit").val(obj[0].Remarks);
+                    $("#TicketAmount").val(obj[0].TicketAmount);
                 }
             });
         }
@@ -161,8 +154,8 @@
                             iHTML += "<span class='description'>Follow Up Date: " + obj[i].FolloUpDate + "</span>";
                             iHTML += "</div>";
                             iHTML += "<p><strong>Remarks</strong>: " + obj[i].Remarks + "</p>";
-                            iHTML += "<p><strong>Status</strong>: " + obj[i].StatusName + "</p>";
-                            if (obj[i].NextFollowUpDate != '') { 
+                            iHTML += "<p><strong>Follow Up Status: </strong>: " + obj[i].StatusName + "</p>";
+                            if (obj[i].NextFollowUpDate != '') {
                                 iHTML += "<p>Next Follow Up Date: " + obj[i].NextFollowUpDate + "</p>";
                             }
                             iHTML += "</div>";

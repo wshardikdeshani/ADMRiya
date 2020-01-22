@@ -15,11 +15,123 @@
             color: #dc3545 !important;
         }
 
-        .projects td{
-            vertical-align:top;
+        .projects td {
+            vertical-align: top;
+        }
+
+        .select2-selection__choice, .select2-selection__choice__remove {
+            background-color: #0069d9 !important;
+            border-color: #0062cc !important;
+            color: #fff !important;
         }
     </style>
 }
+<div class="modal fade" id="ADMDefault">
+    <div class="modal-dialog modal-lg">
+        <form role="form" id="ApplicationForm" method="post" class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New ADM</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ADMIDP" name="ADMIDP" value="0" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="TicketID" class="control-label">Ticket ID<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control numeric" id="TicketID" name="TicketID">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <label class="control-label">&nbsp;</label><br />
+                            <button id="DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="IATANumber" class="control-label">IATA Number</label>
+                            <input type="text" class="form-control" id="IATANumber" name="IATANumber" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ADMNumber" class="control-label">ADM Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ADMNumber" name="ADMNumber">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ADMAmount" class="control-label">ADM Amount<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control numeric" id="ADMAmount" name="ADMAmount">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="OfficeID" class="control-label">Office ID</label>
+                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="BranchID" class="control-label">Branch</label>
+                            <input type="text" class="form-control" id="BranchID" name="BranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
+                            <input type="text" class="form-control" id="TicketIssueBranchID" name="TicketIssueBranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
+                            <input type="text" class="form-control" id="TicketAmount" name="TicketAmount" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ReasonIDF" class="control-label">Reason<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="ReasonIDF" name="ReasonIDF">
+                                <option value="0" selected>Select Reason</option>
+                                @{
+                                    if (ViewBag.ReasonList != null)
+                                    {
+                                        foreach (SQLClass.ReasonMasterClass rm in ViewBag.ReasonList)
+                                        {
+                                            <option value="@rm.ReasonIDP">@rm.ReasonName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="Remarks" class="control-label">Remarks<span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="Remarks" name="Remarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" onclick="Save()" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="modal fade" id="Default">
     <div class="modal-dialog modal-lg">
         <form role="form" id="ApplicationForm" method="post" class="modal-content">
@@ -141,38 +253,76 @@
 <div class="container-fluid">
     <input type="hidden" id="SearchStatusIDF" name="SearchStatusIDF" value="0" />
     <div class="row" id="DashboardStatusCount">
-        
+
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Search</h3>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Search</h3>
+                </div>
+                <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="SearchTicketID" class="control-label">Ticket ID</label>
-                                <input type="text" class="form-control" id="SearchTicketID" name="SearchTicketID">
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="display:none">
-                            <div class="form-group">
-                                <label for="FromDate" class="control-label">From Date</label>
-                                <input type="text" class="form-control" id="FromDate" name="FromDate">
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="display:none">
-                            <div class="form-group">
-                                <label for="ToDate" class="control-label">To Date</label>
-                                <input type="text" class="form-control" id="ToDate" name="ToDate">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="ADMNumber" class="control-label">&nbsp;</label><br />
-                                <button id="DetailButton" type="button" onclick="FilterTicketDetail(0)" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                        <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="SearchTicketID" class="control-label">Ticket ID</label>
+                                        <input type="text" class="form-control" id="SearchTicketID" name="SearchTicketID">
+                                    </div>
+                                </div>
+                                <div class="col-md-3" style="display:none">
+                                    <div class="form-group">
+                                        <label for="FromDate" class="control-label">From Date</label>
+                                        <input type="text" class="form-control" id="FromDate" name="FromDate">
+                                    </div>
+                                </div>
+                                <div class="col-md-3" style="display:none">
+                                    <div class="form-group">
+                                        <label for="ToDate" class="control-label">To Date</label>
+                                        <input type="text" class="form-control" id="ToDate" name="ToDate">
+                                    </div>
+                                </div>
+                                @{
+                                    if (ViewBag.Role == "1")
+                                    {
+                                        <div class="col-md-3">
+                                            <label>Branch</label>
+                                            <select class="select2" id="SearchBranch" multiple="multiple" data-placeholder="Select a Branch" style="width: 100%;">
+                                                @{
+                                                    if (ViewBag.BranchList != null)
+                                                    {
+                                                        foreach (SQLClass.UtilityClass sm in ViewBag.BranchList)
+                                                        {
+                                                            <option value="@sm.Branch">@sm.Branch</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+                                }
+                                <div class="col-md-3">
+                                    <label>Status</label>
+                                    <select class="select2" id="SearchStatusIDF2" data-placeholder="Select a Status" style="width: 100%;">
+                                        <option value="0">Select Status</option>
+                                        @{
+                                            if (ViewBag.StatusList != null)
+                                            {
+                                                foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                                {
+                                                    <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="ADMNumber" class="control-label">&nbsp;</label><br />
+                                        <button id="DetailButton" type="button" onclick="FilterTicketDetail(0)" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -180,58 +330,82 @@
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">ADM Details</h3>
-        </div>
-        <div class="card-body p-0">
-            <table class="table table-striped projects">
-                <thead>
-                    <tr>
-                        <th id="FocusID" style="width: 1%">#</th>
-                        <th style="width: 19%">Ticket ID</th>
-                        <th style="width: 30%">Reason</th>
-                        <th style="width: 30%">Last Follow Up</th>
-                        <th style="width: 30%">ADM Detail</th>
-                        <th style="width: 30%">ACM Detail</th>
-                        <th style="width: 30%">Branch Name</th>
-                        <th style="width: 30%">Total Follow Ups</th>
-                        <th style="width: 14%" class="text-center">Status</th>
-                        <th style="width: 12%"></th>
-                    </tr>
-                </thead>
-                <tbody id="data">
-                    <tr>
-                        <td colspan="10" align="center"><div class="loader"></div></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="card-footer clearfix">
-            <div class="row">
-                <div class="col-md-12">
-                    <div style="float: left;">
-                        <label class="form-label" style="padding-top:5px">
-                            Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
-                        </label>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6" style="padding-top:10px;">
+                            <h3 class="card-title">ADM Details</h3>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="submit" onclick="AddNewADM()" class="btn btn-primary"><i class='fa fa-plus'></i>&nbsp;Add New ADM</button>
+                        </div>
                     </div>
-                    <div style="float: right;text-align: right;">
-                        <button id="LeftEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
-                        <button id="Left" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
-                        Page
-                        <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
-                        <button id="goBtn" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'C')">Go</button> &nbsp;
-                        <button id="Right" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
-                        <button id="RightEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered table-condensed projects" width="100%">
+                        <thead>
+                            <tr>
+                                <th id="FocusID">#</th>
+                                <th>Ticket ID</th>
+                                @{
+                                    if (ViewBag.Role == "1")
+                                    {
+                                        <th>Branch</th>
+                                    }
+                                }
+                                <th>Reason</th>
+                                <th>ADM Detail</th>
+                                <th>ACM Detail</th>
+                                <th>Follow Up Detail</th>
+                                <th class="text-center">Status</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data">
+                            <tr>
+                                @{
+                                    if (ViewBag.Role == "1")
+                                    {
+                                        <td colspan="9" align="center"><div class="loader"></div></td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="8" align="center"><div class="loader"></div></td>
+                                    }
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer clearfix">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="float: left;">
+                                <label class="form-label" style="padding-top:5px">
+                                    Showing <span id="FirstRecord"></span> to <span id="LastRecord"></span> of <span id="TotalRecords"></span>
+                                </label>
+                            </div>
+                            <div style="float: right;text-align: right;">
+                                <button id="LeftEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'LE')"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>&nbsp;
+                                <button id="Left" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'L')"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+                                Page
+                                <input type="text" name="text" id="NavigationValue" value="1" class="form-control" style="width:10%;display:inline-block" />&nbsp; of <span id="TotalPages"></span> &nbsp;
+                                <button id="goBtn" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'C')">Go</button> &nbsp;
+                                <button id="Right" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'R')"><i class="fa fa-angle-right" aria-hidden="true"></i></button>&nbsp;
+                                <button id="RightEnd" href="javascript:;" class="btn btn-secondary" onclick="GetData(10,1,'RE')"><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-    @section scripts{
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
-        <script>
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+    <script>
         $(document).ready(function () {
             jQuery.validator.addMethod("notEqualTo", function (v, e, p) {
                 return this.optional(e) || v != p;
@@ -313,15 +487,17 @@
 
             $("#NavigationValue").val(PageNo);
 
+            var SearchStatus = ($('#SearchStatusIDF').val() == '0' ? $('#SearchStatusIDF2').val() : $('#SearchStatusIDF').val());
+
             var mData = {
-                BranchID: '@ViewBag.BranchID',
+                BranchID: (@ViewBag.Role == 1 ? $('#SearchBranch').val().join(", ") : '@ViewBag.BranchID'),
                 Role: @ViewBag.Role,
                 RowsPerPage: RowPerPage,
                 PageNumber: PageNo,
                 TicketID: $("#SearchTicketID").val(),
                 FromDate: $("#FromDate").val(),
                 ToDate: $("#ToDate").val(),
-                StatusIDF: $("#SearchStatusIDF").val()
+                StatusIDF: SearchStatus
             }
 
             $.ajax({
@@ -340,19 +516,25 @@
                     var iHTML = "";
 
                     if (obj.length === 0) {
-                        $("#data").html("<tr><td colspan='10' align='center'>No Data</td></tr>");
+                        if (@ViewBag.Role == 1) {
+                            $("#data").html("<tr><td colspan='9' align='center'>No Data</td></tr>");
+                        }
+                        else {
+                            $("#data").html("<tr><td colspan='8' align='center'>No Data</td></tr>");
+                        }
                     }
                     else {
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
-                            iHTML += "<td><a>" + obj[i].TicketID + "</a><br /><small>ADM Raised Date: " + obj[i].ADMRaisedDate + "</small></td>";
+                            iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "</td>";
+                            if (@ViewBag.Role == 1) {
+                                iHTML += "<td>" + obj[i].BranchID + "</td>";
+                            }
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
-                            iHTML += "<td>Date: <a>" + obj[i].LastFollowUpDate + "</a><br /><small>By: " + obj[i].LastFollowUpBy + "</small></td>";
-                            iHTML += "<td>Number: <a>" + obj[i].ADMNumber + "</a><br /><small>Amount: " + obj[i].ADMAmount + "</small></td>";
-                            iHTML += "<td>Number: <a>" + obj[i].ACMNumber + "</a><br /><small>Amount: " + obj[i].ACMAmount + "</small></td>";
-                            iHTML += "<td>" + obj[i].BranchID + "</td>";
-                            iHTML += "<td>" + obj[i].TotalFollowUp + "</td>";
+                            iHTML += "<td>Number: " + obj[i].ADMNumber + "<br/>Amount: " + obj[i].ADMAmount + "</td>";
+                            iHTML += "<td>Number: " + obj[i].ACMNumber + "<br/>Amount: " + obj[i].ACMAmount + "</td>";
+                            iHTML += "<td>Date: " + obj[i].LastFollowUpDate + "<br/>By: " + obj[i].LastFollowUpBy + "<br/>Total Follow Ups: " + obj[i].TotalFollowUp + "</td>";
 
                             if (obj[i].StatusName == 'New') {
                                 iHTML += "<td class='project-state'><span class='badge bg-success'>" + obj[i].StatusName + "</span></td>";
@@ -508,10 +690,16 @@
         }
 
         function GetDashboardCount() {
+            var mData = {
+                BranchID: '@ViewBag.BranchID'
+            }
+
             $.ajax({
                 type: "POST",
                 url: "/Home/GetDashboardCount",
-                data: "",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
                 success: function (mRes) {
                     var obj = JSON.parse(mRes);
 
@@ -536,5 +724,57 @@
                 }
             });
         }
-        </script>
-    }
+
+        /*ADD NEW ADM*/
+        function AddNewADM() {
+            ClearControlsADM();
+
+            $("#ADMDefault").modal('show');
+        }
+
+        function ClearControlsADM() {
+            $("#ADMIDP").val(0);
+            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount").val('');
+
+            $("#ReasonIDF").val(0);
+            $('#ReasonIDF').trigger('change');
+        }
+
+        function FetchTicketDetail() {
+            if ($("#TicketID").val().length <= 0) {
+                toastr.error('Please enter ticket id');
+                return false;
+            }
+
+            $("#DetailButton").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
+
+            var mData = {
+                TicketID: $("#TicketID").val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/ADMHeader/GetTicketDetail",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    var obj = JSON.parse(mRes);
+                    if (obj.length > 0) {
+                        $("#IATANumber").val(obj[0].IATANumber);
+                        $("#OfficeID").val(obj[0].OfficeID);
+                        $("#BranchID").val(obj[0].BranchID);
+                        $("#TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
+                        $("#TicketAmount").val(obj[0].TicketAmount);
+                    }
+                    else {
+                        toastr.error('No ticket detail found. Please try again.');
+
+                        $("#IATANumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount").val('');
+                    }
+                    $("#DetailButton").html('<i class="fas fa-search"></i>');
+                }
+            });
+        }
+    </script>
+}

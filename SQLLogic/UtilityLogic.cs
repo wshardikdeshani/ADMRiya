@@ -10,9 +10,14 @@ namespace SQLLogic
 {
     public class UtilityLogic
     {
-        public object DashboardCount()
+        public object DashboardCount(string BranchID)
         {
-            return new SqlHelper().GetJsonResult("DashboardCount", new object[,] { });
+            return new SqlHelper().GetJsonResult("DashboardCount", new object[,] { { "BranchID", BranchID } });
+        }
+
+        public object GetAllBranch()
+        {
+            return new SqlHelper().GetJsonResult("GetAllBranch", new object[,] { });
         }
     }
 }
