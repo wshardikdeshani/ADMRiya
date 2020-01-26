@@ -28,7 +28,7 @@
 }
 <div class="modal fade" id="ADMDefault">
     <div class="modal-dialog modal-lg">
-        <form role="form" id="ApplicationForm" method="post" class="modal-content">
+        <form role="form" id="ADM_ApplicationForm" method="post" class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add New ADM</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -37,71 +37,72 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="ADMIDP" name="ADMIDP" value="0" />
+                <input type="hidden" id="OldFileName" name="OldFileName" />
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="TicketID" class="control-label">Ticket ID<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control numeric" id="TicketID" name="TicketID">
+                            <label for="ADM_TicketID" class="control-label">Ticket ID<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control numeric" id="ADM_TicketID" name="ADM_TicketID">
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <label class="control-label">&nbsp;</label><br />
-                            <button id="DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                            <button id="ADM_DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="IATANumber" class="control-label">IATA Number</label>
-                            <input type="text" class="form-control" id="IATANumber" name="IATANumber" disabled>
+                            <label for="ADM_IATANumber" class="control-label">IATA Number</label>
+                            <input type="text" class="form-control" id="ADM_IATANumber" name="ADM_IATANumber" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ADMNumber" class="control-label">ADM Number<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="ADMNumber" name="ADMNumber">
+                            <label for="ADM_ADMNumber" class="control-label">ADM Number<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ADM_ADMNumber" name="ADM_ADMNumber">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ADMAmount" class="control-label">ADM Amount<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control numeric" id="ADMAmount" name="ADMAmount">
+                            <label for="ADM_ADMAmount" class="control-label">ADM Amount<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control numeric" id="ADM_ADMAmount" name="ADM_ADMAmount">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Office ID</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
+                            <label for="ADM_OfficeID" class="control-label">Office ID</label>
+                            <input type="text" class="form-control" id="ADM_OfficeID" name="ADM_OfficeID" disabled>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="BranchID" class="control-label">Branch</label>
-                            <input type="text" class="form-control" id="BranchID" name="BranchID" disabled>
+                            <label for="ADM_BranchID" class="control-label">Branch</label>
+                            <input type="text" class="form-control" id="ADM_BranchID" name="ADM_BranchID" disabled>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
-                            <input type="text" class="form-control" id="TicketIssueBranchID" name="TicketIssueBranchID" disabled>
+                            <label for="ADM_TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
+                            <input type="text" class="form-control" id="ADM_TicketIssueBranchID" name="ADM_TicketIssueBranchID" disabled>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
-                            <input type="text" class="form-control" id="TicketAmount" name="TicketAmount" disabled>
+                            <label for="ADM_TicketAmount" class="control-label">Ticket Amount</label>
+                            <input type="text" class="form-control" id="ADM_TicketAmount" name="ADM_TicketAmount" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ReasonIDF" class="control-label">Reason<span class="text-danger">*</span></label>
-                            <select class="form-control select2" style="width: 100%;" id="ReasonIDF" name="ReasonIDF">
+                            <label for="ADM_ReasonIDF" class="control-label">Reason<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="ADM_ReasonIDF" name="ADM_ReasonIDF">
                                 <option value="0" selected>Select Reason</option>
                                 @{
                                     if (ViewBag.ReasonList != null)
@@ -115,19 +116,31 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ADMFile" class="control-label">
+                                Upload File
+                                <span class="text-sm text-danger" id="AlreadyUploadedFileName"></span>
+                            </label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="ADMFile" name="ADMFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="Remarks" class="control-label">Remarks<span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="Remarks" name="Remarks"></textarea>
+                            <label for="ADM_Remarks" class="control-label">Remarks<span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="ADM_Remarks" name="ADM_Remarks"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" onclick="Save()" class="btn btn-primary">Save</button>
+                <button type="submit" onclick="ADM_Save()" class="btn btn-primary">Save</button>
             </div>
         </form>
     </div>
@@ -237,8 +250,46 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label for="ACM_ADMAmount" class="control-label">ADM Amount</label>
+                            <input type="text" class="form-control numeric" id="ACM_ADMAmount" name="ACM_ADMAmount" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label for="ACMAmount" class="control-label">ACM Amount</label>
-                            <input type="text" class="form-control numeric" id="ACMAmount" name="ACMAmount">
+                            <input type="text" class="form-control numeric" id="ACMAmount" name="ACMAmount" onkeyup="CalculateACMAmount()">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ACMAmount_Diff" class="control-label">Amount Diff.</label>
+                            <input type="text" class="form-control numeric" id="ACMAmount_Diff" name="ACMAmount_Diff">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="select2" id="ACM_StatusIDF" data-placeholder="Select a Status" style="width: 100%;">
+                                <option value="0">Select Status</option>
+                                @{
+                                    if (ViewBag.StatusList != null)
+                                    {
+                                        foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                        {
+                                            if (sm.StatusIDP == 9 || sm.StatusIDP == 10)
+                                            {
+                                                <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -252,6 +303,8 @@
 </div>
 <div class="container-fluid">
     <input type="hidden" id="SearchStatusIDF" name="SearchStatusIDF" value="0" />
+    <input type="hidden" id="SortingID" name="SortingID" />
+    <input type="hidden" id="SortingOrderBy" name="SortingOrderBy" />
     <div class="row" id="DashboardStatusCount">
 
     </div>
@@ -286,7 +339,7 @@
                                 @{
                                     if (ViewBag.Role == "1")
                                     {
-                                        <div class="col-md-3">
+                                        <div class="col-md-5">
                                             <label>Branch</label>
                                             <select class="select2" id="SearchBranch" multiple="multiple" data-placeholder="Select a Branch" style="width: 100%;">
                                                 @{
@@ -317,7 +370,7 @@
                                         }
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-1">
                                     <div class="form-group">
                                         <label for="ADMNumber" class="control-label">&nbsp;</label><br />
                                         <button id="DetailButton" type="button" onclick="FilterTicketDetail(0)" class="btn btn-primary"><i class="fas fa-search"></i></button>
@@ -339,28 +392,50 @@
                             <h3 class="card-title">ADM Details</h3>
                         </div>
                         <div class="col-md-6 text-right">
-                            <button type="submit" onclick="AddNewADM()" class="btn btn-primary"><i class='fa fa-plus'></i>&nbsp;Add New ADM</button>
+                            @if (ViewBag.Role == "1")
+                            {
+                                <button type="submit" onclick="AddNewADM()" class="btn btn-primary"><i class='fa fa-plus'></i>&nbsp;Add New ADM</button>
+                            }
+                            &nbsp;&nbsp;
+                            <a href="/Home/ExportToExcel" class="btn btn-primary">
+                                <span class="m-l-5"><i class="fa fa-plus"></i> Export to Excel</span>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-striped table-bordered table-condensed projects" width="100%">
+                <div class="card-body p-0">
+                    <table class="table table-striped table-bordered table-condensed projects">
                         <thead>
                             <tr>
-                                <th id="FocusID">#</th>
-                                <th>Ticket ID</th>
+                                <th id="FocusID" onclick="Sorting('SrNo')">
+                                    #
+                                    <span class="fa fa-arrow-up" id="SortingSrNo"></span>
+                                </th>
+                                <th onclick="Sorting('TicketID')">
+                                    Ticket ID
+                                    <span class="fa fa-arrow-up" id="SortingTicketID"></span>
+                                </th>
                                 @{
                                     if (ViewBag.Role == "1")
                                     {
-                                        <th>Branch</th>
+                                        <th onclick="Sorting('BranchID')">
+                                            Branch
+                                            <span class="fa fa-arrow-up" id="SortingBranch"></span>
+                                        </th>
                                     }
                                 }
                                 <th>Reason</th>
                                 <th>ADM Detail</th>
                                 <th>ACM Detail</th>
-                                <th>Follow Up Detail</th>
-                                <th class="text-center">Status</th>
-                                <th>Operation</th>
+                                <th onclick="Sorting('LastFollowUpDate')">
+                                    Last Follow Up Detail
+                                    <span class="fa fa-arrow-up" id="SortingLastFollowUpDate"></span>
+                                </th>
+                                <th class="text-center" onclick="Sorting('StatusName')">
+                                    Status
+                                    <span class="fa fa-arrow-up" id="SortingStatusName"></span>
+                                </th>
+                                <th width="15%">Operation</th>
                             </tr>
                         </thead>
                         <tbody id="data">
@@ -436,11 +511,82 @@
                 }
             });
 
+            bsCustomFileInput.init();
+
             GetData(10, 1, '');
         });
 
         function FilterTicketDetail(id) {
             $("#SearchStatusIDF").val(id);
+
+            GetData(10, 1, '');
+        }
+
+        function Sorting(SortingID) {
+            $("#SortingID").val(SortingID);
+
+            switch (SortingID) {
+                case "SrNo":
+                    if ($("#SortingSrNo").hasClass('fa-arrow-up') == true) {
+                        $("#SortingOrderBy").val('ASC');
+                        $("#SortingSrNo").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+                    }
+                    else if ($("#SortingSrNo").hasClass('fa-arrow-down') == true) {
+                        $("#SortingOrderBy").val('DESC');
+                        $("#SortingSrNo").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+                    }
+
+                    $("#SortingTicketID, #SortingBranch, #SortingLastFollowUpDate, #SortingStatusName").addClass('fa-arrow-up');
+                    break;
+                case "TicketID":
+                    if ($("#SortingTicketID").hasClass('fa-arrow-up') == true) {
+                        $("#SortingOrderBy").val('ASC');
+                        $("#SortingTicketID").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+                    }
+                    else if ($("#SortingTicketID").hasClass('fa-arrow-down') == true) {
+                        $("#SortingOrderBy").val('DESC');
+                        $("#SortingTicketID").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+                    }
+
+                    $("#SortingSrNo, #SortingBranch, #SortingLastFollowUpDate, #SortingStatusName").addClass('fa-arrow-up');
+                    break;
+                case "BranchID":
+                    if ($("#SortingBranch").hasClass('fa-arrow-up') == true) {
+                        $("#SortingOrderBy").val('ASC');
+                        $("#SortingBranch").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+                    }
+                    else if ($("#SortingBranch").hasClass('fa-arrow-down') == true) {
+                        $("#SortingOrderBy").val('DESC');
+                        $("#SortingBranch").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+                    }
+
+                    $("#SortingSrNo, #SortingTicketID, #SortingLastFollowUpDate, #SortingStatusName").addClass('fa-arrow-up');
+                    break;
+                case "LastFollowUpDate":
+                    if ($("#SortingLastFollowUpDate").hasClass('fa-arrow-up') == true) {
+                        $("#SortingOrderBy").val('ASC');
+                        $("#SortingLastFollowUpDate").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+                    }
+                    else if ($("#SortingLastFollowUpDate").hasClass('fa-arrow-down') == true) {
+                        $("#SortingOrderBy").val('DESC');
+                        $("#SortingLastFollowUpDate").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+                    }
+
+                    $("#SortingSrNo, #SortingTicketID, #SortingBranch, #SortingStatusName").addClass('fa-arrow-up');
+                    break;
+                case "StatusName":
+                    if ($("#SortingStatusName").hasClass('fa-arrow-up') == true) {
+                        $("#SortingOrderBy").val('ASC');
+                        $("#SortingStatusName").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+                    }
+                    else if ($("#SortingStatusName").hasClass('fa-arrow-down') == true) {
+                        $("#SortingOrderBy").val('DESC');
+                        $("#SortingStatusName").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+                    }
+
+                    $("#SortingSrNo, #SortingTicketID, #SortingBranch, #SortingLastFollowUpDate").addClass('fa-arrow-up');
+                    break;
+            }
 
             GetData(10, 1, '');
         }
@@ -454,20 +600,20 @@
                     PageNo = navValue - 1;
                 }
 
-                $("#Left").removeClass("btn-info").addClass("btn-warning");
-                $("#LeftEnd, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#Left").removeClass("btn-info").addClass("btn-info");
+                $("#LeftEnd, #goBtn, #Right, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'LE') {
                 PageNo = 1;
 
-                $("#LeftEnd").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#LeftEnd").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #goBtn, #Right, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'C') {
                 PageNo = navValue;
 
-                $("#goBtn").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #LeftEnd, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#goBtn").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #LeftEnd, #Right, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'R') {
                 if (totalPage > navValue)
@@ -475,14 +621,14 @@
                 else
                     PageNo = totalPage;
 
-                $("#Right").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #LeftEnd, #goBtn, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#Right").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #LeftEnd, #goBtn, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'RE') {
                 PageNo = totalPage;
 
-                $("#RightEnd").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #LeftEnd, #goBtn, #Right").removeClass("btn-warning").addClass("btn-info");
+                $("#RightEnd").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #LeftEnd, #goBtn, #Right").removeClass("btn-info").addClass("btn-secondary");
             }
 
             $("#NavigationValue").val(PageNo);
@@ -497,7 +643,9 @@
                 TicketID: $("#SearchTicketID").val(),
                 FromDate: $("#FromDate").val(),
                 ToDate: $("#ToDate").val(),
-                StatusIDF: SearchStatus
+                StatusIDF: SearchStatus,
+                OrderByColumnName: $("#SortingID").val(),
+                OrderBy: $("#SortingOrderBy").val()
             }
 
             $.ajax({
@@ -524,19 +672,26 @@
                         }
                     }
                     else {
+                        var URL = window.location.origin;
+
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
-                            iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "</td>";
+                            iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "" + (obj[i].ADMFileName != null ? "<br/><a href='" + URL + "/ADMFiles/" + obj[i].ADMFileName + "' target='_blank'>View File</a>" : "") + "</td>";
                             if (@ViewBag.Role == 1) {
                                 iHTML += "<td>" + obj[i].BranchID + "</td>";
                             }
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
                             iHTML += "<td>Number: " + obj[i].ADMNumber + "<br/>Amount: " + obj[i].ADMAmount + "</td>";
-                            iHTML += "<td>Number: " + obj[i].ACMNumber + "<br/>Amount: " + obj[i].ACMAmount + "</td>";
+                            if (obj[i].ACMNumber == '' && obj[i].ACMAmount == 0) {
+                                iHTML += "<td><h3 class='text-center'>-</h3></td>";
+                            }
+                            else {
+                                iHTML += "<td>Number: " + obj[i].ACMNumber + "<br/>Amount: " + obj[i].ACMAmount + "</td>";
+                            }
                             iHTML += "<td>Date: " + obj[i].LastFollowUpDate + "<br/>By: " + obj[i].LastFollowUpBy + "<br/>Total Follow Ups: " + obj[i].TotalFollowUp + "</td>";
-
-                            if (obj[i].StatusName == 'New') {
+                            iHTML += "<td class='project-state'><strong>" + obj[i].StatusName + "</strong></td>";
+                            /*if (obj[i].StatusName == 'New') {
                                 iHTML += "<td class='project-state'><span class='badge bg-success'>" + obj[i].StatusName + "</span></td>";
                             }
                             else if (obj[i].StatusName == 'Pending') {
@@ -547,7 +702,7 @@
                             }
                             else {
                                 iHTML += "<td class='project-state'><span class='badge bg-warning'>" + obj[i].StatusName + "</span></td>";
-                            }
+                            }*/
 
                             iHTML += "<td class='project-actions text-right'>";
                             iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-primary btn-sm' href='/ADMFollowUp/Index/" + obj[i].ADMIDP + "' target='_blank'><i class='fas fa-eye'></i>&nbsp;View All F-ups</a>";
@@ -559,7 +714,7 @@
                                     iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;Add Follow Up</a>";
                             }
                             if (obj[i].StatusName == 'ACM Received') {
-                                iHTML += "<a style='display:block;' class='btn btn-warning btn-sm' href='javascript:void(0)' onclick='AddNewACMReceived(" + obj[i].ADMIDP + ", &quot;" + obj[i].ACMNumber + "&quot;," + obj[i].ACMAmount + ")'><i class='fas fa-hand-holding-usd'></i>&nbsp;ACM Received</a>";
+                                iHTML += "<a style='display:block;' class='btn btn-warning btn-sm' href='javascript:void(0)' onclick='AddNewACMReceived(" + obj[i].ADMIDP + ", &quot;" + obj[i].ACMNumber + "&quot;," + obj[i].ACMAmount + "," + obj[i].ADMAmount + ")'><i class='fas fa-hand-holding-usd'></i>&nbsp;ACM Received</a>";
                             }
                             iHTML += "</td>";
                             iHTML += "</tr>";
@@ -649,12 +804,26 @@
             $('#StatusIDF').trigger('change');
         }
 
-        function AddNewACMReceived(id, ACMNo,ACMAmount) {
+        function AddNewACMReceived(id, ACMNo, ACMAmount, ADMAmount) {
             $("#ACM_ADMIDF").val(id);
             $("#ACMNumber").val(ACMNo);
             $("#ACMAmount").val(ACMAmount);
+            $("#ACM_ADMAmount").val(ADMAmount);
+
+            var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
+
+            $("#ACMAmount_Diff").val(AmountDiff);
 
             $("#ACMReceivedDefault").modal('show');
+        }
+
+        function CalculateACMAmount() {
+            var ACMAmount = $("#ACMAmount").val();
+            var ADMAmount = $("#ACM_ADMAmount").val();
+
+            var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
+
+            $("#ACMAmount_Diff").val(AmountDiff);
         }
 
         function UpdateACMDetail() {
@@ -662,6 +831,7 @@
                 ADMIDP: $("#ACM_ADMIDF").val()
                 , ACMNumber: $("#ACMNumber").val()
                 , ACMAmount: $("#ACMAmount").val()
+                , StatusIDF: $("#ACM_StatusIDF").val()
             }
 
             $.ajax({
@@ -710,7 +880,7 @@
                         iHTML += "<div class='small-box bg-info'>";
                         iHTML += "<div class='inner'>";
                         iHTML += "<h3>" + obj[i].Request + "</h3>";
-                        iHTML += "<p>" + obj[i].StatusName +"</p>";
+                        iHTML += "<p class='sm'>" + obj[i].StatusName +"</p>";
                         iHTML += "</div>";
                         iHTML += "<a href='#FocusID' onclick='FilterTicketDetail(" + obj[i].StatusIDF + ")' class='small-box-footer'>More <i class='fas fa-arrow-circle-right'></i></a>";
                         iHTML += "</div>";
@@ -734,22 +904,22 @@
 
         function ClearControlsADM() {
             $("#ADMIDP").val(0);
-            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount").val('');
+            $("#ADM_TicketID, #ADM_IATANumber, #ADM_ADMNumber, #ADM_OfficeID, #ADM_BranchID, #ADM_TicketIssueBranchID, #ADM_TicketAmount, #ADM_Remarks, #ADM_ADMAmount").val('');
 
-            $("#ReasonIDF").val(0);
-            $('#ReasonIDF').trigger('change');
+            $("#ADM_ReasonIDF").val(0);
+            $('#ADM_ReasonIDF').trigger('change');
         }
 
         function FetchTicketDetail() {
-            if ($("#TicketID").val().length <= 0) {
+            if ($("#ADM_TicketID").val().length <= 0) {
                 toastr.error('Please enter ticket id');
                 return false;
             }
 
-            $("#DetailButton").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
+            $("#ADM_DetailButton").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
 
             var mData = {
-                TicketID: $("#TicketID").val()
+                TicketID: $("#ADM_TicketID").val()
             }
 
             $.ajax({
@@ -761,18 +931,117 @@
                 success: function (mRes) {
                     var obj = JSON.parse(mRes);
                     if (obj.length > 0) {
-                        $("#IATANumber").val(obj[0].IATANumber);
-                        $("#OfficeID").val(obj[0].OfficeID);
-                        $("#BranchID").val(obj[0].BranchID);
-                        $("#TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
-                        $("#TicketAmount").val(obj[0].TicketAmount);
+                        $("#ADM_IATANumber").val(obj[0].IATANumber);
+                        $("#ADM_OfficeID").val(obj[0].OfficeID);
+                        $("#ADM_BranchID").val(obj[0].BranchID);
+                        $("#ADM_TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
+                        $("#ADM_TicketAmount").val(obj[0].TicketAmount);
                     }
                     else {
                         toastr.error('No ticket detail found. Please try again.');
 
-                        $("#IATANumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount").val('');
+                        $("#ADM_IATANumber, #ADM_OfficeID, #ADM_BranchID, #ADM_TicketIssueBranchID, #ADM_TicketAmount").val('');
                     }
-                    $("#DetailButton").html('<i class="fas fa-search"></i>');
+                    $("#ADM_DetailButton").html('<i class="fas fa-search"></i>');
+                }
+            });
+        }
+
+        function ADM_Save() {
+            $("#ADM_ApplicationForm").validate({
+                rules: {
+                    TicketID: "required",
+                    IATANumber: "required",
+                    ADMNumber: "required",
+                    ADMAmount: "required",
+                    OfficeID: "required",
+                    BranchID: "required",
+                    TicketIssueBranchID: "required",
+                    TicketAmount: "required",
+                    Remarks: "required",
+                    ReasonIDF: {
+                        required: true,
+                        notEqualTo: "0"
+                    }
+                    //StatusIDF: {
+                    //    required: true,
+                    //    notEqualTo: "0"
+                    //}
+                },
+                messages: {
+                    TicketID: "Ticket ID require.",
+                    IATANumber: "IATA number require.",
+                    ADMNumber: "ADM number require.",
+                    ADMAmount: "ADM amount require.",
+                    OfficeID: "Office id require.",
+                    BranchID: "Branch id require.",
+                    TicketIssueBranchID: "Ticket issue branch id require.",
+                    TicketAmount: "Ticket amount require.",
+                    Remarks: "Remarks require.",
+                    ReasonIDF: {
+                        required: "Reason require.",
+                        notEqualTo: "Reason require."
+                    }
+                    //StatusIDF: {
+                    //    required: "Status require.",
+                    //    notEqualTo: "Status require."
+                    //}
+                },
+                submitHandler: function (form) {
+                    if (window.FormData !== undefined) {
+                        var fileUpload = $("#ADMFile").get(0);
+                        var files = fileUpload.files;
+
+                        // Create FormData object
+                        var fileData = new FormData();
+
+                        // Looping over all files and add it to FormData object
+                        for (var i = 0; i < files.length; i++) {
+                            fileData.append(files[i].name, files[i]);
+                        }
+
+                        fileData.append('ADMIDP', $("#ADMIDP").val());
+                        fileData.append('IATANumber', $("#ADM_IATANumber").val());
+                        fileData.append('OldFileName', $("#OldFileName").val());
+                        fileData.append('ADMNumber', $("#ADM_ADMNumber").val());
+                        fileData.append('ADMAmount', $("#ADM_ADMAmount").val());
+                        fileData.append('TicketID', $("#ADM_TicketID").val());
+                        fileData.append('OfficeID', $("#ADM_OfficeID").val());
+                        fileData.append('BranchID', $("#ADM_BranchID").val());
+                        fileData.append('TicketIssueBranchID', $("#ADM_TicketIssueBranchID").val());
+                        fileData.append('TicketAmount', $("#ADM_TicketAmount").val());
+                        fileData.append('ReasonIDF', $("#ADM_ReasonIDF").val());
+                        fileData.append('Remarks', $("#ADM_Remarks").val());
+
+                        $.ajax({
+                            url: '/ADMHeader/Save',
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: fileData,
+                            success: function (mRes) {
+                                if (mRes == 'Ticket already added in ADM.') {
+                                    toastr.error(mRes);
+                                }
+                                else {
+                                    toastr.success(mRes);
+
+                                    ClearControls();
+
+                                    $("#ADMDefault").modal('hide');
+
+                                    GetData(10, 1, '');
+                                }
+                            },
+                            error: function (err) {
+                                toastr.success(err.statusText);
+                            }
+                        });
+                    }
+                    else {
+                        toastr.success('FormData is not supported.');
+                    }
+                    return false;
                 }
             });
         }

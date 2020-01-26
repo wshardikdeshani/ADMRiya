@@ -1,6 +1,104 @@
 ﻿@{
     ViewBag.Title = "Follow Up";
 }
+@section styles{
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 5px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px !important;
+        }
+
+        .error {
+            color: #dc3545 !important;
+        }
+    </style>
+}
+<div class="modal fade" id="Default">
+    <div class="modal-dialog modal-lg">
+        <form role="form" id="ApplicationForm" method="post" class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Follow Up</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ADMIDF" name="ADMIDF" value="0" />
+                <input type="hidden" id="OfficeID" name="OfficeID" value="" />
+                <input type="hidden" id="BranchID" name="BranchID" value="" />
+                <input type="hidden" id="ADMFollowUpIDP" name="ADMFollowUpIDP" value="0" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="TicketID" class="control-label">Ticket ID</label>
+                            <input type="text" class="form-control" id="TicketID" name="TicketID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ADMNumber" class="control-label">ADM Number</label>
+                            <input type="text" class="form-control" id="ADMNumber" name="ADMNumber" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ReasonName" class="control-label">Reason</label>
+                            <input type="text" class="form-control" id="ReasonName" name="ReasonName" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="RemarksAddByAudit" class="control-label">Remarks Add By Audit User/Manager<span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="RemarksAddByAudit" name="RemarksAddByAudit" disabled></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Remarks" class="control-label">Remarks<span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="Remarks" name="Remarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="NextFollowUpDate" class="control-label">Next Follow Up Date</label>
+                            <input type="text" class="form-control" id="NextFollowUpDate" name="NextFollowUpDate">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
+                                <option value="0" selected>Select Status</option>
+                                @{
+                                    if (ViewBag.StatusList != null)
+                                    {
+                                        foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                        {
+                                            <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" onclick="SaveFollowUp()" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Ticket Detail</h3>
@@ -11,58 +109,58 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="TicketID" class="control-label">Ticket ID</label>
-                            <input type="text" class="form-control form-control-sm" id="TicketID" name="TicketID" disabled>
+                            <label for="ADM_TicketID" class="control-label">Ticket ID</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_TicketID" name="ADM_TicketID" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="IATANumber" class="control-label">IATA Number</label>
-                            <input type="text" class="form-control form-control-sm" id="IATANumber" name="IATANumber" disabled>
+                            <label for="ADM_IATANumber" class="control-label">IATA Number</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_IATANumber" name="ADM_IATANumber" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="ADMNumber" class="control-label">ADM Number</label>
-                            <input type="text" class="form-control form-control-sm" id="ADMNumber" name="ADMNumber" disabled>
+                            <label for="ADM_ADMNumber" class="control-label">ADM Number</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_ADMNumber" name="ADM_ADMNumber" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="ADMAmount" class="control-label">ADM Amount</label>
-                            <input type="text" class="form-control form-control-sm" id="ADMAmount" name="ADMAmount" disabled>
+                            <label for="ADM_ADMAmount" class="control-label">ADM Amount</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_ADMAmount" name="ADM_ADMAmount" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="OfficeID" class="control-label">Office ID</label>
-                            <input type="text" class="form-control form-control-sm" id="OfficeID" name="OfficeID" disabled>
+                            <label for="ADM_OfficeID" class="control-label">Office ID</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_OfficeID" name="ADM_OfficeID" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="BranchID" class="control-label">Branch</label>
-                            <input type="text" class="form-control form-control-sm" id="BranchID" name="BranchID" disabled>
+                            <label for="ADM_BranchID" class="control-label">Branch</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_BranchID" name="ADM_BranchID" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
-                            <input type="text" class="form-control form-control-sm" id="TicketAmount" name="TicketAmount" disabled>
+                            <label for="ADM_TicketAmount" class="control-label">Ticket Amount</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_TicketAmount" name="ADM_TicketAmount" disabled>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="ReasonName" class="control-label">Reason</label>
-                            <input type="text" class="form-control form-control-sm" id="ReasonName" name="ReasonName" disabled>
+                            <label for="ADM_ReasonName" class="control-label">Reason</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_ReasonName" name="ADM_ReasonName" disabled>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="RemarksAddByAudit" class="control-label">Remarks Add By Audit User/Manager</label>
-                            <input type="text" class="form-control form-control-sm" id="RemarksAddByAudit" name="RemarksAddByAudit" disabled>
+                            <label for="ADM_RemarksAddByAudit" class="control-label">Remarks Add By Audit User/Manager</label>
+                            <input type="text" class="form-control form-control-sm" id="ADM_RemarksAddByAudit" name="ADM_RemarksAddByAudit" disabled>
                         </div>
                     </div>
                 </div>
@@ -72,25 +170,38 @@
 </div>
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Follow Up Detail</h3>
+        <h3 class="card-title float-left mt-2">
+            <i class="ion ion-clipboard mr-1"></i>
+            Follow Up History
+        </h3>
+        <button type="button" class="btn btn-info float-right" onclick="AddNewFollowUp()"><i class="fas fa-plus"></i> Add Follow Up</button>
+        <div class="clearfix"></div>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
-                <div class="row">
-                    <div class="col-12" id="FollowUps">
-
-                    </div>
-                </div>
-            </div>
+        <div class="row" id="FollowUps">
         </div>
     </div>
 </div>
+
 @section scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
     <script>
         $(document).ready(function () {
+            jQuery.validator.addMethod("notEqualTo", function (v, e, p) {
+                return this.optional(e) || v != p;
+            }, "Please specify a different value");
+
+            $('#NextFollowUpDate').datepicker({
+                format: 'mm/dd/yyyy',
+                todayHighlight: true,
+                autoclose: true
+            });
+
+            //Initialize Select2 Elements
+            $('.select2').select2();
+
             GetAll();
+
             GetTicketDetail();
         });
 
@@ -106,15 +217,15 @@
                 success: function (mRes) {
                     var obj = JSON.parse(mRes);
 
-                    $("#TicketID").val(obj[0].TicketID);
-                    $("#IATANumber").val(obj[0].IATANumber);
-                    $("#ADMNumber").val(obj[0].ADMNumber);
-                    $("#ADMAmount").val(obj[0].ADMAmount);
-                    $("#OfficeID").val(obj[0].OfficeID);
-                    $("#BranchID").val(obj[0].BranchID);
-                    $("#ReasonName").val(obj[0].ReasonName);
-                    $("#RemarksAddByAudit").val(obj[0].Remarks);
-                    $("#TicketAmount").val(obj[0].TicketAmount);
+                    $("#ADM_TicketID").val(obj[0].TicketID);
+                    $("#ADM_IATANumber").val(obj[0].IATANumber);
+                    $("#ADM_ADMNumber").val(obj[0].ADMNumber);
+                    $("#ADM_ADMAmount").val(obj[0].ADMAmount);
+                    $("#ADM_OfficeID").val(obj[0].OfficeID);
+                    $("#ADM_BranchID").val(obj[0].BranchID);
+                    $("#ADM_ReasonName").val(obj[0].ReasonName);
+                    $("#ADM_RemarksAddByAudit").val(obj[0].Remarks);
+                    $("#ADM_TicketAmount").val(obj[0].TicketAmount);
                 }
             });
         }
@@ -133,40 +244,117 @@
                     var iHTML = "";
 
                     if (obj.length === 0) {
-                        $("#FollowUps").html("No Data");
+                        $("#FollowUps").html("<div class='col-md-12'><div class='card'><div class='card-header text-center'><h3 class='card-title'>No Data</h3></div></div></div>");
                     }
                     else {
-                        var Counter = 0;
-
                         for (var i = 0; i < obj.length; i++) {
-                            if (Counter == 0) {
-                                iHTML += "<div class='post'>";
-                            }
-                            else if (Counter == 1) {
-                                iHTML += "<div class='post clearfix'>";
+                            iHTML += "<div class='col-md-3'>";
+                            iHTML += "<div class='card card-outline card-primary'>";
+                            iHTML += "<div class='card-header'><h3 class='card-title'>Follow Up " + obj[i].SrNo + "</h3></div>";;
 
-                                Counter = -1;
-                            }
+                            iHTML += "<div class='card-body' style='height:300px;'><div class='row'><div class='col-12'>";
 
+                            iHTML += "<div class='post'>";
                             iHTML += "<div class='user-block'>";
                             iHTML += "<img class='img-circle img-bordered-sm' src='/Content/dist/img/avatar.png' alt='user image'>";
                             iHTML += "<span class='username'><a href='#'>Jonathan Burke Jr.</a></span>";
                             iHTML += "<span class='description'>Follow Up Date: " + obj[i].FolloUpDate + "</span>";
                             iHTML += "</div>";
-                            iHTML += "<p><strong>Remarks</strong>: " + obj[i].Remarks + "</p>";
-                            iHTML += "<p><strong>Follow Up Status: </strong>: " + obj[i].StatusName + "</p>";
+                            iHTML += "<p><strong>Remarks</strong>:<br/>" + obj[i].Remarks + "</p>";
+                            iHTML += "<p><strong>Follow Up Status</strong>:<br/>" + obj[i].StatusName + "</p>";
                             if (obj[i].NextFollowUpDate != '') {
-                                iHTML += "<p>Next Follow Up Date: " + obj[i].NextFollowUpDate + "</p>";
+                                iHTML += "<p><strong>Next Follow Up Date</strong>:<br/>" + obj[i].NextFollowUpDate + "</p>";
                             }
+
                             iHTML += "</div>";
 
-                            Counter++;
+                            iHTML += "</div></div></div>";
+
+                            iHTML += "</div>";
+
+                            iHTML += "</div>";
                         }
 
                         $("#FollowUps").html(iHTML);
                     }
                 }
             });
+        }
+
+        function AddNewFollowUp(id) {
+            $("#Default").modal('show');
+
+            var mData = { id: @ViewBag.ID }
+
+            $.ajax({
+                type: "POST",
+                url: "/ADMHeader/Get_GetAll",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    var obj = JSON.parse(mRes);
+
+                    $("#ADMIDF").val(obj[0].ADMIDP);
+                    $("#TicketID").val(obj[0].TicketID);
+                    $("#ADMNumber").val(obj[0].ADMNumber);
+                    $("#OfficeID").val(obj[0].OfficeID);
+                    $("#BranchID").val(obj[0].BranchID);
+                    $("#ReasonName").val(obj[0].ReasonName);
+                    $("#RemarksAddByAudit").val(obj[0].Remarks);
+                    $("#StatusIDF").val(obj[0].StatusIDF);
+                    $('#StatusIDF').trigger('change');
+                }
+            });
+        }
+
+        function SaveFollowUp() {
+            $("#ApplicationForm").validate({
+                rules: {
+                    TicketID: "required",
+                    StatusIDF: {
+                        required: true,
+                        notEqualTo: "0"
+                    },
+                    Remarks: "required",
+                },
+                messages: {
+                    TicketID: "Ticket id require.",
+                    StatusIDF: {
+                        required: "Status require.",
+                        notEqualTo: "Status require."
+                    },
+                    Remarks: "Remarks require.",
+                },
+                submitHandler: function (form) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/Save",
+                        data: $("#ApplicationForm").serialize(),
+                        success: function (mRes) {
+                            toastr.success(mRes);
+
+                            ClearControls();
+
+                            $("#Default").modal('hide');
+
+                            GetAll();
+                        },
+                        error: function (err) {
+                            Swal.fire('Error', err, 'error');
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
+
+        function ClearControls() {
+            $("#ADMIDF, #ADMFollowUpIDP").val(0);
+            $("#OfficeID, #BranchID, #TicketID, #Remarks, #NextFollowUpDate").val('');
+
+            $("#StatusIDF").val(0);
+            $('#StatusIDF').trigger('change');
         }
     </script>
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -31,10 +32,132 @@ namespace ADMPro.Controllers
         }
 
         [HttpPost]
-        public JsonResult Save(ADMHeaderClass model)
+        public JsonResult Save()
         {
-            MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_Insert_Update(model);
-            return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
+            string Response = string.Empty;
+
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+                    //  Get all files from Request object 
+                    HttpFileCollectionBase files = Request.Files;
+
+                    for (int i = 0; i < files.Count; i++)
+                    {
+                        HttpPostedFileBase file = files[i];
+                        string FileName;
+
+                        // Checking for Internet Explorer 
+                        if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                        {
+                            string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                            FileName = testfiles[testfiles.Length - 1];
+                        }
+                        else
+                        {
+                            FileName = file.FileName;
+                        }
+
+                        string FileExtension = System.IO.Path.GetExtension(Request.Files[i].FileName);
+                        string NewFileName = DateTime.Now.ToString("ddMMyyyyHHmmss") + FileExtension;
+                        string SaveFilePath = System.IO.Path.Combine(Server.MapPath("~/ADMFiles/"), NewFileName);
+                        file.SaveAs(SaveFilePath);
+
+                        ADMHeaderClass obj = new ADMHeaderClass();
+
+                        long.TryParse(Request.Form["ADMIDP"].ToString(), out long ADMIDP);
+                        float.TryParse(Request.Form["ADMAmount"].ToString(), out float ADMAmount);
+                        float.TryParse(Request.Form["TicketAmount"].ToString(), out float TicketAmount);
+                        int.TryParse(Request.Form["ReasonIDF"].ToString(), out int ReasonIDF);
+
+                        obj.ADMIDP = ADMIDP;
+                        obj.IATANumber = Request.Form["IATANumber"].ToString();
+                        obj.ADMNumber = Request.Form["ADMNumber"].ToString();
+                        obj.ADMAmount = ADMAmount;
+                        obj.TicketID = Request.Form["TicketID"].ToString();
+                        obj.OfficeID = Request.Form["OfficeID"].ToString();
+                        obj.BranchID = Request.Form["BranchID"].ToString();
+                        obj.TicketIssueBranchID = Request.Form["TicketIssueBranchID"].ToString();
+                        obj.TicketAmount = TicketAmount;
+                        obj.ReasonIDF = ReasonIDF;
+                        obj.Remarks = Request.Form["Remarks"].ToString();
+                        obj.StatusIDF = 1;
+                        obj.UserID = 0;
+                        obj.ADMFileName = NewFileName;
+
+                        MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_Insert_Update(obj);
+
+                        Response = mRes.Outval.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Response = "Error : " + ex.Message;
+                }
+            }
+            else
+            {
+                try
+                {
+                    ADMHeaderClass obj = new ADMHeaderClass();
+
+                    long.TryParse(Request.Form["ADMIDP"].ToString(), out long ADMIDP);
+                    float.TryParse(Request.Form["ADMAmount"].ToString(), out float ADMAmount);
+                    float.TryParse(Request.Form["TicketAmount"].ToString(), out float TicketAmount);
+                    int.TryParse(Request.Form["ReasonIDF"].ToString(), out int ReasonIDF);
+
+                    obj.ADMIDP = ADMIDP;
+                    obj.IATANumber = Request.Form["IATANumber"].ToString();
+                    obj.ADMNumber = Request.Form["ADMNumber"].ToString();
+                    obj.ADMAmount = ADMAmount;
+                    obj.TicketID = Request.Form["TicketID"].ToString();
+                    obj.OfficeID = Request.Form["OfficeID"].ToString();
+                    obj.BranchID = Request.Form["BranchID"].ToString();
+                    obj.TicketIssueBranchID = Request.Form["TicketIssueBranchID"].ToString();
+                    obj.TicketAmount = TicketAmount;
+                    obj.ReasonIDF = ReasonIDF;
+                    obj.Remarks = Request.Form["Remarks"].ToString();
+                    obj.StatusIDF = 1;
+                    obj.UserID = 0;
+                    obj.ADMFileName = Request.Form["OldFileName"].ToString();
+
+                    MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_Insert_Update(obj);
+
+                    Response = mRes.Outval.ToString();
+                }
+                catch (Exception ee)
+                {
+                    Response = "Error : " + ee.Message;
+                }
+            }
+
+            /*Send Email*/
+            if (Request.Form["ADMIDP"].ToString() == "0" && Response != "Ticket already added in ADM.") // NEW ADM RAISED
+            {
+                string Subject = "New ADM Raised - " + Request.Form["TicketID"].ToString();
+
+                string Body = "New ADM Raised - " + Request.Form["TicketID"].ToString();
+
+                DataTable dt = new BranchEmailMasterLogic().BranchEmailMaster_GetEmailByBranchID(Request.Form["BranchID"].ToString());
+
+                if (dt.Rows.Count > 0)
+                {
+                    new EmailLogic().SendEmail(Subject
+                        , Body
+                        , dt.Rows[0]["ToEmailID"].ToString()
+                        , dt.Rows[0]["CCEmailID"].ToString());
+
+                    Response = Response + " and ADM raised email send successfully.";
+                }
+                else
+                {
+                    Response = Response + " and ADM email not found.";
+                }
+            }
+
+
+            return Json(Response, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -51,7 +174,7 @@ namespace ADMPro.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-        
+
 
         [HttpPost]
         public JsonResult GeneralAction(long id, int ActionType)

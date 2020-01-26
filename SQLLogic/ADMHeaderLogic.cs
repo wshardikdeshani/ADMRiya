@@ -30,7 +30,7 @@ namespace SQLLogic
 
         public MEMBERS.PagingResponse ADMHeader_Dashboard(string BranchID, int? Role
             , int RowsPerPage, int PageNumber
-            , string TicketID, string FromDate, string ToDate, int? StatusIDF)
+            , string TicketID, string FromDate, string ToDate, int? StatusIDF, string OrderByColumnName, string OrderBy)
         {
             return new SqlHelper().Paging_GetAll_DataTable("ADMHeader_Dashboard", new object[,] {
                 { "BranchID", BranchID }
@@ -41,6 +41,8 @@ namespace SQLLogic
                 , { "FromDate", FromDate }
                 , { "ToDate", ToDate }
                 , { "StatusIDF", StatusIDF }
+                , { "OrderByColumnName", OrderByColumnName }
+                , { "OrderBy", OrderBy }
             });
         }
 
@@ -54,9 +56,9 @@ namespace SQLLogic
             return new SqlHelper().GetJsonResult("ADM_GetTicketDetail_DSR_ERP_ByTicketID", new object[,] { { "TicketID", TicketID } });
         }
 
-        public MEMBERS.SQLReturnValue ADMHeader_UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount)
+        public MEMBERS.SQLReturnValue ADMHeader_UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount, int StatusIDF)
         {
-            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_UpdateACMDetail", new object[,] { { "ADMIDP", ADMIDP }, { "ACMNumber", ACMNumber }, { "ACMAmount", ACMAmount } }, 3);
+            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_UpdateACMDetail", new object[,] { { "ADMIDP", ADMIDP }, { "ACMNumber", ACMNumber }, { "ACMAmount", ACMAmount }, { "StatusIDF", StatusIDF } }, 3);
         }
     }
 }

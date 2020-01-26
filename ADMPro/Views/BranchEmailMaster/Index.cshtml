@@ -1,29 +1,38 @@
 ﻿@{
-    ViewBag.Title = "Status Master";
-}
-@section styles{
-    <style>
-        .error {
-            color: #dc3545 !important;
-        }
-    </style>
+    ViewBag.Title = "Branch Email Master";
 }
 <div class="modal fade" id="Default">
     <div class="modal-dialog">
         <form role="form" id="ApplicationForm" method="post" class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add New Status</h4>
+                <h4 class="modal-title">Add New Branch Emails</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="StatusIDP" name="StatusIDP" value="0" />
+                <input type="hidden" id="BranchEmailIDP" name="BranchEmailIDP" value="0" />
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="StatusName" class="control-label">Status Name<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="StatusName" name="StatusName">
+                            <label for="BranchID" class="control-label">Branch ID</label>
+                            <input type="text" class="form-control" id="BranchID" name="BranchID" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ToEmailID" class="control-label">To Email ID</label>
+                            <input type="text" class="form-control" id="ToEmailID" name="ToEmailID" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="CCEmailID" class="control-label">From Email ID(s) <span class="text-sm text-muted">Comma Seprated</span></label>
+                            <textarea class="form-control" id="CCEmailID" name="CCEmailID"></textarea>
                         </div>
                     </div>
                 </div>
@@ -52,14 +61,16 @@
             <thead>
                 <tr>
                     <th style="width: 10px">#</th>
-                    <th>Status Name</th>
+                    <th>Branch ID</th>
+                    <th>To Email ID</th>
+                    <th>From Email ID(s)</th>
                     <th>Status</th>
                     <th>Operation</th>
                 </tr>
             </thead>
             <tbody id="data">
                 <tr>
-                    <td colspan="4" align="center"><div class="loader"></div></td>
+                    <td colspan="6" align="center"><div class="loader"></div></td>
                 </tr>
             </tbody>
         </table>
@@ -75,23 +86,25 @@
         function AddNew() {
             ClearControls();
 
-            $("#StatusName").focus();
-
             $("#Default").modal('show');
         }
 
         function Save() {
             $("#ApplicationForm").validate({
                 rules: {
-                    StatusName: "required",
+                    BranchID: "required",
+                    ToEmailID: "required",
+                    CCEmailID: "required"
                 },
                 messages: {
-                    StatusName: "Status name require.",
+                    BranchID: "Branch id require.",
+                    ToEmailID: "To email id require.",
+                    CCEmailID: "CC email ids require."
                 },
                 submitHandler: function (form) {
                     $.ajax({
                         type: "POST",
-                        url: "/StatusMaster/Save",
+                        url: "/BranchEmailMaster/Save",
                         data: $("#ApplicationForm").serialize(),
                         success: function (mRes) {
                             toastr.success(mRes);
@@ -118,14 +131,16 @@
 
             $.ajax({
                 type: "POST",
-                url: "/StatusMaster/Get_GetAll",
+                url: "/BranchEmailMaster/Get_GetAll",
                 data: JSON.stringify(mData),
                 contentType: "application/json",
                 dataType: "json",
                 success: function (mRes) {
                     var obj = JSON.parse(mRes);
-                    $("#StatusIDP").val(obj[0].StatusIDP);
-                    $("#StatusName").val(obj[0].StatusName);
+                    $("#BranchEmailIDP").val(obj[0].BranchEmailIDP);
+                    $("#BranchID").val(obj[0].BranchID);
+                    $("#ToEmailID").val(obj[0].ToEmailID);
+                    $("#CCEmailID").val(obj[0].CCEmailID);
                 }
             });
         }
@@ -147,7 +162,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/StatusMaster/GeneralAction",
+                        url: "/BranchEmailMaster/GeneralAction",
                         data: JSON.stringify(mData),
                         contentType: "application/json",
                         dataType: "json",
@@ -166,7 +181,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/StatusMaster/Get_GetAll",
+                url: "/BranchEmailMaster/Get_GetAll",
                 data: JSON.stringify(mData),
                 contentType: "application/json",
                 dataType: "json",
@@ -175,17 +190,19 @@
                     var iHTML = "";
 
                     if (obj.length === 0) {
-                        $("#data").html("<tr><td colspan='4' align='center'>No Data</td></tr>");
+                        $("#data").html("<tr><td colspan='6' align='center'>No Data</td></tr>");
                     }
                     else {
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
-                            iHTML += "<td>" + obj[i].StatusName + "</td>";
-                            iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].StatusIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") + '</button></td>';
+                            iHTML += "<td>" + obj[i].BranchID + "</td>";
+                            iHTML += "<td>" + obj[i].ToEmailID + "</td>";
+                            iHTML += "<td>" + obj[i].CCEmailID + "</td>";
+                            iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].BranchEmailIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") + '</button></td>';
                             iHTML += "<td>";
-                            iHTML += '<button class="btn btn-success" onclick="Get(' + obj[i].StatusIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';
-                            iHTML += '&nbsp;<button class="btn btn-danger" onclick="GeneralAction(' + obj[i].StatusIDP + ',1)"><i class="fa fa-trash nav-icon"></i>&nbsp;Delete</button>';
+                            iHTML += '<button class="btn btn-success" onclick="Get(' + obj[i].BranchEmailIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';
+                            iHTML += '&nbsp;<button class="btn btn-danger" onclick="GeneralAction(' + obj[i].BranchEmailIDP + ',1)"><i class="fa fa-trash nav-icon"></i>&nbsp;Delete</button>';
                             iHTML += "</td>";
                             iHTML += "</tr>";
                         }
@@ -197,8 +214,8 @@
         }
 
         function ClearControls() {
-            $("#StatusIDP").val(0);
-            $("#StatusName").val('');
+            $("#BranchEmailIDP").val(0);
+            $("#BranchID, #ToEmailID, #CCEmailID").val('');
         }
     </script>
 }

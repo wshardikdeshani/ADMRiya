@@ -27,6 +27,7 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="ADMIDP" name="ADMIDP" value="0" />
+                <input type="hidden" id="OldFileName" name="OldFileName" />
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -88,7 +89,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="ReasonIDF" class="control-label">Reason<span class="text-danger">*</span></label>
                             <select class="form-control select2" style="width: 100%;" id="ReasonIDF" name="ReasonIDF">
@@ -105,22 +106,34 @@
                             </select>
                         </div>
                     </div>
-                    @*<div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
-                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
-                                @{
-                                    if (ViewBag.StatusList != null)
-                                    {
-                                        foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
-                                        {
-                                            <option value="@sm.StatusIDP">@sm.StatusName</option>
-                                        }
-                                    }
-                                }
-                            </select>
+                            <label for="ADMFile" class="control-label">
+                                Upload File
+                                <span class="text-sm text-danger" id="AlreadyUploadedFileName"></span>
+                            </label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="ADMFile" name="ADMFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
                         </div>
-                    </div>*@
+                    </div>
+                    @*<div class="col-md-6">
+                <div class="form-group">
+                    <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
+                    <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
+                        @{
+                            if (ViewBag.StatusList != null)
+                            {
+                                foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                {
+                                    <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>*@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -151,7 +164,7 @@
         <div class="clearfix"></div>
     </div>
     <div class="card-body p-0">
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
                     <th style="width: 10px">#</th>
@@ -220,6 +233,8 @@
             //    }
             //});
 
+            bsCustomFileInput.init();
+
             GetData(10, 1, '');
         });
 
@@ -270,45 +285,59 @@
                     //}
                 },
                 submitHandler: function (form) {
-                    var mData = {
-                        ADMIDP: $("#ADMIDP").val()
-                        , IATANumber: $("#IATANumber").val()
-                        , ADMNumber: $("#ADMNumber").val()
-                        , ADMAmount: $("#ADMAmount").val()
-                        , TicketID: $("#TicketID").val()
-                        , OfficeID: $("#OfficeID").val()
-                        , BranchID: $("#BranchID").val()
-                        , TicketIssueBranchID: $("#TicketIssueBranchID").val()
-                        , TicketAmount: $("#TicketAmount").val()
-                        , ReasonIDF: $("#ReasonIDF").val()
-                        , Remarks: $("#Remarks").val()
-                        , StatusIDF: 1
-                    }
+                    if (window.FormData !== undefined) {
+                        var fileUpload = $("#ADMFile").get(0);
+                        var files = fileUpload.files;
 
-                    $.ajax({
-                        type: "POST",
-                        url: "/ADMHeader/Save",
-                        contentType: "application/json",
-                        dataType: "json",
-                        data: JSON.stringify(mData),
-                        success: function (mRes) {
-                            if (mRes == 'Ticket already added in ADM.') {
-                                toastr.error(mRes);
-                            }
-                            else {
-                                toastr.success(mRes);
+                        // Create FormData object
+                        var fileData = new FormData();
 
-                                ClearControls();
-
-                                $("#Default").modal('hide');
-
-                                GetData(10, 1, '');
-                            }
-                        },
-                        error: function (err) {
-                            Swal.fire('Error', err, 'error');
+                        // Looping over all files and add it to FormData object
+                        for (var i = 0; i < files.length; i++) {
+                            fileData.append(files[i].name, files[i]);
                         }
-                    });
+
+                        fileData.append('ADMIDP', $("#ADMIDP").val());
+                        fileData.append('IATANumber', $("#IATANumber").val());
+                        fileData.append('OldFileName', $("#OldFileName").val());
+                        fileData.append('ADMNumber', $("#ADMNumber").val());
+                        fileData.append('ADMAmount', $("#ADMAmount").val());
+                        fileData.append('TicketID', $("#TicketID").val());
+                        fileData.append('OfficeID', $("#OfficeID").val());
+                        fileData.append('BranchID', $("#BranchID").val());
+                        fileData.append('TicketIssueBranchID', $("#TicketIssueBranchID").val());
+                        fileData.append('TicketAmount', $("#TicketAmount").val());
+                        fileData.append('ReasonIDF', $("#ReasonIDF").val());
+                        fileData.append('Remarks', $("#Remarks").val());
+
+                        $.ajax({
+                            url: '/ADMHeader/Save',
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: fileData,
+                            success: function (mRes) {
+                                if (mRes == 'Ticket already added in ADM.') {
+                                    toastr.error(mRes);
+                                }
+                                else {
+                                    toastr.success(mRes);
+
+                                    ClearControls();
+
+                                    $("#Default").modal('hide');
+
+                                    GetData(10, 1, '');
+                                }
+                            },
+                            error: function (err) {
+                                toastr.success(err.statusText);
+                            }
+                        });
+                    }
+                    else {
+                        toastr.success('FormData is not supported.');
+                    }
                     return false;
                 }
             });
@@ -341,6 +370,8 @@
                     $("#ReasonIDF").val(obj[0].ReasonIDF);
                     $('#ReasonIDF').trigger('change');
 
+                    $("#OldFileName").val(obj[0].ADMFileName);
+                    $("#AlreadyUploadedFileName").text((obj[0].ADMFileName == '' || obj[0].ADMFileName == null) ? 'N/A' : obj[0].ADMFileName);
                     //$("#StatusIDF").val(obj[0].StatusIDF);
                     //$('#StatusIDF').trigger('change');
                 }
@@ -387,20 +418,20 @@
                     PageNo = navValue - 1;
                 }
 
-                $("#Left").removeClass("btn-info").addClass("btn-warning");
-                $("#LeftEnd, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#Left").removeClass("btn-info").addClass("btn-info");
+                $("#LeftEnd, #goBtn, #Right, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'LE') {
                 PageNo = 1;
 
-                $("#LeftEnd").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #goBtn, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#LeftEnd").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #goBtn, #Right, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'C') {
                 PageNo = navValue;
 
-                $("#goBtn").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #LeftEnd, #Right, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#goBtn").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #LeftEnd, #Right, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'R') {
                 if (totalPage > navValue)
@@ -408,14 +439,14 @@
                 else
                     PageNo = totalPage;
 
-                $("#Right").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #LeftEnd, #goBtn, #RightEnd").removeClass("btn-warning").addClass("btn-info");
+                $("#Right").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #LeftEnd, #goBtn, #RightEnd").removeClass("btn-info").addClass("btn-secondary");
             }
             else if (NavigationType === 'RE') {
                 PageNo = totalPage;
 
-                $("#RightEnd").removeClass("btn-info").addClass("btn-warning");
-                $("#Left, #LeftEnd, #goBtn, #Right").removeClass("btn-warning").addClass("btn-info");
+                $("#RightEnd").removeClass("btn-info").addClass("btn-info");
+                $("#Left, #LeftEnd, #goBtn, #Right").removeClass("btn-info").addClass("btn-secondary");
             }
 
             $("#NavigationValue").val(PageNo);
@@ -469,7 +500,7 @@
 
         function ClearControls() {
             $("#ADMIDP").val(0);
-            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount").val('');
+            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount, #OldFileName").val('');
 
             $("#ReasonIDF").val(0);
             $('#ReasonIDF').trigger('change');

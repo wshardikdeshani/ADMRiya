@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ADMFollowUpClass.cs" />
     <Compile Include="ADMHeaderClass.cs" />
+    <Compile Include="BranchEmailMasterClass.cs" />
     <Compile Include="BranchMasterClass.cs" />
     <Compile Include="OfficeMasterClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
