@@ -76,6 +76,10 @@
             ClearControls();
 
             $("#Default").modal('show');
+
+            $('#Default').on('shown.bs.modal', function () {
+                $('#ReasonName').focus();
+            });
         }
 
         function Save() {

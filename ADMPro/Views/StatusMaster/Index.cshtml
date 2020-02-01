@@ -75,9 +75,11 @@
         function AddNew() {
             ClearControls();
 
-            $("#StatusName").focus();
-
             $("#Default").modal('show');
+
+            $('#Default').on('shown.bs.modal', function () {
+                $('#StatusName').focus();
+            });
         }
 
         function Save() {

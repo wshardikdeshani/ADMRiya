@@ -19,6 +19,47 @@ namespace ADMPro.Controllers
     {
         public ActionResult Index()
         {
+            if (Request.QueryString.Count == 0)
+            {
+                return Redirect(GeneralClass.LoginURL);
+            }
+            else if (Request.QueryString.Count == 4) // Branch
+            {
+                if (Request.QueryString.AllKeys.Contains("eid") == false
+                    && Request.QueryString.AllKeys.Contains("enm") == false
+                    && Request.QueryString.AllKeys.Contains("bnm") == false
+                    && Request.QueryString.AllKeys.Contains("role") == false)
+                {
+                    return Redirect(GeneralClass.LoginURL);
+                }
+                else
+                {
+                    GeneralClass.EmployeeID = Request.QueryString["eid"].ToString();
+                    GeneralClass.EmployeeName = Request.QueryString["enm"].ToString();
+                    GeneralClass.BranchID = Request.QueryString["bnm"].ToString();
+                    GeneralClass.Role = Request.QueryString["role"].ToString();
+                }
+            }
+            else if (Request.QueryString.Count == 3) // Audit
+            {
+                if (Request.QueryString.AllKeys.Contains("eid") == false
+                    && Request.QueryString.AllKeys.Contains("enm") == false
+                    && Request.QueryString.AllKeys.Contains("role") == false)
+                {
+                    return Redirect(GeneralClass.LoginURL);
+                }
+                else
+                {
+                    GeneralClass.EmployeeID = Request.QueryString["eid"].ToString();
+                    GeneralClass.EmployeeName = Request.QueryString["enm"].ToString();
+                    GeneralClass.Role = Request.QueryString["role"].ToString();
+                }
+            }
+            else
+            {
+                return Redirect(GeneralClass.LoginURL);
+            }
+
             object dataStatus = new StatusMasterLogic().StatusMaster_Get_GetAll(0, true);
 
             if (dataStatus != null)
@@ -37,36 +78,8 @@ namespace ADMPro.Controllers
 
             if (dataReason != null)
             {
-                ViewBag.ReasonList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ReasonMasterClass>>(dataReason.ToString());
+                ViewBag.ReasonList = JsonConvert.DeserializeObject<List<ReasonMasterClass>>(dataReason.ToString());
             }
-
-            if (Request.QueryString.Count == 4) // Branch
-            {
-                ViewBag.EmployeeID = Request.QueryString["eid"].ToString();
-                ViewBag.EmployeeName = Request.QueryString["enm"].ToString();
-                ViewBag.BranchID = Request.QueryString["bnm"].ToString();
-                ViewBag.Role = Request.QueryString["role"].ToString();
-            }
-            else if (Request.QueryString.Count == 3) // Audit
-            {
-                ViewBag.EmployeeID = Request.QueryString["eid"].ToString();
-                ViewBag.EmployeeName = Request.QueryString["enm"].ToString();
-                ViewBag.Role = Request.QueryString["role"].ToString();
-            }
-
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
             return View();
         }
@@ -95,6 +108,9 @@ namespace ADMPro.Controllers
         [HttpPost]
         public JsonResult Save(ADMFollowUpClass obj)
         {
+            obj.UserID = GeneralClass.GetIntValue(GeneralClass.EmployeeID);
+            obj.UserName = GeneralClass.EmployeeName;
+
             MEMBERS.SQLReturnValue mRes = new ADMFollowUpLogic().ADMFollowUp_Insert_Update(obj);
             return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
         }
@@ -102,7 +118,9 @@ namespace ADMPro.Controllers
         [HttpPost]
         public JsonResult UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount, int StatusIDF)
         {
-            MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_UpdateACMDetail(ADMIDP, ACMNumber, ACMAmount, StatusIDF);
+            MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_UpdateACMDetail(ADMIDP, ACMNumber, ACMAmount
+                , StatusIDF, GeneralClass.GetIntValue(GeneralClass.EmployeeID), GeneralClass.EmployeeName);
+
             return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
         }
 

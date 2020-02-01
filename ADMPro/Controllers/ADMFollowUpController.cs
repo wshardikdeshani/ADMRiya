@@ -15,6 +15,11 @@ namespace ADMPro.Controllers
         // GET: ADMFollowUp
         public ActionResult Index(long id)
         {
+            if (GeneralClass.Role == null || GeneralClass.Role == string.Empty)
+            {
+                return Redirect(GeneralClass.LoginURL);
+            }
+
             ViewBag.ID = id;
 
             object dataStatus = new StatusMasterLogic().StatusMaster_Get_GetAll(0, true);

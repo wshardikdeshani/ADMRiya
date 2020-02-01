@@ -15,6 +15,11 @@ namespace ADMPro.Controllers
         // GET: ADMHeader
         public ActionResult Index()
         {
+            if (GeneralClass.Role == null || GeneralClass.Role == string.Empty)
+            {
+                return Redirect(GeneralClass.LoginURL);
+            }
+
             object dataReason = new ReasonMasterLogic().ReasonMaster_Get_GetAll(0, true);
             object dataStatus = new StatusMasterLogic().StatusMaster_Get_GetAll(0, true);
 
@@ -83,7 +88,8 @@ namespace ADMPro.Controllers
                         obj.ReasonIDF = ReasonIDF;
                         obj.Remarks = Request.Form["Remarks"].ToString();
                         obj.StatusIDF = 1;
-                        obj.UserID = 0;
+                        obj.UserID = GeneralClass.GetIntValue(GeneralClass.EmployeeID);
+                        obj.UserName = GeneralClass.EmployeeName;
                         obj.ADMFileName = NewFileName;
 
                         MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_Insert_Update(obj);
@@ -119,7 +125,8 @@ namespace ADMPro.Controllers
                     obj.ReasonIDF = ReasonIDF;
                     obj.Remarks = Request.Form["Remarks"].ToString();
                     obj.StatusIDF = 1;
-                    obj.UserID = 0;
+                    obj.UserID = GeneralClass.GetIntValue(GeneralClass.EmployeeID);
+                    obj.UserName = GeneralClass.EmployeeName;
                     obj.ADMFileName = Request.Form["OldFileName"].ToString();
 
                     MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_Insert_Update(obj);
@@ -179,7 +186,11 @@ namespace ADMPro.Controllers
         [HttpPost]
         public JsonResult GeneralAction(long id, int ActionType)
         {
-            MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_GeneralAction(id, ActionType);
+            MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_GeneralAction(id
+                , ActionType
+                , GeneralClass.GetIntValue(GeneralClass.EmployeeID)
+                , GeneralClass.EmployeeName);
+
             return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
         }
 

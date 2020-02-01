@@ -174,7 +174,10 @@
             <i class="ion ion-clipboard mr-1"></i>
             Follow Up History
         </h3>
-        <button type="button" class="btn btn-info float-right" onclick="AddNewFollowUp()"><i class="fas fa-plus"></i> Add Follow Up</button>
+        @if (GeneralClass.Role != "1") // Audit User
+        {
+            <button type="button" class="btn btn-info float-right" onclick="AddNewFollowUp()"><i class="fas fa-plus"></i> Add Follow Up</button>
+        }
         <div class="clearfix"></div>
     </div>
     <div class="card-body">
@@ -257,7 +260,7 @@
                             iHTML += "<div class='post'>";
                             iHTML += "<div class='user-block'>";
                             iHTML += "<img class='img-circle img-bordered-sm' src='/Content/dist/img/avatar.png' alt='user image'>";
-                            iHTML += "<span class='username'><a href='#'>Jonathan Burke Jr.</a></span>";
+                            iHTML += "<span class='username'><a href='#'>" + obj[i].FollowUpBy + "</a></span>";
                             iHTML += "<span class='description'>Follow Up Date: " + obj[i].FolloUpDate + "</span>";
                             iHTML += "</div>";
                             iHTML += "<p><strong>Remarks</strong>:<br/>" + obj[i].Remarks + "</p>";

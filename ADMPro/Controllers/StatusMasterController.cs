@@ -14,6 +14,11 @@ namespace ADMPro.Controllers
         // GET: StatusMaster
         public ActionResult Index()
         {
+            if (GeneralClass.Role == null || GeneralClass.Role == string.Empty)
+            {
+                return Redirect(GeneralClass.LoginURL);
+            }
+
             return View();
         }
 

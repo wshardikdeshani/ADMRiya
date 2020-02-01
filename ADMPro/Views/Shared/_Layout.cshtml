@@ -60,11 +60,12 @@
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
-    @{ string ControllerName, ActionName, ControllerActionName;}
+    @{ string ControllerName, ActionName, ControllerActionName, Role; }
     @{
         ControllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
         ActionName = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
         ControllerActionName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() + HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+        Role = GeneralClass.Role;
     }
     <div class="wrapper">
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -73,77 +74,80 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
-                </li>
-            </ul>
         </nav>
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a href="index3.html" class="brand-link">
-                <img src="~/Content/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                     style="opacity: .8">
-                <span class="brand-text font-weight-light">ADM</span>
-            </a>
+            @if (Role == "1" || Role == "2") // Audit
+            {
+                <a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&role=@ViewBag.Role" class="brand-link" style="padding:5px;">
+                    <img src="~/Content/img/riya-logo.svg" alt="Riya Travel - ADM" style="background-color:#fff" />
+                </a>
+            }
+            else if (Role == "3" || Role == "4") // Branch
+            {
+                <a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&bnm=@ViewBag.BranchID&role=@ViewBag.Role" class="brand-link" style="padding:5px;">
+                    <img src="~/Content/img/riya-logo.svg" alt="Riya Travel - ADM" style="background-color:#fff" />
+                </a>
+            }
             <div class="sidebar">
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="~/Content/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="~/Content/dist/img/avatar.png" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Role</a>
+                        @if (Role == "1")
+                        {
+                            <a href="#" class="d-block">Audit Manager</a>
+                        }
+                        else if (Role == "2")
+                        {
+                            <a href="#" class="d-block">Audit User</a>
+                        }
+                        else if (Role == "3")
+                        {
+                            <a href="#" class="d-block">Branch Manager</a>
+                        }
+                        else if (Role == "4")
+                        {
+                            <a href="#" class="d-block">Branch User</a>
+                        }
                     </div>
                 </div>
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item"><a href="/Home/Index?eid=1&enm=Hardik&role=1" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
-                        <li class="nav-item"><a href="/Home/Index?eid=2&enm=Piyush&bnm=Tiruchirapally&role=2" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
+                        @if (Role == "1" || Role == "2") // Audit
+                        {
+                            <li class="nav-item"><a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&role=@ViewBag.Role" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
+                        }
+                        else if (Role == "3" || Role == "4") // Branch
+                        {
+                            <li class="nav-item"><a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&bnm=@ViewBag.BranchID&role=@ViewBag.Role" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
+                        }
                         <li class="nav-item">
                             <a href="/ADMHeader/Index" class="nav-link @(ControllerName == "ADMHeader" ? "active" : string.Empty)"><i class="nav-icon fas fa-plane-departure"></i><p>ADM</p></a>
                         </li>
-                        <li class="nav-item has-treeview @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "menu-open" : string.Empty)">
-                            <a href="javascript:void(0)" class="nav-link @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "active" : string.Empty)"><i class="nav-icon fas fa-copy"></i><p>Master <i class="fas fa-angle-left right"></i></p></a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item" style="display:none">
-                                    <a href="/BranchMaster/Index" class="nav-link @(ControllerName == "BranchMaster" ? "active" : string.Empty)"><i class="far fa-building nav-icon"></i><p>Branch</p></a>
-                                </li>
-                                <li class="nav-item" style="display:none">
-                                    <a href="/OfficeMaster/Index" class="nav-link @(ControllerName == "OfficeMaster" ? "active" : string.Empty)"><i class="fas fa-desktop nav-icon"></i><p>Office</p></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/ReasonMaster/Index" class="nav-link @(ControllerName == "ReasonMaster" ? "active" : string.Empty)"><i class="far fa-comment nav-icon"></i><p>Reason</p></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/StatusMaster/Index" class="nav-link @(ControllerName == "StatusMaster" ? "active" : string.Empty)"><i class="far fa-circle nav-icon"></i><p>Status</p></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="/BranchEmailMaster/Index" class="nav-link @(ControllerName == "BranchEmailMaster" ? "active" : string.Empty)"><i class="far fa-circle nav-icon"></i><p>Branch Email</p></a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if (Role == "1" || Role == "2") // Audit
+                        {
+                            <li class="nav-item has-treeview @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "menu-open" : string.Empty)">
+                                <a href="javascript:void(0)" class="nav-link @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "active" : string.Empty)"><i class="nav-icon fas fa-copy"></i><p>Master <i class="fas fa-angle-left right"></i></p></a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item" style="display:none">
+                                        <a href="/BranchMaster/Index" class="nav-link @(ControllerName == "BranchMaster" ? "active" : string.Empty)"><i class="far fa-building nav-icon"></i><p>Branch</p></a>
+                                    </li>
+                                    <li class="nav-item" style="display:none">
+                                        <a href="/OfficeMaster/Index" class="nav-link @(ControllerName == "OfficeMaster" ? "active" : string.Empty)"><i class="fas fa-desktop nav-icon"></i><p>Office</p></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/ReasonMaster/Index" class="nav-link @(ControllerName == "ReasonMaster" ? "active" : string.Empty)"><i class="far fa-comment nav-icon"></i><p>Reason</p></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/StatusMaster/Index" class="nav-link @(ControllerName == "StatusMaster" ? "active" : string.Empty)"><i class="far fa-circle nav-icon"></i><p>Status</p></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/BranchEmailMaster/Index" class="nav-link @(ControllerName == "BranchEmailMaster" ? "active" : string.Empty)"><i class="far fa-circle nav-icon"></i><p>Branch Email</p></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
                 </nav>
             </div>

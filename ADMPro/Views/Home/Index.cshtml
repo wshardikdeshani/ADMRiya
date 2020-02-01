@@ -42,7 +42,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="ADM_TicketID" class="control-label">Ticket ID<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control numeric" id="ADM_TicketID" name="ADM_TicketID">
+                            <input type="text" class="form-control" id="ADM_TicketID" name="ADM_TicketID">
                         </div>
                     </div>
                     <div class="col-md-1">
@@ -242,21 +242,19 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="ACMNumber" class="control-label">ACM Number</label>
-                            <input type="text" class="form-control" id="ACMNumber" name="ACMNumber">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
                             <label for="ACM_ADMAmount" class="control-label">ADM Amount</label>
                             <input type="text" class="form-control numeric" id="ACM_ADMAmount" name="ACM_ADMAmount" disabled>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ACMNumber" class="control-label">ACM Number</label>
+                            <input type="text" class="form-control" id="ACMNumber" name="ACMNumber">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="ACMAmount" class="control-label">ACM Amount</label>
                             <input type="text" class="form-control numeric" id="ACMAmount" name="ACMAmount" onkeyup="CalculateACMAmount()">
@@ -264,15 +262,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="ACMAmount_Diff" class="control-label">Amount Diff.</label>
-                            <input type="text" class="form-control numeric" id="ACMAmount_Diff" name="ACMAmount_Diff">
+                            <input type="text" class="form-control numeric" id="ACMAmount_Diff" name="ACMAmount_Diff" disabled>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>Status</label>
                             <select class="select2" id="ACM_StatusIDF" data-placeholder="Select a Status" style="width: 100%;">
@@ -337,7 +333,7 @@
                                     </div>
                                 </div>
                                 @{
-                                    if (ViewBag.Role == "1")
+                                    if (GeneralClass.Role == "1" || GeneralClass.Role == "2")
                                     {
                                         <div class="col-md-5">
                                             <label>Branch</label>
@@ -392,7 +388,7 @@
                             <h3 class="card-title">ADM Details</h3>
                         </div>
                         <div class="col-md-6 text-right">
-                            @if (ViewBag.Role == "1")
+                            @if (GeneralClass.Role == "1" || GeneralClass.Role == "2") // Audit User and Manager
                             {
                                 <button type="submit" onclick="AddNewADM()" class="btn btn-primary"><i class='fa fa-plus'></i>&nbsp;Add New ADM</button>
                             }
@@ -416,7 +412,7 @@
                                     <span class="fa fa-arrow-up" id="SortingTicketID"></span>
                                 </th>
                                 @{
-                                    if (ViewBag.Role == "1")
+                                    if (GeneralClass.Role == "1" || GeneralClass.Role == "2") // Audit User and Manager
                                     {
                                         <th onclick="Sorting('BranchID')">
                                             Branch
@@ -441,7 +437,7 @@
                         <tbody id="data">
                             <tr>
                                 @{
-                                    if (ViewBag.Role == "1")
+                                    if (GeneralClass.Role == "1" || GeneralClass.Role == "2")
                                     {
                                         <td colspan="9" align="center"><div class="loader"></div></td>
                                     }
@@ -636,8 +632,8 @@
             var SearchStatus = ($('#SearchStatusIDF').val() == '0' ? $('#SearchStatusIDF2').val() : $('#SearchStatusIDF').val());
 
             var mData = {
-                BranchID: (@ViewBag.Role == 1 ? $('#SearchBranch').val().join(", ") : '@ViewBag.BranchID'),
-                Role: @ViewBag.Role,
+                BranchID: (@GeneralClass.Role == 1 ? ($('#SearchBranch').val() == 'undefined' ? '' : $('#SearchBranch').val().join(", ")) : '@GeneralClass.BranchID'),
+                Role: @GeneralClass.Role,
                 RowsPerPage: RowPerPage,
                 PageNumber: PageNo,
                 TicketID: $("#SearchTicketID").val(),
@@ -664,7 +660,7 @@
                     var iHTML = "";
 
                     if (obj.length === 0) {
-                        if (@ViewBag.Role == 1) {
+                        if (@GeneralClass.Role == '1' || @GeneralClass.Role == '2') {
                             $("#data").html("<tr><td colspan='9' align='center'>No Data</td></tr>");
                         }
                         else {
@@ -678,7 +674,7 @@
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
                             iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "" + (obj[i].ADMFileName != null ? "<br/><a href='" + URL + "/ADMFiles/" + obj[i].ADMFileName + "' target='_blank'>View File</a>" : "") + "</td>";
-                            if (@ViewBag.Role == 1) {
+                            if (@GeneralClass.Role == '1' || @GeneralClass.Role == '2') {
                                 iHTML += "<td>" + obj[i].BranchID + "</td>";
                             }
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
@@ -706,10 +702,11 @@
 
                             iHTML += "<td class='project-actions text-right'>";
                             iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-primary btn-sm' href='/ADMFollowUp/Index/" + obj[i].ADMIDP + "' target='_blank'><i class='fas fa-eye'></i>&nbsp;View All F-ups</a>";
-                            if (@ViewBag.Role== 2) {
+                            if (@GeneralClass.Role != '1') {
+                                // Audit user, branch user and manager
                                 iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;Add Follow Up</a>";
                             }
-                            else if (@ViewBag.Role== 1) {
+                            else if (@GeneralClass.Role == '2') {
                                 if (obj[i].StatusName == 'Dispute' || obj[i].StatusName == 'ACM Received')
                                     iHTML += "<a style='display:block;margin-bottom:5px;' class='btn btn-info btn-sm' href='javascript:void(0)' onclick='AddNewFollowUp(" + obj[i].ADMIDP + ")'><i class='fa fa-plus'></i>&nbsp;Add Follow Up</a>";
                             }
@@ -752,6 +749,10 @@
                     $("#StatusIDF").val(obj[0].StatusIDF);
                     $('#StatusIDF').trigger('change');
                 }
+            });
+
+            $('#Default').on('shown.bs.modal', function () {
+                $('#Remarks').focus();
             });
         }
 
@@ -815,6 +816,10 @@
             $("#ACMAmount_Diff").val(AmountDiff);
 
             $("#ACMReceivedDefault").modal('show');
+
+            $('#ACMReceivedDefault').on('shown.bs.modal', function () {
+                $('#ACMNumber').focus();
+            });
         }
 
         function CalculateACMAmount() {
@@ -861,7 +866,7 @@
 
         function GetDashboardCount() {
             var mData = {
-                BranchID: '@ViewBag.BranchID'
+                BranchID: '@GeneralClass.BranchID'
             }
 
             $.ajax({
@@ -900,6 +905,10 @@
             ClearControlsADM();
 
             $("#ADMDefault").modal('show');
+
+            $('#ADMDefault').on('shown.bs.modal', function () {
+                $('#ADM_TicketID').focus();
+            });
         }
 
         function ClearControlsADM() {

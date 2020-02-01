@@ -46,9 +46,14 @@ namespace SQLLogic
             });
         }
 
-        public MEMBERS.SQLReturnValue ADMHeader_GeneralAction(long ADMIDP, int ActionType)
+        public MEMBERS.SQLReturnValue ADMHeader_GeneralAction(long ADMIDP, int ActionType, int UserID, string UserName)
         {
-            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_GeneralAction", new object[,] { { "ADMIDP", ADMIDP }, { "ActionType", ActionType } }, 3);
+            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_GeneralAction", new object[,] { 
+                { "ADMIDP", ADMIDP }
+                , { "ActionType", ActionType }
+                , { "UserID", UserID }
+                , { "UserName", UserName }
+            }, 3);
         }
 
         public object ADM_GetTicketDetail_DSR_ERP_ByTicketID(string TicketID)
@@ -56,9 +61,17 @@ namespace SQLLogic
             return new SqlHelper().GetJsonResult("ADM_GetTicketDetail_DSR_ERP_ByTicketID", new object[,] { { "TicketID", TicketID } });
         }
 
-        public MEMBERS.SQLReturnValue ADMHeader_UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount, int StatusIDF)
+        public MEMBERS.SQLReturnValue ADMHeader_UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount
+            , int StatusIDF, int UserID, string UserName)
         {
-            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_UpdateACMDetail", new object[,] { { "ADMIDP", ADMIDP }, { "ACMNumber", ACMNumber }, { "ACMAmount", ACMAmount }, { "StatusIDF", StatusIDF } }, 3);
+            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_UpdateACMDetail", new object[,] {
+                { "ADMIDP", ADMIDP }
+                , { "ACMNumber", ACMNumber }
+                , { "ACMAmount", ACMAmount }
+                , { "StatusIDF", StatusIDF }
+                , { "UserID", UserID }
+                , { "UserName", UserName }
+            }, 3);
         }
     }
 }
