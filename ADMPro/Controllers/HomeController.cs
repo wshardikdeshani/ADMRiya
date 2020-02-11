@@ -200,35 +200,43 @@ namespace ADMPro.Controllers
                 List<string> columns = new List<string>();
                 List<string> headers = new List<string>();
 
+                columns.Add("TicketID");
+                columns.Add("TicketAmount");
                 columns.Add("IATANumber");
+                if (Role == "1" || Role == "2")
+                    columns.Add("BranchID");
+                columns.Add("OfficeID");
                 columns.Add("ADMNumber");
                 columns.Add("ADMAmount");
+                columns.Add("ReasonName");
+                columns.Add("Remarks");
+                columns.Add("StatusName");
+                columns.Add("ADMRaisedDate");
+                columns.Add("CreatedByName");
                 columns.Add("ACMNumber");
                 columns.Add("ACMAmount");
-                columns.Add("TicketID");
-                columns.Add("OfficeID");
-                if (Role == "1")
-                    columns.Add("BranchID");
-                columns.Add("TicketAmount");
-                columns.Add("ReasonName");
-                columns.Add("StatusName");
-                columns.Add("Remarks");
-                columns.Add("ADMRaisedDate");
+                columns.Add("TotalDebitAmount");
+                columns.Add("LastFollowUpDate");
+                columns.Add("LastFollowUpBy");
 
-                headers.Add("IATANumber");
-                headers.Add("ADMNumber");
-                headers.Add("ADMAmount");
-                headers.Add("ACMNumber");
-                headers.Add("ACMAmount");
-                headers.Add("TicketID");
-                headers.Add("OfficeID");
-                if (Role == "1")
-                    headers.Add("BranchID");
-                headers.Add("TicketAmount");
-                headers.Add("ReasonName");
-                headers.Add("StatusName");
+                headers.Add("Ticket ID");
+                headers.Add("Ticket Amount");
+                headers.Add("IATA Number");
+                if (Role == "1" || Role == "2")
+                    headers.Add("Branch Name");
+                headers.Add("Office ID");
+                headers.Add("ADM Number");
+                headers.Add("ADM Amount");
+                headers.Add("Reason");
                 headers.Add("Remarks");
-                headers.Add("ADMRaisedDate");
+                headers.Add("Status");
+                headers.Add("ADM Raised Date");
+                headers.Add("ADM Raised By");
+                headers.Add("ACM Number");
+                headers.Add("ACM Amount");
+                headers.Add("Total Debit Amount");
+                headers.Add("Last Updated Date");
+                headers.Add("Last Updated By");
 
                 var cStyle = workbook.CreateCellStyle();
                 cStyle.FillForegroundColor = IndexedColors.White.Index;
@@ -243,11 +251,19 @@ namespace ADMPro.Controllers
                 BodyFont.FontHeightInPoints = 12;
                 BodyFont.FontName = "Calibri";
 
+                HSSFFont TotalFont = (HSSFFont)workbook.CreateFont();
+                TotalFont.FontHeightInPoints = 12;
+                TotalFont.FontName = "Calibri";
+                TotalFont.Boldweight = 800;
+
                 HSSFCellStyle HeaderStyle = (HSSFCellStyle)workbook.CreateCellStyle();
                 HeaderStyle.SetFont(HeaderFont);
 
                 HSSFCellStyle BodyStyle = (HSSFCellStyle)workbook.CreateCellStyle();
                 BodyStyle.SetFont(BodyFont);
+
+                HSSFCellStyle TotalStyle = (HSSFCellStyle)workbook.CreateCellStyle();
+                TotalStyle.SetFont(TotalFont);
 
                 var headerRow = sheet.CreateRow(0);
 
@@ -261,6 +277,8 @@ namespace ADMPro.Controllers
 
                 int RowCounter = 1;
 
+                double ADMAmountTotal = 0, ACMTotalAmount = 0, TicketTotalAmount = 0, TotalDebitAmount = 0;
+
                 //Below loop is fill content
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
@@ -272,10 +290,26 @@ namespace ADMPro.Controllers
                         var cell = row.CreateCell(j);
                         var o = dt.Rows[i][columns[j]].ToString();
 
-                        if (columns[j] == "ADMAmount" || columns[j] == "ACMAmount" || columns[j] == "TicketAmount")
+                        if (columns[j] == "ADMAmount" || columns[j] == "ACMAmount" || columns[j] == "TicketAmount" || columns[j] == "TotalDebitAmount")
                         {
                             double.TryParse(o, out double Value);
                             cell.SetCellValue(Value);
+
+                            switch (columns[j])
+                            {
+                                case "ADMAmount":
+                                    ADMAmountTotal = ADMAmountTotal + Value;
+                                    break;
+                                case "ACMAmount":
+                                    ACMTotalAmount = ACMTotalAmount + Value;
+                                    break;
+                                case "TicketAmount":
+                                    TicketTotalAmount = TicketTotalAmount + Value;
+                                    break;
+                                case "TotalDebitAmount":
+                                    TotalDebitAmount = TotalDebitAmount + Value;
+                                    break;
+                            }
                         }
                         else
                         {
@@ -289,6 +323,26 @@ namespace ADMPro.Controllers
 
                     RowCounter = RowCounter + 1;
                 }
+
+                int LastRowCount = dt.Rows.Count + 1;
+
+                var rowTotalAmount = sheet.CreateRow(LastRowCount);
+
+                var cellTicketAmount = rowTotalAmount.CreateCell(1);
+                cellTicketAmount.SetCellValue(TicketTotalAmount);
+                cellTicketAmount.CellStyle = TotalStyle;
+
+                var cellADMAmount = rowTotalAmount.CreateCell((Role == "1" || Role == "2") ? 6 : 5);
+                cellADMAmount.SetCellValue(ADMAmountTotal);
+                cellADMAmount.CellStyle = TotalStyle;
+
+                var cellACMAmount = rowTotalAmount.CreateCell((Role == "1" || Role == "2") ? 13 : 12);
+                cellACMAmount.SetCellValue(ACMTotalAmount);
+                cellACMAmount.CellStyle = TotalStyle;
+
+                var cellTotalDebitAmount = rowTotalAmount.CreateCell((Role == "1" || Role == "2") ? 14 : 13);
+                cellTotalDebitAmount.SetCellValue(TotalDebitAmount);
+                cellTotalDebitAmount.CellStyle = TotalStyle;
 
                 // Declare one MemoryStream variable for write file in stream
                 var stream = new MemoryStream();

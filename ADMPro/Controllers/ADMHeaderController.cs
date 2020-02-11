@@ -140,18 +140,25 @@ namespace ADMPro.Controllers
             }
 
             /*Send Email*/
-            if (Request.Form["ADMIDP"].ToString() == "0" && Response != "Ticket already added in ADM.") // NEW ADM RAISED
+            if (Request.Form["ADMIDP"].ToString() == "0" && (Response != "Ticket already added in ADM." && Response != "ADM already raised.")) // NEW ADM RAISED
             {
-                string Subject = "New ADM Raised - " + Request.Form["TicketID"].ToString();
+                string SubjectBody = string.Empty;
 
-                string Body = "New ADM Raised - " + Request.Form["TicketID"].ToString();
+                if (string.IsNullOrEmpty(Request.Form["TicketID"].ToString()) && !string.IsNullOrEmpty(Request.Form["ADMNumber"].ToString()))
+                {
+                    SubjectBody = "New ADM Raised - AMD Number is " + Request.Form["ADMNumber"].ToString();
+                }
+                else if (!string.IsNullOrEmpty(Request.Form["TicketID"].ToString()))
+                {
+                    SubjectBody = "New ADM Raised - Ticket id is " + Request.Form["TicketID"].ToString();
+                }
 
                 DataTable dt = new BranchEmailMasterLogic().BranchEmailMaster_GetEmailByBranchID(Request.Form["BranchID"].ToString());
 
                 if (dt.Rows.Count > 0)
                 {
-                    new EmailLogic().SendEmail(Subject
-                        , Body
+                    new EmailLogic().SendEmail(SubjectBody
+                        , SubjectBody
                         , dt.Rows[0]["ToEmailID"].ToString()
                         , dt.Rows[0]["CCEmailID"].ToString());
 
@@ -195,9 +202,9 @@ namespace ADMPro.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetTicketDetail(string TicketID)
+        public JsonResult GetTicketDetail(string TicketID, string IATANumber)
         {
-            object data = new ADMHeaderLogic().ADM_GetTicketDetail_DSR_ERP_ByTicketID(TicketID);
+            object data = new ADMHeaderLogic().ADM_GetTicketDetail_DSR_ERP_ByTicketID(TicketID, IATANumber);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
     }

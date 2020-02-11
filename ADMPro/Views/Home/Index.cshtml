@@ -41,20 +41,20 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ADM_TicketID" class="control-label">Ticket ID<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="ADM_TicketID" name="ADM_TicketID">
+                            <label for="ADM_TicketID" class="control-label">Ticket ID</label>
+                            <input type="text" class="form-control mygroup" id="ADM_TicketID" name="ADM_TicketID">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="ADM_IATANumber" class="control-label">IATA Number</label>
+                            <input type="text" class="form-control mygroup" id="ADM_IATANumber" name="ADM_IATANumber">
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <label class="control-label">&nbsp;</label><br />
                             <button id="ADM_DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="ADM_IATANumber" class="control-label">IATA Number</label>
-                            <input type="text" class="form-control" id="ADM_IATANumber" name="ADM_IATANumber" disabled>
                         </div>
                     </div>
                 </div>
@@ -673,12 +673,12 @@
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
-                            iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "" + (obj[i].ADMFileName != null ? "<br/><a href='" + URL + "/ADMFiles/" + obj[i].ADMFileName + "' target='_blank'>View File</a>" : "") + "</td>";
+                            iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "" + (obj[i].ADMFileName != null && obj[i].ADMFileName != '' ? "<br/><a href='" + URL + "/ADMFiles/" + obj[i].ADMFileName + "' target='_blank'>View File</a>" : "") + "</td>";
                             if (@GeneralClass.Role == '1' || @GeneralClass.Role == '2') {
                                 iHTML += "<td>" + obj[i].BranchID + "</td>";
                             }
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
-                            iHTML += "<td>Number: " + obj[i].ADMNumber + "<br/>Amount: " + obj[i].ADMAmount + "</td>";
+                            iHTML += "<td>Number: " + obj[i].ADMNumber + "<br/>Amount: " + obj[i].ADMAmount + "<br/>Total Debit Amount: " + obj[i].TotalDebitAmount + "</td>";
                             if (obj[i].ACMNumber == '' && obj[i].ACMAmount == 0) {
                                 iHTML += "<td><h3 class='text-center'>-</h3></td>";
                             }
@@ -813,6 +813,13 @@
 
             var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
 
+            if (AmountDiff == 0) {
+                $("#ACM_StatusIDF").attr("disabled", "disabled");
+            }
+            else {
+                $("#ACM_StatusIDF").removeAttr("disabled");
+            }
+
             $("#ACMAmount_Diff").val(AmountDiff);
 
             $("#ACMReceivedDefault").modal('show');
@@ -828,6 +835,13 @@
 
             var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
 
+            if (AmountDiff == 0) {
+                $("#ACM_StatusIDF").attr("disabled", "disabled");
+            }
+            else {
+                $("#ACM_StatusIDF").removeAttr("disabled");
+            }
+
             $("#ACMAmount_Diff").val(AmountDiff);
         }
 
@@ -836,7 +850,7 @@
                 ADMIDP: $("#ACM_ADMIDF").val()
                 , ACMNumber: $("#ACMNumber").val()
                 , ACMAmount: $("#ACMAmount").val()
-                , StatusIDF: $("#ACM_StatusIDF").val()
+                , StatusIDF: ($("#ACMAmount_Diff").val() == '0' ? '7' : $("#ACM_StatusIDF").val())
             }
 
             $.ajax({
@@ -851,6 +865,8 @@
                     ClearACMControls();
 
                     $("#ACMReceivedDefault").modal('hide');
+
+                    GetData(10, 1, '');
                 },
                 error: function (err) {
                     Swal.fire('Error', err, 'error');
@@ -920,8 +936,8 @@
         }
 
         function FetchTicketDetail() {
-            if ($("#ADM_TicketID").val().length <= 0) {
-                toastr.error('Please enter ticket id');
+            if ($("#ADM_TicketID").val().length <= 0 && $("#ADM_IATANumber").val().length <= 0) {
+                toastr.error('Please enter ticket id or IATA number');
                 return false;
             }
 
@@ -929,6 +945,7 @@
 
             var mData = {
                 TicketID: $("#ADM_TicketID").val()
+                , IATANumber: $("#ADM_IATANumber").val()
             }
 
             $.ajax({
@@ -959,16 +976,20 @@
         function ADM_Save() {
             $("#ADM_ApplicationForm").validate({
                 rules: {
-                    TicketID: "required",
-                    IATANumber: "required",
-                    ADMNumber: "required",
-                    ADMAmount: "required",
-                    OfficeID: "required",
-                    BranchID: "required",
-                    TicketIssueBranchID: "required",
-                    TicketAmount: "required",
-                    Remarks: "required",
-                    ReasonIDF: {
+                    ADM_TicketID: {
+                        require_from_group: [1, '.mygroup']
+                    },
+                    ADM_IATANumber: {
+                        require_from_group: [1, '.mygroup']
+                    },
+                    ADM_ADMNumber: "required",
+                    ADM_ADMAmount: "required",
+                    ADM_OfficeID: "required",
+                    ADM_BranchID: "required",
+                    ADM_TicketIssueBranchID: "required",
+                    ADM_TicketAmount: "required",
+                    ADM_Remarks: "required",
+                    ADM_ReasonIDF: {
                         required: true,
                         notEqualTo: "0"
                     }
@@ -977,17 +998,20 @@
                     //    notEqualTo: "0"
                     //}
                 },
+                groups: {
+                    mygroup: "ADM_TicketID ADM_IATANumber"
+                },
                 messages: {
-                    TicketID: "Ticket ID require.",
-                    IATANumber: "IATA number require.",
-                    ADMNumber: "ADM number require.",
-                    ADMAmount: "ADM amount require.",
-                    OfficeID: "Office id require.",
-                    BranchID: "Branch id require.",
-                    TicketIssueBranchID: "Ticket issue branch id require.",
-                    TicketAmount: "Ticket amount require.",
-                    Remarks: "Remarks require.",
-                    ReasonIDF: {
+                    ADM_TicketID: "Please enter Ticket ID or IATA number.",
+                    ADM_IATANumber: "Please enter Ticket ID or IATA number.",
+                    ADM_ADMNumber: "ADM number require.",
+                    ADM_ADMAmount: "ADM amount require.",
+                    ADM_OfficeID: "Office id require.",
+                    ADM_BranchID: "Branch id require.",
+                    ADM_TicketIssueBranchID: "Ticket issue branch id require.",
+                    ADM_TicketAmount: "Ticket amount require.",
+                    ADM_Remarks: "Remarks require.",
+                    ADM_ReasonIDF: {
                         required: "Reason require.",
                         notEqualTo: "Reason require."
                     }
@@ -1029,7 +1053,7 @@
                             processData: false, // Not to process data
                             data: fileData,
                             success: function (mRes) {
-                                if (mRes == 'Ticket already added in ADM.') {
+                                if (mRes == 'Ticket already added in ADM.' || mRes == 'ADM already raised.') {
                                     toastr.error(mRes);
                                 }
                                 else {

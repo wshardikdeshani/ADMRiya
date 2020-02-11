@@ -48,7 +48,7 @@ namespace SQLLogic
 
         public MEMBERS.SQLReturnValue ADMHeader_GeneralAction(long ADMIDP, int ActionType, int UserID, string UserName)
         {
-            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_GeneralAction", new object[,] { 
+            return new SqlHelper().ExecuteProceduerWithValue("ADMHeader_GeneralAction", new object[,] {
                 { "ADMIDP", ADMIDP }
                 , { "ActionType", ActionType }
                 , { "UserID", UserID }
@@ -56,9 +56,9 @@ namespace SQLLogic
             }, 3);
         }
 
-        public object ADM_GetTicketDetail_DSR_ERP_ByTicketID(string TicketID)
+        public object ADM_GetTicketDetail_DSR_ERP_ByTicketID(string TicketID, string IATANumber)
         {
-            return new SqlHelper().GetJsonResult("ADM_GetTicketDetail_DSR_ERP_ByTicketID", new object[,] { { "TicketID", TicketID } });
+            return new SqlHelper().GetJsonResult("ADM_GetTicketDetail_DSR_ERP_ByTicketID", new object[,] { { "TicketID", TicketID }, { "IATANumber", IATANumber } });
         }
 
         public MEMBERS.SQLReturnValue ADMHeader_UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount

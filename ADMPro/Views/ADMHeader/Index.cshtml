@@ -31,20 +31,20 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="TicketID" class="control-label">Ticket ID<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control numeric" id="TicketID" name="TicketID">
+                            <label for="TicketID" class="control-label">Ticket ID</label>
+                            <input type="text" class="form-control mygroup" id="TicketID" name="TicketID">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="IATANumber" class="control-label">IATA Number</label>
+                            <input type="text" class="form-control mygroup" id="IATANumber" name="IATANumber">
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
                             <label class="control-label">&nbsp;</label><br />
                             <button id="DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="IATANumber" class="control-label">IATA Number</label>
-                            <input type="text" class="form-control" id="IATANumber" name="IATANumber" disabled>
                         </div>
                     </div>
                 </div>
@@ -169,8 +169,8 @@
                 <tr>
                     <th style="width: 10px">#</th>
                     <th>Ticket ID</th>
-                    <th>Office/Branch</th>
                     <th>IATA Number</th>
+                    <th>Office/Branch</th>
                     <th>Reason</th>
                     <th>ADM Raised Date</th>
                     <th>Ticket Status</th>
@@ -180,7 +180,7 @@
             </thead>
             <tbody id="data">
                 <tr>
-                    <td colspan="8" align="center"><div class="loader"></div></td>
+                    <td colspan="9" align="center"><div class="loader"></div></td>
                 </tr>
             </tbody>
         </table>
@@ -251,8 +251,12 @@
         function Save() {
             $("#ApplicationForm").validate({
                 rules: {
-                    TicketID: "required",
-                    IATANumber: "required",
+                    TicketID: {
+                        require_from_group:[1, '.mygroup']
+                    },
+                    IATANumber: {
+                        require_from_group: [1, '.mygroup']
+                    },
                     ADMNumber: "required",
                     ADMAmount: "required",
                     OfficeID: "required",
@@ -269,9 +273,12 @@
                     //    notEqualTo: "0"
                     //}
                 },
+                groups: {
+                    mygroup: "TicketID IATANumber"
+                },
                 messages: {
-                    TicketID: "Ticket ID require.",
-                    IATANumber: "IATA number require.",
+                    TicketID: "Please enter Ticket ID or IATA number.",
+                    IATANumber: "Please enter Ticket ID or IATA number.",
                     ADMNumber: "ADM number require.",
                     ADMAmount: "ADM amount require.",
                     OfficeID: "Office id require.",
@@ -321,7 +328,7 @@
                             processData: false, // Not to process data
                             data: fileData,
                             success: function (mRes) {
-                                if (mRes == 'Ticket already added in ADM.') {
+                                if (mRes == 'Ticket already added in ADM.' || mRes == 'ADM already raised.') {
                                     toastr.error(mRes);
                                 }
                                 else {
@@ -476,15 +483,15 @@
                     var iHTML = "";
 
                     if (obj.length === 0) {
-                        $("#data").html("<tr><td colspan='8' align='center'>No Data</td></tr>");
+                        $("#data").html("<tr><td colspan='9' align='center'>No Data</td></tr>");
                     }
                     else {
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
                             iHTML += "<td>" + obj[i].TicketID + "</td>";
-                            iHTML += "<td>" + obj[i].OfficeID + "/" + obj[i].BranchID + "</td>";
                             iHTML += "<td>" + obj[i].IATANumber + "</td>";
+                            iHTML += "<td>" + obj[i].OfficeID + "/" + obj[i].BranchID + "</td>";
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
                             iHTML += "<td>" + obj[i].ADMRaisedDate + "</td>";
                             iHTML += "<td>" + obj[i].StatusName + "</td>";
@@ -514,8 +521,8 @@
         }
 
         function FetchTicketDetail() {
-            if ($("#TicketID").val().length <= 0) {
-                toastr.error('Please enter ticket id');
+            if ($("#TicketID").val().length <= 0 && $("#IATANumber").val().length <= 0) {
+                toastr.error('Please enter ticket id or IATA number');
                 return false;
             }
 
@@ -523,6 +530,7 @@
 
             var mData = {
                 TicketID: $("#TicketID").val()
+                , IATANumber: $("#IATANumber").val()
             }
 
             $.ajax({

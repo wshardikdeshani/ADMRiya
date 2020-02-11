@@ -60,11 +60,14 @@
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
-    @{ string ControllerName, ActionName, ControllerActionName, Role; }
+    @{ string ControllerName, ActionName, ControllerActionName, EmployeeID, EmployeeName, BranchID, Role; }
     @{
         ControllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
         ActionName = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
         ControllerActionName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() + HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+        EmployeeID = GeneralClass.EmployeeID;
+        EmployeeName = GeneralClass.EmployeeName;
+        BranchID = GeneralClass.BranchID;
         Role = GeneralClass.Role;
     }
     <div class="wrapper">
@@ -78,13 +81,13 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             @if (Role == "1" || Role == "2") // Audit
             {
-                <a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&role=@ViewBag.Role" class="brand-link" style="padding:5px;">
+                <a href="/Home/Index?eid=@EmployeeID&enm=@EmployeeName&role=@Role" class="brand-link" style="padding:5px;">
                     <img src="~/Content/img/riya-logo.svg" alt="Riya Travel - ADM" style="background-color:#fff" />
                 </a>
             }
             else if (Role == "3" || Role == "4") // Branch
             {
-                <a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&bnm=@ViewBag.BranchID&role=@ViewBag.Role" class="brand-link" style="padding:5px;">
+                <a href="/Home/Index?eid=@EmployeeID&enm=@EmployeeName&bnm=@BranchID&role=@Role" class="brand-link" style="padding:5px;">
                     <img src="~/Content/img/riya-logo.svg" alt="Riya Travel - ADM" style="background-color:#fff" />
                 </a>
             }
@@ -96,19 +99,19 @@
                     <div class="info">
                         @if (Role == "1")
                         {
-                            <a href="#" class="d-block">Audit Manager</a>
+                            <a href="#" class="d-block">Audit Manager<br />@EmployeeName</a>
                         }
                         else if (Role == "2")
                         {
-                            <a href="#" class="d-block">Audit User</a>
+                            <a href="#" class="d-block">Audit User<br />@EmployeeName</a>
                         }
                         else if (Role == "3")
                         {
-                            <a href="#" class="d-block">Branch Manager</a>
+                            <a href="#" class="d-block">Branch Manager<br />@EmployeeName</a>
                         }
                         else if (Role == "4")
                         {
-                            <a href="#" class="d-block">Branch User</a>
+                            <a href="#" class="d-block">Branch User<br />@EmployeeName</a>
                         }
                     </div>
                 </div>
@@ -116,17 +119,17 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         @if (Role == "1" || Role == "2") // Audit
                         {
-                            <li class="nav-item"><a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&role=@ViewBag.Role" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
+                            <li class="nav-item"><a href="/Home/Index?eid=@EmployeeID&enm=@EmployeeName&role=@Role" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
                         }
                         else if (Role == "3" || Role == "4") // Branch
                         {
-                            <li class="nav-item"><a href="/Home/Index?eid=@ViewBag.EmployeeID&enm=@ViewBag.EmployeeName&bnm=@ViewBag.BranchID&role=@ViewBag.Role" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
+                            <li class="nav-item"><a href="/Home/Index?eid=@EmployeeID&enm=@EmployeeName&bnm=@BranchID&role=@Role" class="nav-link @(ControllerName == "Home" ? "active" : string.Empty)"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
                         }
-                        <li class="nav-item">
-                            <a href="/ADMHeader/Index" class="nav-link @(ControllerName == "ADMHeader" ? "active" : string.Empty)"><i class="nav-icon fas fa-plane-departure"></i><p>ADM</p></a>
-                        </li>
                         @if (Role == "1" || Role == "2") // Audit
                         {
+                            <li class="nav-item">
+                                <a href="/ADMHeader/Index" class="nav-link @(ControllerName == "ADMHeader" ? "active" : string.Empty)"><i class="nav-icon fas fa-plane-departure"></i><p>ADM</p></a>
+                            </li>
                             <li class="nav-item has-treeview @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "menu-open" : string.Empty)">
                                 <a href="javascript:void(0)" class="nav-link @(ControllerName == "BranchMaster" || ControllerName == "OfficeMaster" || ControllerName == "ReasonMaster" || ControllerName == "StatusMaster" ? "active" : string.Empty)"><i class="nav-icon fas fa-copy"></i><p>Master <i class="fas fa-angle-left right"></i></p></a>
                                 <ul class="nav nav-treeview">
@@ -148,6 +151,9 @@
                                 </ul>
                             </li>
                         }
+                        <li class="nav-item">
+                            <a href="javascript:window.open('','_self').close();" class="nav-link"><i class="nav-icon fas fa-power-off"></i><p>Logout</p></a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -190,6 +196,7 @@
     <script src="~/Content/plugins/toastr/toastr.min.js"></script>
     <!--form validation-->
     <script src="~/Content/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/Content/plugins/jquery-validation/additional-methods.min.js"></script>
     <!-- Select2 -->
     <script src="~/Content/plugins/select2/js/select2.full.min.js"></script>
     <!-- Date Picker -->

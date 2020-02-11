@@ -16,9 +16,18 @@ namespace SQLLogic
             return new SqlHelper().ExecuteProceduerWithValueSpecial("BranchEmailMaster_Insert_Update", model);
         }
 
-        public object BranchEmailMaster_Get_GetAll(int BranchEmailIDP, bool? IsActive)
+        public object BranchEmailMaster_Get_GetAll(int BranchEmailIDP, string BranchID, bool? IsActive)
         {
-            return new SqlHelper().GetJsonResult("BranchEmailMaster_Get_GetAll", new object[,] { { "BranchEmailIDP", BranchEmailIDP }, { "IsActive", IsActive } });
+            return new SqlHelper().GetJsonResult("BranchEmailMaster_Get_GetAll", new object[,] { { "BranchEmailIDP", BranchEmailIDP }, { "BranchID", BranchID }, { "IsActive", IsActive } });
+        }
+
+        public MEMBERS.PagingResponse BranchEmailMaster_GetAll_Paging(string BranchID, int RowsPerPage, int PageNumber)
+        {
+            return new SqlHelper().Paging_GetAll_DataTable("BranchEmailMaster_GetAll_Paging", new object[,] {
+                { "BranchID", BranchID }
+                , { "RowsPerPage", RowsPerPage }
+                , { "PageNumber", PageNumber }
+            });
         }
 
         public MEMBERS.SQLReturnValue BranchEmailMaster_GeneralAction(int BranchEmailIDP, int ActionType)
