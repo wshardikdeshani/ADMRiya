@@ -491,10 +491,10 @@
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
                             iHTML += "<td>" + obj[i].TicketID + "</td>";
                             iHTML += "<td>" + obj[i].IATANumber + "</td>";
-                            iHTML += "<td>" + obj[i].OfficeID + "/" + obj[i].BranchID + "</td>";
+                            iHTML += "<td><span style='display:block;width:120px;'>" + obj[i].OfficeID + "/<br>" + obj[i].BranchID + "</span></td>";
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
                             iHTML += "<td>" + obj[i].ADMRaisedDate + "</td>";
-                            iHTML += "<td>" + obj[i].StatusName + "</td>";
+                            iHTML += "<td><span style='display:block;width:120px;'>" + obj[i].StatusName + "</span></td>";
                             iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].ADMIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") + '</button></td>';
                             iHTML += "<td>";
                             iHTML += '<button style="display:block;margin-bottom:5px;" class="btn btn-success" onclick="Get(' + obj[i].ADMIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';

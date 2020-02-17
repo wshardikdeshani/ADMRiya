@@ -99,7 +99,19 @@ namespace ADMPro.Controllers
                 , OrderByColumnName
                 , OrderBy);
 
-            HttpContext.Cache["TicketResponse"] = data.Data;
+            /*Call Again For Excel*/
+            MEMBERS.PagingResponse AuditData = new ADMHeaderLogic().ADMHeader_Dashboard(BranchID
+                , Role
+                , 0
+                , 0
+                , TicketID
+                , FromDate
+                , ToDate
+                , StatusIDF
+                , OrderByColumnName
+                , OrderBy);
+
+            HttpContext.Cache["TicketResponse"] = AuditData.Data;
             HttpContext.Cache["Role"] = Role;
 
             return Json(data, JsonRequestBehavior.AllowGet);
@@ -200,7 +212,7 @@ namespace ADMPro.Controllers
                 List<string> columns = new List<string>();
                 List<string> headers = new List<string>();
 
-                columns.Add("TicketID");
+                columns.Add("TicketIDDisplay");
                 columns.Add("TicketAmount");
                 columns.Add("IATANumber");
                 if (Role == "1" || Role == "2")

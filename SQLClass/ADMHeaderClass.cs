@@ -27,7 +27,7 @@ namespace SQLClass
 
     public class ADMHeaderExportClass
     {
-        public string TicketID { get; set; }
+        public string TicketIDDisplay { get; set; }
         public float TicketAmount { get; set; }
         public string IATANumber { get; set; }
         public string BranchID { get; set; }
