@@ -230,6 +230,7 @@ namespace ADMPro.Controllers
                 columns.Add("TotalDebitAmount");
                 columns.Add("LastFollowUpDate");
                 columns.Add("LastFollowUpBy");
+                columns.Add("IATAADMDate");
 
                 headers.Add("Ticket ID");
                 headers.Add("Ticket Amount");
@@ -249,6 +250,7 @@ namespace ADMPro.Controllers
                 headers.Add("Total Debit Amount");
                 headers.Add("Last Updated Date");
                 headers.Add("Last Updated By");
+                headers.Add("IATA ADM Date");
 
                 var cStyle = workbook.CreateCellStyle();
                 cStyle.FillForegroundColor = IndexedColors.White.Index;

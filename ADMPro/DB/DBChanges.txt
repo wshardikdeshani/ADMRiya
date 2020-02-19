@@ -1,0 +1,9 @@
+﻿ALTER TABLE ADMHeader ADD IATAADMDate DateTime
+
+ALTER SP ADMHeader_Insert_Update
+
+ALTER SP ADMHeader_Get_GetAll
+
+ALTER SP ADMHeader_GetAllPaging
+
+ALTER TABLE ADMHeader ADD DebitTo Varchar(100)

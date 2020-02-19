@@ -49,16 +49,22 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="ADMNumber" class="control-label">ADM Number<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="ADMNumber" name="ADMNumber">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="ADMAmount" class="control-label">ADM Amount<span class="text-danger">*</span></label>
                             <input type="text" class="form-control numeric" id="ADMAmount" name="ADMAmount">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="IATAADMDate" class="control-label">IATA ADM Date<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="IATAADMDate" name="IATAADMDate" />
                         </div>
                     </div>
                 </div>
@@ -119,21 +125,21 @@
                         </div>
                     </div>
                     @*<div class="col-md-6">
-                <div class="form-group">
-                    <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
-                    <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
-                        @{
-                            if (ViewBag.StatusList != null)
-                            {
-                                foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
-                                {
-                                    <option value="@sm.StatusIDP">@sm.StatusName</option>
-                                }
-                            }
-                        }
-                    </select>
-                </div>
-            </div>*@
+                            <div class="form-group">
+                                <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
+                                <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
+                                    @{
+                                        if (ViewBag.StatusList != null)
+                                        {
+                                            foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                            {
+                                                <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>*@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -217,6 +223,12 @@
             //Initialize Select2 Elements
             $('.select2').select2()
 
+            $('#IATAADMDate').datepicker({
+                format: 'mm/dd/yyyy',
+                todayHighlight: true,
+                autoclose: true
+            });
+
             //$(".numeric").keydown(function (e) {
             //    // Allow: backspace, delete, tab, escape, enter and .
             //    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -252,7 +264,7 @@
             $("#ApplicationForm").validate({
                 rules: {
                     TicketID: {
-                        require_from_group:[1, '.mygroup']
+                        require_from_group: [1, '.mygroup']
                     },
                     IATANumber: {
                         require_from_group: [1, '.mygroup']
@@ -267,7 +279,8 @@
                     ReasonIDF: {
                         required: true,
                         notEqualTo: "0"
-                    }
+                    },
+                    IATAADMDate: "required"
                     //StatusIDF: {
                     //    required: true,
                     //    notEqualTo: "0"
@@ -289,7 +302,8 @@
                     ReasonIDF: {
                         required: "Reason require.",
                         notEqualTo: "Reason require."
-                    }
+                    },
+                    IATAADMDate: "IATA ADM date require."
                     //StatusIDF: {
                     //    required: "Status require.",
                     //    notEqualTo: "Status require."
@@ -320,6 +334,7 @@
                         fileData.append('TicketAmount', $("#TicketAmount").val());
                         fileData.append('ReasonIDF', $("#ReasonIDF").val());
                         fileData.append('Remarks', $("#Remarks").val());
+                        fileData.append('IATAADMDate', $("#IATAADMDate").val());
 
                         $.ajax({
                             url: '/ADMHeader/Save',
@@ -377,6 +392,8 @@
                     $("#TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
                     $("#TicketAmount").val(obj[0].TicketAmount);
                     $("#Remarks").val(obj[0].Remarks);
+
+                    $("#IATAADMDate").val(obj[0].IATAADMDate);
 
                     $("#ReasonIDF").val(obj[0].ReasonIDF);
                     $('#ReasonIDF').trigger('change');
@@ -490,7 +507,7 @@
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
                             iHTML += "<td>" + obj[i].TicketID + "</td>";
-                            iHTML += "<td>" + obj[i].IATANumber + "</td>";
+                            iHTML += "<td>" + obj[i].IATANumber + (obj[i].IATAADMDate != '' ? "<br/>IATA ADM Date: " + obj[i].IATAADMDate + "" : "") + "</td>";
                             iHTML += "<td><span style='display:block;width:120px;'>" + obj[i].OfficeID + "/<br>" + obj[i].BranchID + "</span></td>";
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
                             iHTML += "<td>" + obj[i].ADMRaisedDate + "</td>";
@@ -511,7 +528,7 @@
 
         function ClearControls() {
             $("#ADMIDP").val(0);
-            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount, #OldFileName").val('');
+            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount, #OldFileName, #IATAADMDate").val('');
 
             $("#ReasonIDF").val(0);
             $('#ReasonIDF').trigger('change');

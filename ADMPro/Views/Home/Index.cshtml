@@ -59,16 +59,22 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="ADM_ADMNumber" class="control-label">ADM Number<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="ADM_ADMNumber" name="ADM_ADMNumber">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="ADM_ADMAmount" class="control-label">ADM Amount<span class="text-danger">*</span></label>
                             <input type="text" class="form-control numeric" id="ADM_ADMAmount" name="ADM_ADMAmount">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ADM_IATAADMDate" class="control-label">IATA ADM Date<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ADM_IATAADMDate" name="ADM_IATAADMDate" />
                         </div>
                     </div>
                 </div>
@@ -205,7 +211,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
-                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
+                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF" onchange="DisplayDebitOption()">
                                 <option value="0" selected>Select Status</option>
                                 @{
                                     if (ViewBag.StatusList != null)
@@ -217,6 +223,31 @@
                                     }
                                 }
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display:none" id="DebitToRiya">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DebitToRiyaType" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="DebitToType" name="DebitToType" onchange="DisplayDebitToOption()">
+                                <option value="1" selected>Staff</option>
+                                <option value="2" selected>Riya</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DebitTo" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="DebitTo" name="DebitTo" value="Company Account" disabled/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display:none" id="DebitToSubAgent">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DebitToSubAgentName" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="DebitToSubAgentName" name="DebitToSubAgentName" />
                         </div>
                     </div>
                 </div>
@@ -320,13 +351,13 @@
                                         <input type="text" class="form-control" id="SearchTicketID" name="SearchTicketID">
                                     </div>
                                 </div>
-                                <div class="col-md-3" style="display:none">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="FromDate" class="control-label">From Date</label>
                                         <input type="text" class="form-control" id="FromDate" name="FromDate">
                                     </div>
                                 </div>
-                                <div class="col-md-3" style="display:none">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="ToDate" class="control-label">To Date</label>
                                         <input type="text" class="form-control" id="ToDate" name="ToDate">
@@ -482,7 +513,7 @@
                 return this.optional(e) || v != p;
             }, "Please specify a different value");
 
-            $('#NextFollowUpDate, #FromDate, #ToDate').datepicker({
+            $('#NextFollowUpDate, #FromDate, #ToDate, #ADM_IATAADMDate').datepicker({
                 format: 'mm/dd/yyyy',
                 todayHighlight: true,
                 autoclose: true
@@ -673,7 +704,7 @@
                         for (var i = 0; i < obj.length; i++) {
                             iHTML += "<tr>";
                             iHTML += "<td>" + obj[i].SrNo + "</td>";
-                            iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "" + (obj[i].ADMFileName != null && obj[i].ADMFileName != '' ? "<br/><a href='" + URL + "/ADMFiles/" + obj[i].ADMFileName + "' target='_blank'>View File</a>" : "") + "</td>";
+                            iHTML += "<td>" + obj[i].TicketID + "<br/>" + obj[i].ADMRaisedDate + "" + (obj[i].ADMFileName != null && obj[i].ADMFileName != '' ? "<br/><a href='" + URL + "/ADMFiles/" + obj[i].ADMFileName + "' target='_blank'>View File</a>" : "") + "<br/>" + (obj[i].IATAADMDate != '' ? "<br/>IATA ADM Date: " + obj[i].IATAADMDate + "" : "") + "</td>";
                             if (@GeneralClass.Role == '1' || @GeneralClass.Role == '2') {
                                 iHTML += "<td>" + obj[i].BranchID + "</td>";
                             }
@@ -929,7 +960,7 @@
 
         function ClearControlsADM() {
             $("#ADMIDP").val(0);
-            $("#ADM_TicketID, #ADM_IATANumber, #ADM_ADMNumber, #ADM_OfficeID, #ADM_BranchID, #ADM_TicketIssueBranchID, #ADM_TicketAmount, #ADM_Remarks, #ADM_ADMAmount").val('');
+            $("#ADM_TicketID, #ADM_IATANumber, #ADM_ADMNumber, #ADM_OfficeID, #ADM_BranchID, #ADM_TicketIssueBranchID, #ADM_TicketAmount, #ADM_Remarks, #ADM_ADMAmount, #ADM_IATAADMDate").val('');
 
             $("#ADM_ReasonIDF").val(0);
             $('#ADM_ReasonIDF').trigger('change');
@@ -992,7 +1023,8 @@
                     ADM_ReasonIDF: {
                         required: true,
                         notEqualTo: "0"
-                    }
+                    },
+                    ADM_IATAADMDate: "required"
                     //StatusIDF: {
                     //    required: true,
                     //    notEqualTo: "0"
@@ -1014,7 +1046,8 @@
                     ADM_ReasonIDF: {
                         required: "Reason require.",
                         notEqualTo: "Reason require."
-                    }
+                    },
+                    ADM_IATAADMDate: "IATA ADM date require."
                     //StatusIDF: {
                     //    required: "Status require.",
                     //    notEqualTo: "Status require."
@@ -1045,6 +1078,7 @@
                         fileData.append('TicketAmount', $("#ADM_TicketAmount").val());
                         fileData.append('ReasonIDF', $("#ADM_ReasonIDF").val());
                         fileData.append('Remarks', $("#ADM_Remarks").val());
+                        fileData.append('IATAADMDate', $("#ADM_IATAADMDate").val());
 
                         $.ajax({
                             url: '/ADMHeader/Save',
@@ -1077,6 +1111,34 @@
                     return false;
                 }
             });
+        }
+
+        function DisplayDebitOption() {
+            var StatusIDF = $("#StatusIDF").val();
+
+            if (StatusIDF == 5 || StatusIDF == 10) // Agent
+            {
+                $("#DebitToRiya").hide();
+                $("#DebitToSubAgent").show();
+            }
+            else if (StatusIDF == 4 || StatusIDF == 9) // Riya
+            {
+                $("#DebitToRiya").show();
+                $("#DebitToSubAgent").hide();
+            }
+        }
+
+        function DisplayDebitToOption() {
+            var DebitToType = $("#DebitToType").val();
+
+            if (DebitToType == 1) { // Staff
+                $("#DebitTo").val("");
+                $("#DebitTo").removeAttr("disabled");
+            }
+            else if (DebitToType == 2) { // Riya
+                $("#DebitTo").val("Company Account");
+                $("#DebitTo").attr("disabled", "disabled");
+            }
         }
     </script>
 }

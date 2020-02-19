@@ -23,6 +23,7 @@ namespace SQLClass
         public int UserID { get; set; }
         public string UserName { get; set; }
         public string ADMFileName { get; set; }
+        public string IATAADMDate { get; set; }
     }
 
     public class ADMHeaderExportClass

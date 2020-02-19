@@ -76,7 +76,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
-                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
+                            <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF" onchange="DisplayDebitOption()">
                                 <option value="0" selected>Select Status</option>
                                 @{
                                     if (ViewBag.StatusList != null)
@@ -88,6 +88,31 @@
                                     }
                                 }
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display:none" id="DebitToRiya">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DebitToRiyaType" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="DebitToType" name="DebitToType" onchange="DisplayDebitToOption()">
+                                <option value="1" selected>Staff</option>
+                                <option value="2" selected>Riya</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DebitTo" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="DebitTo" name="DebitTo" value="Company Account" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display:none" id="DebitToSubAgent">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DebitToSubAgentName" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="DebitToSubAgentName" name="DebitToSubAgentName" />
                         </div>
                     </div>
                 </div>
@@ -358,6 +383,34 @@
 
             $("#StatusIDF").val(0);
             $('#StatusIDF').trigger('change');
+        }
+
+        function DisplayDebitOption() {
+            var StatusIDF = $("#StatusIDF").val();
+
+            if (StatusIDF == 5 || StatusIDF == 10) // Agent
+            {
+                $("#DebitToRiya").hide();
+                $("#DebitToSubAgent").show();
+            }
+            else if (StatusIDF == 4 || StatusIDF == 9) // Riya
+            {
+                $("#DebitToRiya").show();
+                $("#DebitToSubAgent").hide();
+            }
+        }
+
+        function DisplayDebitToOption() {
+            var DebitToType = $("#DebitToType").val();
+
+            if (DebitToType == 1) { // Staff
+                $("#DebitTo").val("");
+                $("#DebitTo").removeAttr("disabled");
+            }
+            else if (DebitToType == 2) { // Riya
+                $("#DebitTo").val("Company Account");
+                $("#DebitTo").attr("disabled", "disabled");
+            }
         }
     </script>
 }

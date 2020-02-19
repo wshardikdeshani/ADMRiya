@@ -75,6 +75,7 @@ namespace ADMPro.Controllers
                         float.TryParse(Request.Form["ADMAmount"].ToString(), out float ADMAmount);
                         float.TryParse(Request.Form["TicketAmount"].ToString(), out float TicketAmount);
                         int.TryParse(Request.Form["ReasonIDF"].ToString(), out int ReasonIDF);
+                        //DateTime.TryParse(Request.Form["IATAADMDate"].ToString(), out DateTime IATAADMDate);
 
                         obj.ADMIDP = ADMIDP;
                         obj.IATANumber = Request.Form["IATANumber"].ToString();
@@ -91,6 +92,7 @@ namespace ADMPro.Controllers
                         obj.UserID = GeneralClass.GetIntValue(GeneralClass.EmployeeID);
                         obj.UserName = GeneralClass.EmployeeName;
                         obj.ADMFileName = NewFileName;
+                        obj.IATAADMDate = Request.Form["IATAADMDate"].ToString();
 
                         MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_Insert_Update(obj);
 
@@ -112,6 +114,9 @@ namespace ADMPro.Controllers
                     float.TryParse(Request.Form["ADMAmount"].ToString(), out float ADMAmount);
                     float.TryParse(Request.Form["TicketAmount"].ToString(), out float TicketAmount);
                     int.TryParse(Request.Form["ReasonIDF"].ToString(), out int ReasonIDF);
+                    //DateTime.TryParse(Request.Form["IATAADMDate"].ToString(), out DateTime IATAADMDate);
+
+                    //DateTime IATAADMDate = Convert.ToDateTime(Request.Form["IATAADMDate"].ToString());
 
                     obj.ADMIDP = ADMIDP;
                     obj.IATANumber = Request.Form["IATANumber"].ToString();
@@ -128,6 +133,7 @@ namespace ADMPro.Controllers
                     obj.UserID = GeneralClass.GetIntValue(GeneralClass.EmployeeID);
                     obj.UserName = GeneralClass.EmployeeName;
                     obj.ADMFileName = Request.Form["OldFileName"].ToString();
+                    obj.IATAADMDate = Request.Form["IATAADMDate"].ToString();
 
                     MEMBERS.SQLReturnValue mRes = new ADMHeaderLogic().ADMHeader_Insert_Update(obj);
 
