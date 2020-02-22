@@ -30,7 +30,7 @@ namespace SQLLogic
 
         public MEMBERS.PagingResponse ADMHeader_Dashboard(string BranchID, int? Role
             , int RowsPerPage, int PageNumber
-            , string TicketID, string FromDate, string ToDate, int? StatusIDF, string OrderByColumnName, string OrderBy)
+            , string TicketID, string FromDate, string ToDate, int? StatusIDF, string OrderByColumnName, string OrderBy, int ReasonIDF)
         {
             return new SqlHelper().Paging_GetAll_DataTable("ADMHeader_Dashboard", new object[,] {
                 { "BranchID", BranchID }
@@ -43,6 +43,7 @@ namespace SQLLogic
                 , { "StatusIDF", StatusIDF }
                 , { "OrderByColumnName", OrderByColumnName }
                 , { "OrderBy", OrderBy }
+                , { "ReasonIDF", ReasonIDF }
             });
         }
 

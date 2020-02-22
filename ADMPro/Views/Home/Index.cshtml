@@ -24,6 +24,10 @@
             border-color: #0062cc !important;
             color: #fff !important;
         }
+
+        .small-box{
+            height:120px;
+        }
     </style>
 }
 <div class="modal fade" id="ADMDefault">
@@ -41,13 +45,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ADM_TicketID" class="control-label">Ticket ID</label>
+                            <label for="ADM_TicketID" class="control-label">Ticket No</label>
                             <input type="text" class="form-control mygroup" id="ADM_TicketID" name="ADM_TicketID">
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="ADM_IATANumber" class="control-label">IATA Number</label>
+                            <label for="ADM_IATANumber" class="control-label">IATA No</label>
                             <input type="text" class="form-control mygroup" id="ADM_IATANumber" name="ADM_IATANumber">
                         </div>
                     </div>
@@ -61,7 +65,33 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="ADM_ADMNumber" class="control-label">ADM Number<span class="text-danger">*</span></label>
+                            <label for="ADM_OfficeID" class="control-label">Office ID<span class="text-danger" id="OfficeIDTextDanger" style="display:none">*</span></label>
+                            <input type="text" class="form-control" id="ADM_OfficeID" name="ADM_OfficeID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ADM_BranchID" class="control-label">Branch</label>
+                            <input type="text" class="form-control" id="ADM_BranchID" name="ADM_BranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="display:none">
+                        <div class="form-group">
+                            <label for="ADM_TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
+                            <input type="text" class="form-control" id="ADM_TicketIssueBranchID" name="ADM_TicketIssueBranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ADM_TicketAmount" class="control-label">Ticket Amount<span class="text-danger" id="TicketAmountTextDanger" style="display:none">*</span></label>
+                            <input type="text" class="form-control" id="ADM_TicketAmount" name="ADM_TicketAmount" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ADM_ADMNumber" class="control-label">ADM No<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="ADM_ADMNumber" name="ADM_ADMNumber">
                         </div>
                     </div>
@@ -75,32 +105,6 @@
                         <div class="form-group">
                             <label for="ADM_IATAADMDate" class="control-label">IATA ADM Date<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="ADM_IATAADMDate" name="ADM_IATAADMDate" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="ADM_OfficeID" class="control-label">Office ID</label>
-                            <input type="text" class="form-control" id="ADM_OfficeID" name="ADM_OfficeID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="ADM_BranchID" class="control-label">Branch</label>
-                            <input type="text" class="form-control" id="ADM_BranchID" name="ADM_BranchID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="ADM_TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
-                            <input type="text" class="form-control" id="ADM_TicketIssueBranchID" name="ADM_TicketIssueBranchID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="ADM_TicketAmount" class="control-label">Ticket Amount</label>
-                            <input type="text" class="form-control" id="ADM_TicketAmount" name="ADM_TicketAmount" disabled>
                         </div>
                     </div>
                 </div>
@@ -168,13 +172,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="TicketID" class="control-label">Ticket ID</label>
+                            <label for="TicketID" class="control-label">Ticket No</label>
                             <input type="text" class="form-control" id="TicketID" name="TicketID" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ADMNumber" class="control-label">ADM Number</label>
+                            <label for="ADMNumber" class="control-label">ADM No</label>
                             <input type="text" class="form-control" id="ADMNumber" name="ADMNumber" disabled>
                         </div>
                     </div>
@@ -226,28 +230,56 @@
                         </div>
                     </div>
                 </div>
+                <!-- DEBIT TO PART -->
                 <div class="row" style="display:none" id="DebitToRiya">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="DebitToRiyaType" class="control-label">Debit To<span class="text-danger">*</span></label>
                             <select class="form-control select2" style="width: 100%;" id="DebitToType" name="DebitToType" onchange="DisplayDebitToOption()">
-                                <option value="1" selected>Staff</option>
-                                <option value="2" selected>Riya</option>
+                                <option value="1">Staff</option>
+                                <option value="2">Riya</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="divDebitToRiya" style="display:none">
                         <div class="form-group">
-                            <label for="DebitTo" class="control-label">Debit To<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="DebitTo" name="DebitTo" value="Company Account" disabled/>
+                            <label for="DebitTo" class="control-label">Staff Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="DebitTo" name="DebitTo" value="Company Account" />
                         </div>
                     </div>
                 </div>
                 <div class="row" style="display:none" id="DebitToSubAgent">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="DebitToSubAgentName" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <label for="DebitToSubAgentName" class="control-label">Agent Name<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="DebitToSubAgentName" name="DebitToSubAgentName" />
+                        </div>
+                    </div>
+                </div>
+                <!-- ACM DISPLAY PART -->
+                <div class="row" id="divFUACM" style="display:none">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ADMAmount" class="control-label">ADM Amount</label>
+                            <input type="text" class="form-control" id="FU_ADMAmount" name="FU_ADMAmount" disabled/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMNo" class="control-label">ACM No<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="FU_ACMNo" name="FU_ACMNo" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMAmount" class="control-label">ACM Amount<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="FU_ACMAmount" name="FU_ACMAmount" onkeyup="CalculateACMAmountFromFollowUp()" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMAmountDiff" class="control-label">ACM Diff.</label>
+                            <input type="text" class="form-control" id="FU_ACMAmountDiff" name="FU_ACMAmountDiff" disabled />
                         </div>
                     </div>
                 </div>
@@ -281,7 +313,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ACMNumber" class="control-label">ACM Number</label>
+                            <label for="ACMNumber" class="control-label">ACM No</label>
                             <input type="text" class="form-control" id="ACMNumber" name="ACMNumber">
                         </div>
                     </div>
@@ -345,30 +377,60 @@
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
-                                        <label for="SearchTicketID" class="control-label">Ticket ID</label>
+                                        <label for="SearchTicketID" class="control-label">Ticket No</label>
                                         <input type="text" class="form-control" id="SearchTicketID" name="SearchTicketID">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="FromDate" class="control-label">From Date</label>
                                         <input type="text" class="form-control" id="FromDate" name="FromDate">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="ToDate" class="control-label">To Date</label>
                                         <input type="text" class="form-control" id="ToDate" name="ToDate">
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <label>Status</label>
+                                    <select class="select2" id="SearchStatusIDF2" data-placeholder="Select Status" style="width: 100%;">
+                                        <option value="0">Select Status</option>
+                                        @{
+                                            if (ViewBag.StatusList != null)
+                                            {
+                                                foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                                {
+                                                    <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Status</label>
+                                    <select class="select2" id="SearchReason" data-placeholder="Select Reason" style="width: 100%;">
+                                        <option value="0">Select Status</option>
+                                        @{
+                                            if (ViewBag.ReasonList != null)
+                                            {
+                                                foreach (SQLClass.ReasonMasterClass sm in ViewBag.ReasonList)
+                                                {
+                                                    <option value="@sm.ReasonIDP">@sm.ReasonName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
                                 @{
                                     if (GeneralClass.Role == "1" || GeneralClass.Role == "2")
                                     {
-                                        <div class="col-md-5">
+                                        <div class="col-md-6">
                                             <label>Branch</label>
-                                            <select class="select2" id="SearchBranch" multiple="multiple" data-placeholder="Select a Branch" style="width: 100%;">
+                                            <select class="select2" id="SearchBranch" multiple="multiple" data-placeholder="Select Branch" style="width: 100%;">
                                                 @{
                                                     if (ViewBag.BranchList != null)
                                                     {
@@ -382,21 +444,6 @@
                                         </div>
                                     }
                                 }
-                                <div class="col-md-3">
-                                    <label>Status</label>
-                                    <select class="select2" id="SearchStatusIDF2" data-placeholder="Select a Status" style="width: 100%;">
-                                        <option value="0">Select Status</option>
-                                        @{
-                                            if (ViewBag.StatusList != null)
-                                            {
-                                                foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
-                                                {
-                                                    <option value="@sm.StatusIDP">@sm.StatusName</option>
-                                                }
-                                            }
-                                        }
-                                    </select>
-                                </div>
                                 <div class="col-md-1">
                                     <div class="form-group">
                                         <label for="ADMNumber" class="control-label">&nbsp;</label><br />
@@ -439,7 +486,7 @@
                                     <span class="fa fa-arrow-up" id="SortingSrNo"></span>
                                 </th>
                                 <th onclick="Sorting('TicketID')">
-                                    Ticket ID
+                                    Ticket No
                                     <span class="fa fa-arrow-up" id="SortingTicketID"></span>
                                 </th>
                                 @{
@@ -451,7 +498,10 @@
                                         </th>
                                     }
                                 }
-                                <th>Reason</th>
+                                <th onclick="Sorting('ReasonName')">
+                                    Reason
+                                    <span class="fa fa-arrow-up" id="SortingReason"></span>
+                                </th>
                                 <th>ADM Detail</th>
                                 <th>ACM Detail</th>
                                 <th onclick="Sorting('LastFollowUpDate')">
@@ -563,7 +613,7 @@
                         $("#SortingSrNo").removeClass('fa-arrow-down').addClass('fa-arrow-up');
                     }
 
-                    $("#SortingTicketID, #SortingBranch, #SortingLastFollowUpDate, #SortingStatusName").addClass('fa-arrow-up');
+                    $("#SortingTicketID, #SortingBranch, #SortingLastFollowUpDate, #SortingStatusName, #SortingReason").addClass('fa-arrow-up');
                     break;
                 case "TicketID":
                     if ($("#SortingTicketID").hasClass('fa-arrow-up') == true) {
@@ -575,7 +625,7 @@
                         $("#SortingTicketID").removeClass('fa-arrow-down').addClass('fa-arrow-up');
                     }
 
-                    $("#SortingSrNo, #SortingBranch, #SortingLastFollowUpDate, #SortingStatusName").addClass('fa-arrow-up');
+                    $("#SortingSrNo, #SortingBranch, #SortingLastFollowUpDate, #SortingStatusName, #SortingReason").addClass('fa-arrow-up');
                     break;
                 case "BranchID":
                     if ($("#SortingBranch").hasClass('fa-arrow-up') == true) {
@@ -587,7 +637,7 @@
                         $("#SortingBranch").removeClass('fa-arrow-down').addClass('fa-arrow-up');
                     }
 
-                    $("#SortingSrNo, #SortingTicketID, #SortingLastFollowUpDate, #SortingStatusName").addClass('fa-arrow-up');
+                    $("#SortingSrNo, #SortingTicketID, #SortingLastFollowUpDate, #SortingStatusName, #SortingReason").addClass('fa-arrow-up');
                     break;
                 case "LastFollowUpDate":
                     if ($("#SortingLastFollowUpDate").hasClass('fa-arrow-up') == true) {
@@ -599,7 +649,7 @@
                         $("#SortingLastFollowUpDate").removeClass('fa-arrow-down').addClass('fa-arrow-up');
                     }
 
-                    $("#SortingSrNo, #SortingTicketID, #SortingBranch, #SortingStatusName").addClass('fa-arrow-up');
+                    $("#SortingSrNo, #SortingTicketID, #SortingBranch, #SortingStatusName, #SortingReason").addClass('fa-arrow-up');
                     break;
                 case "StatusName":
                     if ($("#SortingStatusName").hasClass('fa-arrow-up') == true) {
@@ -611,7 +661,19 @@
                         $("#SortingStatusName").removeClass('fa-arrow-down').addClass('fa-arrow-up');
                     }
 
-                    $("#SortingSrNo, #SortingTicketID, #SortingBranch, #SortingLastFollowUpDate").addClass('fa-arrow-up');
+                    $("#SortingSrNo, #SortingTicketID, #SortingBranch, #SortingLastFollowUpDate, #SortingReason").addClass('fa-arrow-up');
+                    break;
+                case "ReasonName":
+                    if ($("#SortingReason").hasClass('fa-arrow-up') == true) {
+                        $("#SortingOrderBy").val('ASC');
+                        $("#SortingReason").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+                    }
+                    else if ($("#SortingReason").hasClass('fa-arrow-down') == true) {
+                        $("#SortingOrderBy").val('DESC');
+                        $("#SortingReason").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+                    }
+
+                    $("#SortingSrNo, #SortingTicketID, #SortingBranch, #SortingLastFollowUpDate, #SortingStatusName").addClass('fa-arrow-up');
                     break;
             }
 
@@ -672,7 +734,8 @@
                 ToDate: $("#ToDate").val(),
                 StatusIDF: SearchStatus,
                 OrderByColumnName: $("#SortingID").val(),
-                OrderBy: $("#SortingOrderBy").val()
+                OrderBy: $("#SortingOrderBy").val(),
+                ReasonIDF: $("#SearchReason").val()
             }
 
             $.ajax({
@@ -709,12 +772,12 @@
                                 iHTML += "<td>" + obj[i].BranchID + "</td>";
                             }
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
-                            iHTML += "<td>Number: " + obj[i].ADMNumber + "<br/>Amount: " + obj[i].ADMAmount + "<br/>Total Debit Amount: " + obj[i].TotalDebitAmount + "</td>";
+                            iHTML += "<td>No.: " + obj[i].ADMNumber + "<br/>Amount: " + obj[i].ADMAmount + "<br/>Total Debit Amount: " + obj[i].TotalDebitAmount + "</td>";
                             if (obj[i].ACMNumber == '' && obj[i].ACMAmount == 0) {
                                 iHTML += "<td><h3 class='text-center'>-</h3></td>";
                             }
                             else {
-                                iHTML += "<td>Number: " + obj[i].ACMNumber + "<br/>Amount: " + obj[i].ACMAmount + "</td>";
+                                iHTML += "<td>No.: " + obj[i].ACMNumber + "<br/>Amount: " + obj[i].ACMAmount + "</td>";
                             }
                             iHTML += "<td>Date: " + obj[i].LastFollowUpDate + "<br/>By: " + obj[i].LastFollowUpBy + "<br/>Total Follow Ups: " + obj[i].TotalFollowUp + "</td>";
                             iHTML += "<td class='project-state'><strong>" + obj[i].StatusName + "</strong></td>";
@@ -757,6 +820,17 @@
         }
 
         function AddNewFollowUp(id) {
+            /*HIDE DETAIL OF DEBIT TO*/
+            $("#DebitToRiya").hide();
+            $("#DebitToSubAgent").hide();
+            $("#divFUACM").hide();
+
+            $("#divDebitToRiya").hide();
+            $("#DebitTo").val("");
+
+            $("#DebitToType").val('1');
+            $('#DebitToType').trigger('change');
+
             $("#Default").modal('show');
 
             var mData = { id: id }
@@ -777,8 +851,15 @@
                     $("#BranchID").val(obj[0].BranchID);
                     $("#ReasonName").val(obj[0].ReasonName);
                     $("#RemarksAddByAudit").val(obj[0].Remarks);
+
                     $("#StatusIDF").val(obj[0].StatusIDF);
                     $('#StatusIDF').trigger('change');
+
+                    $("#FU_ADMAmount").val(obj[0].ADMAmount);
+                    $("#FU_ACMNo").val(obj[0].ACMNumber);
+                    $("#FU_ACMAmount").val(obj[0].ACMAmount);
+
+                    CalculateACMAmountFromFollowUp();
                 }
             });
 
@@ -798,14 +879,41 @@
                     Remarks: "required",
                 },
                 messages: {
-                    TicketID: "Ticket id require.",
+                    TicketID: "Please enter Ticket no.",
                     StatusIDF: {
-                        required: "Status require.",
-                        notEqualTo: "Status require."
+                        required: "Please select Status.",
+                        notEqualTo: "Please select Status."
                     },
-                    Remarks: "Remarks require.",
+                    Remarks: "Please enter Remarks.",
                 },
                 submitHandler: function (form) {
+                    var StatusIDF = $("#StatusIDF").val();
+
+                    if (StatusIDF == 5 || StatusIDF == 10) {
+                        if ($("#DebitToSubAgent").val().length <= 0) {
+                            toastr.success('Please enter agent name.');
+                            return;
+                        }
+                    }
+                    else if (StatusIDF == 4 || StatusIDF == 9) {
+                        var DebitToType = $("#DebitToType").val();
+
+                        if (DebitToType == 1 && $("#DebitTo").val().length <= 0) {
+                            toastr.success('Please enter Staff name.');
+                            return;
+                        }
+                    }
+                    else if (StatusIDF == 7) {
+                        if ($("#FU_ACMNo").val().length <= 0) {
+                            toastr.success('Please enter ACM No.');
+                            return;
+                        }
+                        else if ($("#FU_ACMAmount").val().length <= 0) {
+                            toastr.success('Please enter ACM Amount.');
+                            return;
+                        }
+                    }
+
                     $.ajax({
                         type: "POST",
                         url: "/Home/Save",
@@ -861,8 +969,8 @@
         }
 
         function CalculateACMAmount() {
-            var ACMAmount = $("#ACMAmount").val();
-            var ADMAmount = $("#ACM_ADMAmount").val();
+            var ACMAmount = ($("#ACMAmount").val().length <= 0 ? 0 : $("#ACMAmount").val());
+            var ADMAmount = ($("#ACM_ADMAmount").val().length <= 0 ? 0 : $("#ACM_ADMAmount").val());
 
             var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
 
@@ -874,6 +982,22 @@
             }
 
             $("#ACMAmount_Diff").val(AmountDiff);
+        }
+
+        function CalculateACMAmountFromFollowUp() {
+            var ACMAmount = ($("#FU_ADMAmount").val().length <= 0 ? 0 : $("#FU_ADMAmount").val());
+            var ADMAmount = ($("#FU_ACMAmount").val().length <= 0 ? 0 : $("#FU_ACMAmount").val());
+
+            var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
+
+            if (AmountDiff == 0) {
+                $("#StatusIDF").attr("disabled", "disabled");
+            }
+            else {
+                $("#StatusIDF").removeAttr("disabled");
+            }
+
+            $("#FU_ACMAmountDiff").val(AmountDiff);
         }
 
         function UpdateACMDetail() {
@@ -928,15 +1052,15 @@
                     var iHTML = "";
 
                     for (var i = 0; i < obj.length; i++) {
-                        iHTML += "<div class='col-lg-2 col-2 text-center'>";
+                        iHTML += "<div class='col-lg-2 col-2 text-center'><a href='#FocusID' onclick='FilterTicketDetail(" + obj[i].StatusIDF + ")'>";
                         iHTML += "<div class='small-box bg-info'>";
                         iHTML += "<div class='inner'>";
                         iHTML += "<h3>" + obj[i].Request + "</h3>";
-                        iHTML += "<p class='sm'>" + obj[i].StatusName +"</p>";
+                        iHTML += "<p class='text-sm'>" + obj[i].StatusName +"</p>";
                         iHTML += "</div>";
-                        iHTML += "<a href='#FocusID' onclick='FilterTicketDetail(" + obj[i].StatusIDF + ")' class='small-box-footer'>More <i class='fas fa-arrow-circle-right'></i></a>";
+                        //iHTML += "<a href='#FocusID' onclick='FilterTicketDetail(" + obj[i].StatusIDF + ")' class='small-box-footer'>More <i class='fas fa-arrow-circle-right'></i></a>";
                         iHTML += "</div>";
-                        iHTML += "</div>";
+                        iHTML += "</a></div>";
                     }
 
                     $("#DashboardStatusCount").html(iHTML);
@@ -964,11 +1088,15 @@
 
             $("#ADM_ReasonIDF").val(0);
             $('#ADM_ReasonIDF').trigger('change');
+
+            $("#OfficeIDTextDanger, #TicketAmountTextDanger").hide();
+            $("#OfficeID").attr('disabled', 'disabled');
+            $("#TicketAmount").attr('disabled', 'disabled');
         }
 
         function FetchTicketDetail() {
             if ($("#ADM_TicketID").val().length <= 0 && $("#ADM_IATANumber").val().length <= 0) {
-                toastr.error('Please enter ticket id or IATA number');
+                toastr.error('Please enter Ticket No or IATA No');
                 return false;
             }
 
@@ -997,7 +1125,11 @@
                     else {
                         toastr.error('No ticket detail found. Please try again.');
 
-                        $("#ADM_IATANumber, #ADM_OfficeID, #ADM_BranchID, #ADM_TicketIssueBranchID, #ADM_TicketAmount").val('');
+                        ClearControlsADM();
+
+                        $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
+                        $("#ADM_OfficeID").removeAttr('disabled');
+                        $("#ADM_TicketAmount").removeAttr('disabled');
                     }
                     $("#ADM_DetailButton").html('<i class="fas fa-search"></i>');
                 }
@@ -1034,26 +1166,35 @@
                     mygroup: "ADM_TicketID ADM_IATANumber"
                 },
                 messages: {
-                    ADM_TicketID: "Please enter Ticket ID or IATA number.",
-                    ADM_IATANumber: "Please enter Ticket ID or IATA number.",
-                    ADM_ADMNumber: "ADM number require.",
-                    ADM_ADMAmount: "ADM amount require.",
-                    ADM_OfficeID: "Office id require.",
-                    ADM_BranchID: "Branch id require.",
-                    ADM_TicketIssueBranchID: "Ticket issue branch id require.",
-                    ADM_TicketAmount: "Ticket amount require.",
-                    ADM_Remarks: "Remarks require.",
+                    ADM_TicketID: "Please enter Ticket No or IATA No.",
+                    ADM_IATANumber: "Please enter Ticket No or IATA No.",
+                    ADM_ADMNumber: "Please enter ADM No.",
+                    ADM_ADMAmount: "Please enter ADM Amount.",
+                    ADM_OfficeID: "Please enter Office id.",
+                    ADM_BranchID: "Please enter Branch id.",
+                    ADM_TicketIssueBranchID: "Please enter Ticket issue branch id.",
+                    ADM_TicketAmount: "Please enter Ticket Amount.",
+                    ADM_Remarks: "Please enter Remarks.",
                     ADM_ReasonIDF: {
-                        required: "Reason require.",
-                        notEqualTo: "Reason require."
+                        required: "Please select Reason.",
+                        notEqualTo: "Please select Reason."
                     },
-                    ADM_IATAADMDate: "IATA ADM date require."
+                    ADM_IATAADMDate: "Please select IATA ADM date."
                     //StatusIDF: {
                     //    required: "Status require.",
                     //    notEqualTo: "Status require."
                     //}
                 },
                 submitHandler: function (form) {
+                    if ($("#ADM_OfficeID").val().length <= 0) {
+                        toastr.error('Please enter Office id.');
+                        return;
+                    }
+                    else if ($("#ADM_TicketAmount").val().length <= 0) {
+                        toastr.error('Please enter Ticket Amount.');
+                        return;
+                    }
+
                     if (window.FormData !== undefined) {
                         var fileUpload = $("#ADMFile").get(0);
                         var files = fileUpload.files;
@@ -1120,11 +1261,19 @@
             {
                 $("#DebitToRiya").hide();
                 $("#DebitToSubAgent").show();
+                $("#divFUACM").hide();
             }
             else if (StatusIDF == 4 || StatusIDF == 9) // Riya
             {
                 $("#DebitToRiya").show();
                 $("#DebitToSubAgent").hide();
+                $("#divFUACM").hide();
+            }
+            else if (StatusIDF == 7) // ACM Received
+            {
+                $("#DebitToRiya").hide();
+                $("#DebitToSubAgent").hide();
+                $("#divFUACM").show();
             }
         }
 
@@ -1133,11 +1282,11 @@
 
             if (DebitToType == 1) { // Staff
                 $("#DebitTo").val("");
-                $("#DebitTo").removeAttr("disabled");
+                $("#divDebitToRiya").show();
             }
             else if (DebitToType == 2) { // Riya
                 $("#DebitTo").val("Company Account");
-                $("#DebitTo").attr("disabled", "disabled");
+                $("#divDebitToRiya").hide();
             }
         }
     </script>

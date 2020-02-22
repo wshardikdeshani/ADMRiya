@@ -86,7 +86,7 @@ namespace ADMPro.Controllers
 
         [HttpPost]
         public JsonResult GetAllTicket(string BranchID, int? Role, int RowsPerPage, int PageNumber
-            , string TicketID, string FromDate, string ToDate, int? StatusIDF, string OrderByColumnName, string OrderBy)
+            , string TicketID, string FromDate, string ToDate, int? StatusIDF, string OrderByColumnName, string OrderBy, int ReasonIDF)
         {
             MEMBERS.PagingResponse data = new ADMHeaderLogic().ADMHeader_Dashboard(BranchID
                 , Role
@@ -97,7 +97,8 @@ namespace ADMPro.Controllers
                 , ToDate
                 , StatusIDF
                 , OrderByColumnName
-                , OrderBy);
+                , OrderBy
+                , ReasonIDF);
 
             /*Call Again For Excel*/
             MEMBERS.PagingResponse AuditData = new ADMHeaderLogic().ADMHeader_Dashboard(BranchID
@@ -109,7 +110,8 @@ namespace ADMPro.Controllers
                 , ToDate
                 , StatusIDF
                 , OrderByColumnName
-                , OrderBy);
+                , OrderBy
+                , ReasonIDF);
 
             HttpContext.Cache["TicketResponse"] = AuditData.Data;
             HttpContext.Cache["Role"] = Role;
@@ -231,6 +233,7 @@ namespace ADMPro.Controllers
                 columns.Add("LastFollowUpDate");
                 columns.Add("LastFollowUpBy");
                 columns.Add("IATAADMDate");
+                columns.Add("DebitTo");
 
                 headers.Add("Ticket ID");
                 headers.Add("Ticket Amount");
@@ -251,6 +254,7 @@ namespace ADMPro.Controllers
                 headers.Add("Last Updated Date");
                 headers.Add("Last Updated By");
                 headers.Add("IATA ADM Date");
+                headers.Add("Debit To");
 
                 var cStyle = workbook.CreateCellStyle();
                 cStyle.FillForegroundColor = IndexedColors.White.Index;

@@ -31,13 +31,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="TicketID" class="control-label">Ticket ID</label>
+                            <label for="TicketID" class="control-label">Ticket No</label>
                             <input type="text" class="form-control mygroup" id="TicketID" name="TicketID">
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="IATANumber" class="control-label">IATA Number</label>
+                            <label for="IATANumber" class="control-label">IATA No</label>
                             <input type="text" class="form-control mygroup" id="IATANumber" name="IATANumber">
                         </div>
                     </div>
@@ -45,6 +45,32 @@
                         <div class="form-group">
                             <label class="control-label">&nbsp;</label><br />
                             <button id="DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="OfficeID" class="control-label">Office ID<span class="text-danger" id="OfficeIDTextDanger" style="display:none">*</span></label>
+                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="BranchID" class="control-label">Branch</label>
+                            <input type="text" class="form-control" id="BranchID" name="BranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="display:none">
+                        <div class="form-group">
+                            <label for="TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
+                            <input type="text" class="form-control" id="TicketIssueBranchID" name="TicketIssueBranchID" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="TicketAmount" class="control-label">Ticket Amount<span class="text-danger" id="TicketAmountTextDanger" style="display:none">*</span></label>
+                            <input type="text" class="form-control" id="TicketAmount" name="TicketAmount" disabled>
                         </div>
                     </div>
                 </div>
@@ -65,32 +91,6 @@
                         <div class="form-group">
                             <label for="IATAADMDate" class="control-label">IATA ADM Date<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="IATAADMDate" name="IATAADMDate" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="OfficeID" class="control-label">Office ID</label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="BranchID" class="control-label">Branch</label>
-                            <input type="text" class="form-control" id="BranchID" name="BranchID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="TicketIssueBranchID" class="control-label">Ticket Issued Branch</label>
-                            <input type="text" class="form-control" id="TicketIssueBranchID" name="TicketIssueBranchID" disabled>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="TicketAmount" class="control-label">Ticket Amount</label>
-                            <input type="text" class="form-control" id="TicketAmount" name="TicketAmount" disabled>
                         </div>
                     </div>
                 </div>
@@ -124,22 +124,6 @@
                             </div>
                         </div>
                     </div>
-                    @*<div class="col-md-6">
-                            <div class="form-group">
-                                <label for="StatusIDF" class="control-label">Status<span class="text-danger">*</span></label>
-                                <select class="form-control select2" style="width: 100%;" id="StatusIDF" name="StatusIDF">
-                                    @{
-                                        if (ViewBag.StatusList != null)
-                                        {
-                                            foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
-                                            {
-                                                <option value="@sm.StatusIDP">@sm.StatusName</option>
-                                            }
-                                        }
-                                    }
-                                </select>
-                            </div>
-                        </div>*@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -174,8 +158,8 @@
             <thead>
                 <tr>
                     <th style="width: 10px">#</th>
-                    <th>Ticket ID</th>
-                    <th>IATA Number</th>
+                    <th>Ticket No</th>
+                    <th>IATA No</th>
                     <th>Office/Branch</th>
                     <th>Reason</th>
                     <th>ADM Raised Date</th>
@@ -290,26 +274,35 @@
                     mygroup: "TicketID IATANumber"
                 },
                 messages: {
-                    TicketID: "Please enter Ticket ID or IATA number.",
-                    IATANumber: "Please enter Ticket ID or IATA number.",
-                    ADMNumber: "ADM number require.",
-                    ADMAmount: "ADM amount require.",
-                    OfficeID: "Office id require.",
-                    BranchID: "Branch id require.",
-                    TicketIssueBranchID: "Ticket issue branch id require.",
-                    TicketAmount: "Ticket amount require.",
-                    Remarks: "Remarks require.",
+                    TicketID: "Please enter Ticket No or IATA No.",
+                    IATANumber: "Please enter Ticket No or IATA No.",
+                    ADMNumber: "Please enter ADM No.",
+                    ADMAmount: "Please enter ADM Amount.",
+                    OfficeID: "Please enter Office id.",
+                    BranchID: "Please enter Branch id.",
+                    TicketIssueBranchID: "Please enter Ticket issue branch id.",
+                    TicketAmount: "Please enter Ticket Amount.",
+                    Remarks: "Please enter Remarks.",
                     ReasonIDF: {
-                        required: "Reason require.",
-                        notEqualTo: "Reason require."
+                        required: "Please select Reason.",
+                        notEqualTo: "Please select Reason."
                     },
-                    IATAADMDate: "IATA ADM date require."
+                    IATAADMDate: "Please select IATA ADM date."
                     //StatusIDF: {
                     //    required: "Status require.",
                     //    notEqualTo: "Status require."
                     //}
                 },
                 submitHandler: function (form) {
+                    if ($("#ADM_OfficeID").val().length <= 0) {
+                        toastr.error('Please enter Office id.');
+                        return;
+                    }
+                    else if ($("#ADM_TicketAmount").val().length <= 0) {
+                        toastr.error('Please enter Ticket Amount.');
+                        return;
+                    }
+
                     if (window.FormData !== undefined) {
                         var fileUpload = $("#ADMFile").get(0);
                         var files = fileUpload.files;
@@ -533,13 +526,14 @@
             $("#ReasonIDF").val(0);
             $('#ReasonIDF').trigger('change');
 
-            //$("#StatusIDF").val(1);
-            //$('#StatusIDF').trigger('change');
+            $("#OfficeIDTextDanger, #TicketAmountTextDanger").hide();
+            $("#OfficeID").attr('disabled', 'disabled');
+            $("#TicketAmount").attr('disabled', 'disabled');
         }
 
         function FetchTicketDetail() {
             if ($("#TicketID").val().length <= 0 && $("#IATANumber").val().length <= 0) {
-                toastr.error('Please enter ticket id or IATA number');
+                toastr.error('Please enter Ticket No or IATA No');
                 return false;
             }
 
@@ -566,9 +560,13 @@
                         $("#TicketAmount").val(obj[0].TicketAmount);
                     }
                     else {
-                        toastr.error('No ticket detail found. Please try again.');
+                        ClearControls()
 
-                        $("#IATANumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount").val('');
+                        $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
+                        $("#OfficeID").removeAttr('disabled');
+                        $("#TicketAmount").removeAttr('disabled');
+
+                        toastr.error('No ticket detail found. Please try again.');
                     }
                     $("#DetailButton").html('<i class="fas fa-search"></i>');
                 }

@@ -33,13 +33,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="TicketID" class="control-label">Ticket ID</label>
+                            <label for="TicketID" class="control-label">Ticket No</label>
                             <input type="text" class="form-control" id="TicketID" name="TicketID" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ADMNumber" class="control-label">ADM Number</label>
+                            <label for="ADMNumber" class="control-label">ADM No</label>
                             <input type="text" class="form-control" id="ADMNumber" name="ADMNumber" disabled>
                         </div>
                     </div>
@@ -96,23 +96,50 @@
                         <div class="form-group">
                             <label for="DebitToRiyaType" class="control-label">Debit To<span class="text-danger">*</span></label>
                             <select class="form-control select2" style="width: 100%;" id="DebitToType" name="DebitToType" onchange="DisplayDebitToOption()">
-                                <option value="1" selected>Staff</option>
-                                <option value="2" selected>Riya</option>
+                                <option value="1">Staff</option>
+                                <option value="2">Riya</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="divDebitToRiya" style="display:none">
                         <div class="form-group">
-                            <label for="DebitTo" class="control-label">Debit To<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="DebitTo" name="DebitTo" value="Company Account" disabled />
+                            <label for="DebitTo" class="control-label">Staff Name<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="DebitTo" name="DebitTo" value="Company Account" />
                         </div>
                     </div>
                 </div>
                 <div class="row" style="display:none" id="DebitToSubAgent">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="DebitToSubAgentName" class="control-label">Debit To<span class="text-danger">*</span></label>
+                            <label for="DebitToSubAgentName" class="control-label">Agent Name<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="DebitToSubAgentName" name="DebitToSubAgentName" />
+                        </div>
+                    </div>
+                </div>
+                <!-- ACM DISPLAY PART -->
+                <div class="row" id="divFUACM" style="display:none">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ADMAmount" class="control-label">ADM Amount</label>
+                            <input type="text" class="form-control" id="FU_ADMAmount" name="FU_ADMAmount" disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMNo" class="control-label">ACM No<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="FU_ACMNo" name="FU_ACMNo" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMAmount" class="control-label">ACM Amount<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="FU_ACMAmount" name="FU_ACMAmount" onkeyup="CalculateACMAmountFromFollowUp()" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMAmountDiff" class="control-label">ACM Diff.</label>
+                            <input type="text" class="form-control" id="FU_ACMAmountDiff" name="FU_ACMAmountDiff" disabled />
                         </div>
                     </div>
                 </div>
@@ -134,19 +161,19 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="ADM_TicketID" class="control-label">Ticket ID</label>
+                            <label for="ADM_TicketID" class="control-label">Ticket No</label>
                             <input type="text" class="form-control form-control-sm" id="ADM_TicketID" name="ADM_TicketID" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="ADM_IATANumber" class="control-label">IATA Number</label>
+                            <label for="ADM_IATANumber" class="control-label">IATA No</label>
                             <input type="text" class="form-control form-control-sm" id="ADM_IATANumber" name="ADM_IATANumber" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="ADM_ADMNumber" class="control-label">ADM Number</label>
+                            <label for="ADM_ADMNumber" class="control-label">ADM No</label>
                             <input type="text" class="form-control form-control-sm" id="ADM_ADMNumber" name="ADM_ADMNumber" disabled>
                         </div>
                     </div>
@@ -310,6 +337,17 @@
         }
 
         function AddNewFollowUp(id) {
+            /*HIDE DETAIL OF DEBIT TO*/
+            $("#DebitToRiya").hide();
+            $("#DebitToSubAgent").hide();
+            $("#divFUACM").hide();
+
+            $("#divDebitToRiya").hide();
+            $("#DebitTo").val("");
+
+            $("#DebitToType").val('1');
+            $('#DebitToType').trigger('change');
+
             $("#Default").modal('show');
 
             var mData = { id: @ViewBag.ID }
@@ -330,10 +368,33 @@
                     $("#BranchID").val(obj[0].BranchID);
                     $("#ReasonName").val(obj[0].ReasonName);
                     $("#RemarksAddByAudit").val(obj[0].Remarks);
+
                     $("#StatusIDF").val(obj[0].StatusIDF);
                     $('#StatusIDF').trigger('change');
+
+                    $("#FU_ADMAmount").val(obj[0].ADMAmount);
+                    $("#FU_ACMNo").val(obj[0].ACMNumber);
+                    $("#FU_ACMAmount").val(obj[0].ACMAmount);
+
+                    CalculateACMAmountFromFollowUp();
                 }
             });
+        }
+
+        function CalculateACMAmountFromFollowUp() {
+            var ACMAmount = ($("#FU_ADMAmount").val().length <= 0 ? 0 : $("#FU_ADMAmount").val());
+            var ADMAmount = ($("#FU_ACMAmount").val().length <= 0 ? 0 : $("#FU_ACMAmount").val());
+
+            var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
+
+            if (AmountDiff == 0) {
+                $("#StatusIDF").attr("disabled", "disabled");
+            }
+            else {
+                $("#StatusIDF").removeAttr("disabled");
+            }
+
+            $("#FU_ACMAmountDiff").val(AmountDiff);
         }
 
         function SaveFollowUp() {
@@ -347,14 +408,41 @@
                     Remarks: "required",
                 },
                 messages: {
-                    TicketID: "Ticket id require.",
+                    TicketID: "Please enter Ticket No.",
                     StatusIDF: {
-                        required: "Status require.",
-                        notEqualTo: "Status require."
+                        required: "Please select Status.",
+                        notEqualTo: "Please select Status."
                     },
-                    Remarks: "Remarks require.",
+                    Remarks: "Please enter Remarks.",
                 },
                 submitHandler: function (form) {
+                    var StatusIDF = $("#StatusIDF").val();
+
+                    if (StatusIDF == 5 || StatusIDF == 10) {
+                        if ($("#DebitToSubAgent").val().length <= 0) {
+                            toastr.success('Please enter Agent name.');
+                            return;
+                        }
+                    }
+                    else if (StatusIDF == 4 || StatusIDF == 9) {
+                        var DebitToType = $("#DebitToType").val();
+
+                        if (DebitToType == 1 && $("#DebitTo").val().length <= 0) {
+                            toastr.success('Please enter Staff name.');
+                            return;
+                        }
+                    }
+                    else if (StatusIDF == 7) {
+                        if ($("#FU_ACMNo").val().length <= 0) {
+                            toastr.success('Please enter ACM No.');
+                            return;
+                        }
+                        else if ($("#FU_ACMAmount").val().length <= 0) {
+                            toastr.success('Please enter ACM Amount.');
+                            return;
+                        }
+                    }
+
                     $.ajax({
                         type: "POST",
                         url: "/Home/Save",
@@ -392,11 +480,19 @@
             {
                 $("#DebitToRiya").hide();
                 $("#DebitToSubAgent").show();
+                $("#divFUACM").hide();
             }
             else if (StatusIDF == 4 || StatusIDF == 9) // Riya
             {
                 $("#DebitToRiya").show();
                 $("#DebitToSubAgent").hide();
+                $("#divFUACM").hide();
+            }
+            else if (StatusIDF == 7) // ACM Received
+            {
+                $("#DebitToRiya").hide();
+                $("#DebitToSubAgent").hide();
+                $("#divFUACM").show();
             }
         }
 
@@ -405,11 +501,11 @@
 
             if (DebitToType == 1) { // Staff
                 $("#DebitTo").val("");
-                $("#DebitTo").removeAttr("disabled");
+                $("#DebitTo").show();
             }
             else if (DebitToType == 2) { // Riya
                 $("#DebitTo").val("Company Account");
-                $("#DebitTo").attr("disabled", "disabled");
+                $("#DebitTo").hide();
             }
         }
     </script>
