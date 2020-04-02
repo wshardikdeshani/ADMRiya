@@ -102,7 +102,7 @@ For Riya
 
     Download from below the backup drive path.
 
-      /*BAKUP DRIVE PATH PENDING*/
+      https://drive.google.com/open?id=1GqZWtWl6h_eD1f-C3HMZEaecBJJONncp
 
 ## Modules
 
