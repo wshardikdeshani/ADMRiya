@@ -1860,6 +1860,7 @@
     <Content Include="WebImageAndDoc\DashboardCount.png" />
     <Content Include="WebImageAndDoc\DashboardSearchBox.png" />
     <Content Include="WebImageAndDoc\ReasonMaster.png" />
+    <Content Include="WebImageAndDoc\RoleWiseMenu.png" />
     <Content Include="WebImageAndDoc\StatusMaster.png" />
     <Content Include="WebImageAndDoc\ViewFollowUps.png" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
