@@ -11,27 +11,27 @@ For CTO contact please ask Sagar Bhai
 
 Project Manager: Harshit Gor
 
-Mobile No: 99203 68031
-Email ID: harshit.gor@riya.travel
+  - Mobile No: 99203 68031
+  - Email ID: harshit.gor@riya.travel
 
 Team Leader and Sr. Developer: Ketan Hiranandani
 
-Mobile No: 99305 91395
-Email ID: ketan.hiranandani@riya.travel
+  - Mobile No: 99305 91395
+  - Email ID: ketan.hiranandani@riya.travel
 
 Hidden person Purav give us this idea to make this project.
 
 ## Riya Policy
 
-1. They give us one remote server for an access database of ADM. This remote server opens from our 109 IP server because he needs some static IP that's why we give 109 servers.
+  1. They give us one remote server for an access database of ADM. This remote server opens from our 109 IP server because he needs some static IP that's why we give 109 servers.
 
-2. Upload all ADM code using Ankh SVN and Tortoise SVN in his server.
+  2. Upload all ADM code using Ankh SVN and Tortoise SVN in his server.
 
-3. For live database access, we need to call Ketan Hiranandani first if he is not available then call Harshit Gor. Because they have some policy for live database access.
+  3. For live database access, we need to call Ketan Hiranandani first if he is not available then call Harshit Gor. Because they have some policy for live database access.
 
-4. For upload changes first commit all work in Ankh SVN to his server then call Ketan Hiranandani for upload website. They have 2 sites for upload 1 is parikshan and 1 is life. So first they upload our work in parikshan if it is proper then they upload in Live Server.
+  4. For upload changes first commit all work in Ankh SVN to his server then call Ketan Hiranandani for upload website. They have 2 sites for upload 1 is parikshan and 1 is life. So first they upload our work in parikshan if it is proper then they upload in Live Server.
 
-5. You can get all the changes by a phone call or in email. Every time Harshit Gor gives us changes because he is project manager.
+  5. You can get all the changes by a phone call or in email. Every time Harshit Gor gives us changes because he is project manager.
 
 ## Why ADM
 
