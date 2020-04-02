@@ -4,6 +4,41 @@
 
 ADM is used to manage airline debit memos using airline ticket numbers or airline IATA numbers.
 
+## Project Owner Details
+
+CTO: Amol Patil
+For CTO contact please ask Sagar Bhai
+
+Project Manager: Harshit Gor
+
+Mobile No: 99203 68031
+Email ID: harshit.gor@riya.travel
+
+Team Leader and Sr. Developer: Ketan Hiranandani
+
+Mobile No: 99305 91395
+Email ID: ketan.hiranandani@riya.travel
+
+Hidden person Purav give us this idea to make this project.
+
+## Riya Policy
+
+1. They give us one remote server for an access database of ADM. This remote server opens from our 109 IP server because he needs some static IP that's why we give 109 servers.
+
+2. Upload all ADM code using Ankh SVN and Tortoise SVN in his server.
+
+3. For live database access, we need to call Ketan Hiranandani first if he is not available then call Harshit Gor. Because they have some policy for live database access.
+
+4. For upload changes first commit all work in Ankh SVN to his server then call Ketan Hiranandani for upload website. They have 2 sites for upload 1 is parikshan and 1 is life. So first they upload our work in parikshan if it is proper then they upload in Live Server.
+
+5. You can get all the changes by a phone call or in email. Every time Harshit Gor gives us changes because he is project manager.
+
+## Why ADM
+
+ADM is (Airline Debit Memo). If Airline found some violation in ticket booking they send ADM to that user.
+
+Riya maintains all the ADM in live google sheet. Nowadays work is a little painful so they decide to make this system. This system is phase 1 and currently, this is launched in some branches.
+
 ## Projects Inside ADM
 
 1. ADMPro (MVC website)
@@ -295,3 +330,37 @@ When users add new followup they can select any status. Now here I discuss statu
       b. Partial ACM Received - Debit to Sub Agent - Please refer "Partial ACM Received - Debit to Sub Agent"  here I add detail and example of why select this status.
 
 ###### 6. ADM Deleted - Means ADM is currently not used full so they select this status. In this status, we are not deleting the record just change the status.
+
+###### 6. View Followups
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/ViewFollowUps.png)
+
+In the above screenshot, We display ticket detail and all the followups give by all users. From this screen, the user can add new followups also.
+
+###### 7. Reason Master
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/ReasonMaster.png)
+
+In the above screenshot, users can add/edit reasons.
+
+###### 8. Status Master
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/StatusMaster.png)
+
+In the above screenshot, users can add/edit status.
+
+###### 9. Branch Email Master
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/BranchEmailMaster.png)
+
+In the above screenshot, Here we get data from DBADM and DSR_ERP database. We union both table and display all branches with email. So here the user edits the branch and adds To email and CC email in comma-separated.
+
+Note: We use this master to send an ADM email to a specific branch while the new ADM raised.
+
+###### 10. Role wise menu
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/RoleWiseMenu.png)
+
+In the above screenshot, Display menu role wise. If the user role is 1 = Audit Manager and 2 = Audit user they have the permission of all the menu with masters. If the user role is 3 = Branch Manager and 4 = Branch User they have permission for seeing Dashboard.
+
+###### Here I attached one excel sheet that is export from Dashboard [Exported Excel Sheet Downlod From Here](https://github.com/wshardikdeshani/ADMRiya/blob/master/ADMPro/WebImageAndDoc/637214460340569127.xls?raw=true).
