@@ -1,13 +1,1 @@
-﻿ALTER TABLE
-
-ALTER TABLE ADMHeader ADD IATAADMDate DateTime
-ALTER TABLE ADMHeader ADD DebitTo Varchar(100)
-
-ALTER SP 
-
-ADMHeader_Insert_Update
-ADMHeader_Get_GetAll
-ADMHeader_GetAllPaging
-ADMFollowUp_Insert_Update
-ADMHeader_Dashboard
-ADM_GetTicketDetail_DSR_ERP_ByTicketID
+﻿ALTER ADM_GetTicketDetail_DSR_ERP_ByTicketID

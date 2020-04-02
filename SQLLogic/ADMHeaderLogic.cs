@@ -57,9 +57,16 @@ namespace SQLLogic
             }, 3);
         }
 
-        public object ADM_GetTicketDetail_DSR_ERP_ByTicketID(string TicketID, string IATANumber)
+        /// <summary>
+        /// Fetch ID Added
+        /// </summary>
+        /// <param name="TicketID"></param>
+        /// <param name="IATANumber"></param>
+        /// <param name="FetchID"></param>
+        /// <returns>Return Object</returns>
+        public object ADM_GetTicketDetail_DSR_ERP_ByTicketID(string TicketID, string IATANumber, int FetchID) 
         {
-            return new SqlHelper().GetJsonResult("ADM_GetTicketDetail_DSR_ERP_ByTicketID", new object[,] { { "TicketID", TicketID }, { "IATANumber", IATANumber } });
+            return new SqlHelper().GetJsonResult("ADM_GetTicketDetail_DSR_ERP_ByTicketID", new object[,] { { "TicketID", TicketID }, { "IATANumber", IATANumber }, { "FetchID", FetchID } });
         }
 
         public MEMBERS.SQLReturnValue ADMHeader_UpdateACMDetail(long ADMIDP, string ACMNumber, float ACMAmount

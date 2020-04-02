@@ -1853,6 +1853,15 @@
     <Content Include="Content\plugins\summernote\summernote.js.map" />
     <Content Include="Content\plugins\sweetalert2-theme-bootstrap-4\bootstrap-4.scss" />
     <Content Include="Content\plugins\toastr\toastr.js.map" />
+    <Content Include="WebImageAndDoc\BranchEmailMaster.png" />
+    <Content Include="WebImageAndDoc\DashboardAddNewADMDialog.png" />
+    <Content Include="WebImageAndDoc\DashboardAddNewFollowup.png" />
+    <Content Include="WebImageAndDoc\DashboardAllADMTable.png" />
+    <Content Include="WebImageAndDoc\DashboardCount.png" />
+    <Content Include="WebImageAndDoc\DashboardSearchBox.png" />
+    <Content Include="WebImageAndDoc\ReasonMaster.png" />
+    <Content Include="WebImageAndDoc\StatusMaster.png" />
+    <Content Include="WebImageAndDoc\ViewFollowUps.png" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -1890,6 +1899,7 @@
     <Content Include="Views\ADMHeader\Index.cshtml" />
     <Content Include="Views\ADMFollowUp\Index.cshtml" />
     <Content Include="Views\BranchEmailMaster\Index.cshtml" />
+    <Content Include="WebImageAndDoc\637214460340569127.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ADMFiles\" />

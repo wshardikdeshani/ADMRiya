@@ -45,5 +45,7 @@ namespace SQLClass
         public float TotalDebitAmount { get; set; }
         public string LastFollowUpDate { get; set; }
         public string LastFollowUpBy { get; set; }
+        public string IATAADMDate { get; set; }
+        public string DebitTo { get; set; }
     }
 }

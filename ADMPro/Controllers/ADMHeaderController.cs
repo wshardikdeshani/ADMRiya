@@ -85,7 +85,7 @@ namespace ADMPro.Controllers
                         obj.OfficeID = Request.Form["OfficeID"].ToString();
                         obj.BranchID = Request.Form["BranchID"].ToString();
                         obj.TicketIssueBranchID = Request.Form["TicketIssueBranchID"].ToString();
-                        obj.TicketAmount = TicketAmount;
+                        obj.TicketAmount = (TicketAmount > 0 && string.IsNullOrEmpty(Request.Form["TicketID"].ToString()) ? 0 : TicketAmount);
                         obj.ReasonIDF = ReasonIDF;
                         obj.Remarks = Request.Form["Remarks"].ToString();
                         obj.StatusIDF = 1;
@@ -126,7 +126,7 @@ namespace ADMPro.Controllers
                     obj.OfficeID = Request.Form["OfficeID"].ToString();
                     obj.BranchID = Request.Form["BranchID"].ToString();
                     obj.TicketIssueBranchID = Request.Form["TicketIssueBranchID"].ToString();
-                    obj.TicketAmount = TicketAmount;
+                    obj.TicketAmount = (TicketAmount > 0 && string.IsNullOrEmpty(Request.Form["TicketID"].ToString()) ? 0 : TicketAmount);
                     obj.ReasonIDF = ReasonIDF;
                     obj.Remarks = Request.Form["Remarks"].ToString();
                     obj.StatusIDF = 1;
@@ -176,7 +176,6 @@ namespace ADMPro.Controllers
                 }
             }
 
-
             return Json(Response, JsonRequestBehavior.AllowGet);
         }
 
@@ -207,10 +206,17 @@ namespace ADMPro.Controllers
             return Json(mRes.Outval, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public JsonResult GetTicketDetail(string TicketID, string IATANumber)
+        /// <summary>
+        /// Fetch ID Added
+        /// </summary>
+        /// <param name="TicketID"></param>
+        /// <param name="IATANumber"></param>
+        /// <param name="FetchID"></param>
+        /// <returns></returns>
+        [HttpPost] 
+        public JsonResult GetTicketDetail(string TicketID, string IATANumber, int FetchID)
         {
-            object data = new ADMHeaderLogic().ADM_GetTicketDetail_DSR_ERP_ByTicketID(TicketID, IATANumber);
+            object data = new ADMHeaderLogic().ADM_GetTicketDetail_DSR_ERP_ByTicketID(TicketID, IATANumber, FetchID);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
     }

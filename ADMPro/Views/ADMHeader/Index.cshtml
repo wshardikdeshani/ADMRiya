@@ -29,10 +29,16 @@
                 <input type="hidden" id="ADMIDP" name="ADMIDP" value="0" />
                 <input type="hidden" id="OldFileName" name="OldFileName" />
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label for="TicketID" class="control-label">Ticket No</label>
                             <input type="text" class="form-control mygroup" id="TicketID" name="TicketID">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <label class="control-label">&nbsp;</label><br />
+                            <button id="DetailButton1" type="button" onclick="FetchTicketDetail(1)" class="btn btn-primary"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -44,7 +50,7 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <label class="control-label">&nbsp;</label><br />
-                            <button id="DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                            <button id="DetailButton2" type="button" onclick="FetchTicketDetail(2)" class="btn btn-primary"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                 </div>
@@ -52,7 +58,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="OfficeID" class="control-label">Office ID<span class="text-danger" id="OfficeIDTextDanger" style="display:none">*</span></label>
-                            <input type="text" class="form-control" id="OfficeID" name="OfficeID" disabled>
+                            <input type="text" class="form-control officeGroup" id="OfficeIDManual" name="OfficeIDManual" disabled style="display:none">
+                            <select id="OfficeID" name="OfficeID" class="form-control officeGroup" disabled></select>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -235,6 +242,8 @@
         });
 
         function AddNew() {
+            $("#OfficeID").html("");
+
             ClearControls();
 
             $("#Default").modal('show');
@@ -256,6 +265,7 @@
                     ADMNumber: "required",
                     ADMAmount: "required",
                     OfficeID: "required",
+                    OfficeIDManual: "required",
                     BranchID: "required",
                     TicketIssueBranchID: "required",
                     TicketAmount: "required",
@@ -271,14 +281,16 @@
                     //}
                 },
                 groups: {
-                    mygroup: "TicketID IATANumber"
+                    mygroup: "TicketID IATANumber",
+                    officeGroup: "Please select/enter Office id."
                 },
                 messages: {
                     TicketID: "Please enter Ticket No or IATA No.",
                     IATANumber: "Please enter Ticket No or IATA No.",
                     ADMNumber: "Please enter ADM No.",
                     ADMAmount: "Please enter ADM Amount.",
-                    OfficeID: "Please enter Office id.",
+                    OfficeID: "Please select Office id.",
+                    OfficeIDManual: "Please enter Office id.",
                     BranchID: "Please enter Branch id.",
                     TicketIssueBranchID: "Please enter Ticket issue branch id.",
                     TicketAmount: "Please enter Ticket Amount.",
@@ -294,11 +306,11 @@
                     //}
                 },
                 submitHandler: function (form) {
-                    if ($("#ADM_OfficeID").val().length <= 0) {
+                    if ($("#OfficeID").val().length <= 0) {
                         toastr.error('Please enter Office id.');
                         return;
                     }
-                    else if ($("#ADM_TicketAmount").val().length <= 0) {
+                    else if ($("#TicketAmount").val().length <= 0) {
                         toastr.error('Please enter Ticket Amount.');
                         return;
                     }
@@ -321,7 +333,12 @@
                         fileData.append('ADMNumber', $("#ADMNumber").val());
                         fileData.append('ADMAmount', $("#ADMAmount").val());
                         fileData.append('TicketID', $("#TicketID").val());
-                        fileData.append('OfficeID', $("#OfficeID").val());
+
+                        if ($("#OfficeID").val().length > 0)
+                            fileData.append('OfficeID', $("#OfficeID").val());
+                        else
+                            fileData.append('OfficeID', $("#OfficeIDManual").val());
+
                         fileData.append('BranchID', $("#BranchID").val());
                         fileData.append('TicketIssueBranchID', $("#TicketIssueBranchID").val());
                         fileData.append('TicketAmount', $("#TicketAmount").val());
@@ -363,6 +380,8 @@
         }
 
         function Get(id) {
+            $("#OfficeID").html("");
+
             $("#Default").modal('show');
 
             var mData = { id: id }
@@ -377,10 +396,58 @@
                     var obj = JSON.parse(mRes);
                     $("#ADMIDP").val(obj[0].ADMIDP);
                     $("#IATANumber").val(obj[0].IATANumber);
+                    $("#TicketID").val(obj[0].TicketID);
+                    
+                    if ($("#TicketID").val().length > 0) {
+                        $("#OfficeIDManual").val(obj[0].OfficeID);
+
+                        $("#OfficeIDManual").show();
+                        $("#OfficeID").hide();
+                    }
+                    else {
+                        $("#TicketAmount").removeAttr('disabled');
+                        $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
+                        $("#OfficeID, #OfficeIDManual").removeAttr('disabled');
+
+                        var mData = {
+                            TicketID: $("#TicketID").val()
+                            , IATANumber: $("#IATANumber").val()
+                            , FetchID: 2 // FETCH ID ADDED
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/ADMHeader/GetTicketDetail",
+                            data: JSON.stringify(mData),
+                            contentType: "application/json",
+                            dataType: "json",
+                            success: function (mRes) {
+                                var objTicket = JSON.parse(mRes);
+
+                                if (objTicket.length > 0) {
+                                    $("#OfficeIDManual").hide();
+                                    $("#OfficeID").show();
+
+                                    for (var i = 0; i < objTicket.length; i++) {
+                                        if (obj[0].OfficeID == objTicket[i].OfficeID)
+                                            $("#OfficeID").append("<option value='" + objTicket[i].OfficeID + "' selected>" + objTicket[i].OfficeID + "</option>");
+                                        else
+                                            $("#OfficeID").append("<option value='" + objTicket[i].OfficeID + "'>" + objTicket[i].OfficeID + "</option>");
+                                    }
+                                }
+                                else {
+                                    $("#OfficeIDManual").show();
+                                    $("#OfficeID").hide();
+                                }
+                            }
+                        });
+
+                        //var SelectOffice = setInterval(function () { $("#OfficeID").val(obj[0].OfficeID); }, 200);
+                        //clearInterval(SelectOffice);
+                    }
+
                     $("#ADMNumber").val(obj[0].ADMNumber);
                     $("#ADMAmount").val(obj[0].ADMAmount);
-                    $("#TicketID").val(obj[0].TicketID);
-                    $("#OfficeID").val(obj[0].OfficeID);
                     $("#BranchID").val(obj[0].BranchID);
                     $("#TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
                     $("#TicketAmount").val(obj[0].TicketAmount);
@@ -504,7 +571,7 @@
                             iHTML += "<td><span style='display:block;width:120px;'>" + obj[i].OfficeID + "/<br>" + obj[i].BranchID + "</span></td>";
                             iHTML += "<td>" + obj[i].ReasonName + "</td>";
                             iHTML += "<td>" + obj[i].ADMRaisedDate + "</td>";
-                            iHTML += "<td><span style='display:block;width:120px;'>" + obj[i].StatusName + "</span></td>";
+                            iHTML += "<td><span style='display:block;width:120px;'>" + obj[i].StatusName + "<br/>" + (obj[i].DebitTo != '' ? "<br/>Debit To: " + obj[i].DebitTo + "" : "") + "</span></td>";
                             iHTML += '<td><button class="btn btn-' + (obj[i].IsActive == true ? "success" : "danger") + '" onclick="GeneralAction(' + obj[i].ADMIDP + ',2)"><i class="fa fa-' + (obj[i].IsActive == true ? "check" : "times") + ' nav-icon"></i>&nbsp;' + (obj[i].IsActive == true ? "Yes" : "No") + '</button></td>';
                             iHTML += "<td>";
                             iHTML += '<button style="display:block;margin-bottom:5px;" class="btn btn-success" onclick="Get(' + obj[i].ADMIDP + ')"><i class="far fa-edit nav-icon"></i>&nbsp;Edit</button>';
@@ -521,27 +588,40 @@
 
         function ClearControls() {
             $("#ADMIDP").val(0);
-            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount, #OldFileName, #IATAADMDate").val('');
+            $("#TicketID, #IATANumber, #ADMNumber, #OfficeID, #BranchID, #TicketIssueBranchID, #TicketAmount, #Remarks, #ADMAmount, #OldFileName, #IATAADMDate, #OfficeIDManual").val('');
 
             $("#ReasonIDF").val(0);
             $('#ReasonIDF').trigger('change');
 
             $("#OfficeIDTextDanger, #TicketAmountTextDanger").hide();
-            $("#OfficeID").attr('disabled', 'disabled');
+            $("#OfficeID, #OfficeIDManual").attr('disabled', 'disabled');
             $("#TicketAmount").attr('disabled', 'disabled');
+
+            $("#OfficeIDManual").hide();
+            $("#OfficeID").show();
         }
 
-        function FetchTicketDetail() {
+        function FetchTicketDetail(fetchID) {
+            $("#OfficeID").html("");
+
+            $("#OfficeIDTextDanger, #TicketAmountTextDanger").hide();
+            $("#OfficeID").attr('disabled', 'disabled');
+            $("#TicketAmount").attr('disabled', 'disabled');
+
             if ($("#TicketID").val().length <= 0 && $("#IATANumber").val().length <= 0) {
                 toastr.error('Please enter Ticket No or IATA No');
                 return false;
             }
 
-            $("#DetailButton").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
+            if (fetchID == 1)
+                $("#DetailButton1").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
+            else if (fetchID == 2)
+                $("#DetailButton2").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
 
             var mData = {
                 TicketID: $("#TicketID").val()
                 , IATANumber: $("#IATANumber").val()
+                , FetchID: fetchID // FETCH ID ADDED
             }
 
             $.ajax({
@@ -552,23 +632,63 @@
                 dataType: "json",
                 success: function (mRes) {
                     var obj = JSON.parse(mRes);
+
                     if (obj.length > 0) {
                         $("#IATANumber").val(obj[0].IATANumber);
-                        $("#OfficeID").val(obj[0].OfficeID);
                         $("#BranchID").val(obj[0].BranchID);
                         $("#TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
                         $("#TicketAmount").val(obj[0].TicketAmount);
+
+                        if (fetchID == 2) // FETCH BY IATA NUMBER
+                        {
+                            $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
+                            $("#OfficeID").removeAttr('disabled');
+
+                            if ($("#TicketID").val().length > 0) {
+                                $("#TicketAmount").removeAttr('disabled');
+                            }
+                            else {
+                                $("#TicketAmount").attr('disabled', 'disabled');
+                            }
+                        }
+
+                        $("#OfficeIDManual").hide();
+                        $("#OfficeID").show();
+
+                        for (var i = 0; i < obj.length; i++) {
+                            $("#OfficeID").append("<option value='" + obj[i].OfficeID + "'>" + obj[i].OfficeID + "</option>");
+                        }
+
+                        $("#OfficeID").val(obj[0].OfficeID);
                     }
                     else {
-                        ClearControls()
+                        if (fetchID == 1) // FETCH BY TICKET ID
+                        {
+                            /*
+                             * IF FETCH BY TICKET ID AND TICKET DETAIL NOT FOUND
+                             * THEN ENABLE OFFICE ID AND TICKET AMOUNT
+                             */
 
-                        $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
-                        $("#OfficeID").removeAttr('disabled');
-                        $("#TicketAmount").removeAttr('disabled');
+                            $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
+                            $("#OfficeID, #OfficeIDManual").removeAttr('disabled');
+                            $("#OfficeIDManual").show();
+                            $("#OfficeID").hide();
+                            $("#TicketAmount").removeAttr('disabled');
 
-                        toastr.error('No ticket detail found. Please try again.');
+                            $("#OfficeID, #TicketAmount").val('');
+                        }
+
+                        $("#ADMIDP").val(0);
+                        $("#ReasonIDF").val(0);
+                        $('#ReasonIDF').trigger('change');
+
+                        toastr.error('No ticket detail found. Enter office id and ticket amount manually.');
                     }
-                    $("#DetailButton").html('<i class="fas fa-search"></i>');
+
+                    if (fetchID == 1)
+                        $("#DetailButton1").html('<i class="fas fa-search"></i>');
+                    else if (fetchID == 2)
+                        $("#DetailButton2").html('<i class="fas fa-search"></i>');
                 }
             });
         }

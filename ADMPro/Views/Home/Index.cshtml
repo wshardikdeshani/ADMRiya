@@ -25,8 +25,8 @@
             color: #fff !important;
         }
 
-        .small-box{
-            height:120px;
+        .small-box {
+            height: 120px;
         }
     </style>
 }
@@ -43,10 +43,16 @@
                 <input type="hidden" id="ADMIDP" name="ADMIDP" value="0" />
                 <input type="hidden" id="OldFileName" name="OldFileName" />
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label for="ADM_TicketID" class="control-label">Ticket No</label>
                             <input type="text" class="form-control mygroup" id="ADM_TicketID" name="ADM_TicketID">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <label class="control-label">&nbsp;</label><br />
+                            <button id="ADM_DetailButton1" type="button" onclick="FetchTicketDetail(1)" class="btn btn-primary"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -58,7 +64,7 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <label class="control-label">&nbsp;</label><br />
-                            <button id="ADM_DetailButton" type="button" onclick="FetchTicketDetail()" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                            <button id="ADM_DetailButton2" type="button" onclick="FetchTicketDetail(2)" class="btn btn-primary"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                 </div>
@@ -66,7 +72,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="ADM_OfficeID" class="control-label">Office ID<span class="text-danger" id="OfficeIDTextDanger" style="display:none">*</span></label>
-                            <input type="text" class="form-control" id="ADM_OfficeID" name="ADM_OfficeID" disabled>
+                            <input type="text" class="form-control officeGroup" id="ADM_OfficeIDManual" name="ADM_OfficeIDManual" disabled style="display:none">
+                            <select id="ADM_OfficeID" name="ADM_OfficeID" class="form-control officeGroup" disabled></select>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -194,7 +201,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="RemarksAddByAudit" class="control-label">Remarks Add By Audit User/Manager<span class="text-danger">*</span></label>
+                            <label for="RemarksAddByAudit" class="control-label">Remarks By Audit Team<span class="text-danger">*</span></label>
                             <textarea class="form-control" id="RemarksAddByAudit" name="RemarksAddByAudit" disabled></textarea>
                         </div>
                     </div>
@@ -222,7 +229,10 @@
                                     {
                                         foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
                                         {
-                                            <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                            if (sm.StatusIDP != 9 && sm.StatusIDP != 10)
+                                            {
+                                                <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                            }
                                         }
                                     }
                                 }
@@ -230,7 +240,56 @@
                         </div>
                     </div>
                 </div>
-                <!-- DEBIT TO PART -->
+                <!-- ACM DISPLAY PART -->
+                <div class="row" id="divFUACM" style="display:none">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ADMAmount" class="control-label">ADM Amount</label>
+                            <input type="text" class="form-control" id="FU_ADMAmount" name="FU_ADMAmount" disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMNo" class="control-label">ACM No<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="FU_ACMNo" name="FU_ACMNo" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMAmount" class="control-label">ACM Amount<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="FU_ACMAmount" name="FU_ACMAmount" onkeyup="CalculateACMAmountFromFollowUp()" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="FU_ACMAmountDiff" class="control-label">ACM Diff.</label>
+                            <input type="text" class="form-control" id="FU_ACMAmountDiff" name="FU_ACMAmountDiff" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="divFUACM_Status" style="display:none">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="FU_ACMStatusIDF" class="control-label">Partial Status<span class="text-danger">*</span></label>
+                            <select class="form-control select2" style="width: 100%;" id="FU_ACMStatusIDF" name="FU_ACMStatusIDF" onchange="DisplayDebitOption()">
+                                <option value="0" selected>Select Status</option>
+                                @{
+                                    if (ViewBag.StatusList != null)
+                                    {
+                                        foreach (SQLClass.StatusMasterClass sm in ViewBag.StatusList)
+                                        {
+                                            if (sm.StatusIDP == 9 || sm.StatusIDP == 10)
+                                            {
+                                                <option value="@sm.StatusIDP">@sm.StatusName</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- DEBIT TO RIYA PART -->
                 <div class="row" style="display:none" id="DebitToRiya">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -253,33 +312,6 @@
                         <div class="form-group">
                             <label for="DebitToSubAgentName" class="control-label">Agent Name<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="DebitToSubAgentName" name="DebitToSubAgentName" />
-                        </div>
-                    </div>
-                </div>
-                <!-- ACM DISPLAY PART -->
-                <div class="row" id="divFUACM" style="display:none">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="FU_ADMAmount" class="control-label">ADM Amount</label>
-                            <input type="text" class="form-control" id="FU_ADMAmount" name="FU_ADMAmount" disabled/>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="FU_ACMNo" class="control-label">ACM No<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="FU_ACMNo" name="FU_ACMNo" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="FU_ACMAmount" class="control-label">ACM Amount<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="FU_ACMAmount" name="FU_ACMAmount" onkeyup="CalculateACMAmountFromFollowUp()" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="FU_ACMAmountDiff" class="control-label">ACM Diff.</label>
-                            <input type="text" class="form-control" id="FU_ACMAmountDiff" name="FU_ACMAmountDiff" disabled />
                         </div>
                     </div>
                 </div>
@@ -395,7 +427,7 @@
                                         <input type="text" class="form-control" id="ToDate" name="ToDate">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-@((GeneralClass.Role == "1" || GeneralClass.Role == "2")?"3":"2")">
                                     <label>Status</label>
                                     <select class="select2" id="SearchStatusIDF2" data-placeholder="Select Status" style="width: 100%;">
                                         <option value="0">Select Status</option>
@@ -411,9 +443,9 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label>Status</label>
+                                    <label>Reason</label>
                                     <select class="select2" id="SearchReason" data-placeholder="Select Reason" style="width: 100%;">
-                                        <option value="0">Select Status</option>
+                                        <option value="0">Select Reason</option>
                                         @{
                                             if (ViewBag.ReasonList != null)
                                             {
@@ -780,7 +812,7 @@
                                 iHTML += "<td>No.: " + obj[i].ACMNumber + "<br/>Amount: " + obj[i].ACMAmount + "</td>";
                             }
                             iHTML += "<td>Date: " + obj[i].LastFollowUpDate + "<br/>By: " + obj[i].LastFollowUpBy + "<br/>Total Follow Ups: " + obj[i].TotalFollowUp + "</td>";
-                            iHTML += "<td class='project-state'><strong>" + obj[i].StatusName + "</strong></td>";
+                            iHTML += "<td class='project-state'><strong>" + obj[i].StatusName + "<br/>" + (obj[i].DebitTo != '' ? "<br/>Debit To: " + obj[i].DebitTo + "" : "") + "</strong></td>";
                             /*if (obj[i].StatusName == 'New') {
                                 iHTML += "<td class='project-state'><span class='badge bg-success'>" + obj[i].StatusName + "</span></td>";
                             }
@@ -823,13 +855,13 @@
             /*HIDE DETAIL OF DEBIT TO*/
             $("#DebitToRiya").hide();
             $("#DebitToSubAgent").hide();
-            $("#divFUACM").hide();
-
-            $("#divDebitToRiya").hide();
-            $("#DebitTo").val("");
+            $("#divFUACM, #divFUACM_Status").hide();
 
             $("#DebitToType").val('1');
             $('#DebitToType').trigger('change');
+
+            $("#divDebitToRiya").show();
+            $("#DebitTo").val("");
 
             $("#Default").modal('show');
 
@@ -852,12 +884,26 @@
                     $("#ReasonName").val(obj[0].ReasonName);
                     $("#RemarksAddByAudit").val(obj[0].Remarks);
 
-                    $("#StatusIDF").val(obj[0].StatusIDF);
-                    $('#StatusIDF').trigger('change');
-
                     $("#FU_ADMAmount").val(obj[0].ADMAmount);
                     $("#FU_ACMNo").val(obj[0].ACMNumber);
                     $("#FU_ACMAmount").val(obj[0].ACMAmount);
+
+                    /*BELOW CONDITION SET FOR DISPLAY ACM DETAILS*/
+                    if (obj[0].StatusIDF == 9 || obj[0].StatusIDF == 10) {
+                        // DEFAULT SELECT 7 AS ACM RECEIVED
+                        $("#StatusIDF").val(7);
+                        $('#StatusIDF').trigger('change');
+
+                        $("#FU_ACMStatusIDF").val(obj[0].StatusIDF);
+                        $('#FU_ACMStatusIDF').trigger('change');
+                    }
+                    else {
+                        $("#StatusIDF").val(obj[0].StatusIDF);
+                        $('#StatusIDF').trigger('change');
+
+                        $("#FU_ACMStatusIDF").val(0);
+                        $('#FU_ACMStatusIDF').trigger('change');
+                    }
 
                     CalculateACMAmountFromFollowUp();
                 }
@@ -888,14 +934,15 @@
                 },
                 submitHandler: function (form) {
                     var StatusIDF = $("#StatusIDF").val();
+                    var FU_ACMStatusIDF = $("#FU_ACMStatusIDF").val();
 
-                    if (StatusIDF == 5 || StatusIDF == 10) {
-                        if ($("#DebitToSubAgent").val().length <= 0) {
+                    if (StatusIDF == 5 || FU_ACMStatusIDF == 10) {
+                        if ($("#DebitToSubAgentName").val().length <= 0) {
                             toastr.success('Please enter agent name.');
                             return;
                         }
                     }
-                    else if (StatusIDF == 4 || StatusIDF == 9) {
+                    else if (StatusIDF == 4 || FU_ACMStatusIDF == 9) {
                         var DebitToType = $("#DebitToType").val();
 
                         if (DebitToType == 1 && $("#DebitTo").val().length <= 0) {
@@ -938,7 +985,7 @@
 
         function ClearControls() {
             $("#ADMIDF, #ADMFollowUpIDP").val(0);
-            $("#OfficeID, #BranchID, #TicketID, #Remarks, #NextFollowUpDate").val('');
+            $("#OfficeID, #BranchID, #TicketID, #Remarks, #NextFollowUpDate, #DebitToSubAgentName, #DebitTo, #FU_ACMNo, #FU_ACMAmount").val('');
 
             $("#StatusIDF").val(0);
             $('#StatusIDF').trigger('change');
@@ -952,11 +999,17 @@
 
             var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
 
-            if (AmountDiff == 0) {
-                $("#ACM_StatusIDF").attr("disabled", "disabled");
-            }
-            else {
-                $("#ACM_StatusIDF").removeAttr("disabled");
+            if ($("#ACMAmount").val().length > 0) {
+                if (AmountDiff == 0) {
+                    $("#ACM_StatusIDF").attr("disabled", "disabled");
+                }
+                else if (AmountDiff < 0) {
+                    toastr.error('Invalid Amount.');
+                    $("#ACMAmount").val('');
+                    $("#ACMAmount").focus();
+                    $("#ACMAmount_Diff").val(ADMAmount);
+                    return false;
+                }
             }
 
             $("#ACMAmount_Diff").val(AmountDiff);
@@ -974,27 +1027,39 @@
 
             var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
 
-            if (AmountDiff == 0) {
-                $("#ACM_StatusIDF").attr("disabled", "disabled");
-            }
-            else {
-                $("#ACM_StatusIDF").removeAttr("disabled");
+            if ($("#ACMAmount").val().length >= 0) {
+                if (AmountDiff == 0) {
+                    $("#ACM_StatusIDF").attr("disabled", "disabled");
+                }
+                else if (AmountDiff < 0) {
+                    toastr.error('Invalid Amount.');
+                    $("#ACMAmount").val('');
+                    $("#ACMAmount").focus();
+                    $("#ACMAmount_Diff").val(ADMAmount);
+                    return false;
+                }
             }
 
             $("#ACMAmount_Diff").val(AmountDiff);
         }
 
         function CalculateACMAmountFromFollowUp() {
-            var ACMAmount = ($("#FU_ADMAmount").val().length <= 0 ? 0 : $("#FU_ADMAmount").val());
-            var ADMAmount = ($("#FU_ACMAmount").val().length <= 0 ? 0 : $("#FU_ACMAmount").val());
+            var ADMAmount = ($("#FU_ADMAmount").val().length <= 0 ? 0 : $("#FU_ADMAmount").val());
+            var ACMAmount = ($("#FU_ACMAmount").val().length <= 0 ? 0 : $("#FU_ACMAmount").val());
 
             var AmountDiff = parseFloat(ADMAmount) - parseFloat(ACMAmount);
 
-            if (AmountDiff == 0) {
-                $("#StatusIDF").attr("disabled", "disabled");
-            }
-            else {
-                $("#StatusIDF").removeAttr("disabled");
+            if ($("#FU_ACMAmount").val().length > 0) {
+                if (AmountDiff == 0) {
+                    $("#FU_ACMStatusIDF").attr("disabled", "disabled");
+                }
+                else if (AmountDiff < 0) {
+                    toastr.error('Invalid Amount.');
+                    $("#FU_ACMAmount").val('');
+                    $("#FU_ACMAmount").focus();
+                    $("#FU_ACMAmountDiff").val(ADMAmount);
+                    return false;
+                }
             }
 
             $("#FU_ACMAmountDiff").val(AmountDiff);
@@ -1073,6 +1138,8 @@
 
         /*ADD NEW ADM*/
         function AddNewADM() {
+            $("#ADM_OfficeID").html("");
+
             ClearControlsADM();
 
             $("#ADMDefault").modal('show');
@@ -1084,27 +1151,40 @@
 
         function ClearControlsADM() {
             $("#ADMIDP").val(0);
-            $("#ADM_TicketID, #ADM_IATANumber, #ADM_ADMNumber, #ADM_OfficeID, #ADM_BranchID, #ADM_TicketIssueBranchID, #ADM_TicketAmount, #ADM_Remarks, #ADM_ADMAmount, #ADM_IATAADMDate").val('');
+            $("#ADM_TicketID, #ADM_IATANumber, #ADM_ADMNumber, #ADM_OfficeID, #ADM_BranchID, #ADM_TicketIssueBranchID, #ADM_TicketAmount, #ADM_Remarks, #ADM_ADMAmount, #ADM_IATAADMDate, #ADM_OfficeIDManual").val('');
 
             $("#ADM_ReasonIDF").val(0);
             $('#ADM_ReasonIDF').trigger('change');
 
             $("#OfficeIDTextDanger, #TicketAmountTextDanger").hide();
-            $("#OfficeID").attr('disabled', 'disabled');
-            $("#TicketAmount").attr('disabled', 'disabled');
+            $("#ADM_OfficeID, #ADM_OfficeIDManual").attr('disabled', 'disabled');
+            $("#ADM_TicketAmount").attr('disabled', 'disabled');
+
+            $("#ADM_OfficeIDManual").hide();
+            $("#ADM_OfficeID").show();
         }
 
-        function FetchTicketDetail() {
+        function FetchTicketDetail(fetchID) {
+            $("#ADM_OfficeID").html("");
+
+            $("#OfficeIDTextDanger, #TicketAmountTextDanger").hide();
+            $("#ADM_OfficeID").attr('disabled', 'disabled');
+            $("#ADM_TicketAmount").attr('disabled', 'disabled');
+
             if ($("#ADM_TicketID").val().length <= 0 && $("#ADM_IATANumber").val().length <= 0) {
                 toastr.error('Please enter Ticket No or IATA No');
                 return false;
             }
 
-            $("#ADM_DetailButton").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
+            if (fetchID == 1)
+                $("#ADM_DetailButton1").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
+            else if (fetchID == 2)
+                $("#ADM_DetailButton2").html('<i class="fas fa-1x fa-sync-alt fa-spin"></i>');
 
             var mData = {
                 TicketID: $("#ADM_TicketID").val()
                 , IATANumber: $("#ADM_IATANumber").val()
+                , FetchID: fetchID // FETCH ID ADDED - 28.02.2020
             }
 
             $.ajax({
@@ -1121,17 +1201,59 @@
                         $("#ADM_BranchID").val(obj[0].BranchID);
                         $("#ADM_TicketIssueBranchID").val(obj[0].TicketIssueBranchID);
                         $("#ADM_TicketAmount").val(obj[0].TicketAmount);
+
+                        if (fetchID == 2) // FETCH BY IATA NUMBER
+                        {
+                            $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
+                            $("#ADM_OfficeID").removeAttr('disabled');
+
+                            if ($("#ADM_TicketID").val().length > 0) {
+                                $("#ADM_TicketAmount").removeAttr('disabled');
+                            }
+                            else {
+                                $("#ADM_TicketAmount").attr('disabled', 'disabled');
+                            }
+                        }
+
+                        $("#ADM_OfficeIDManual").hide();
+                        $("#ADM_OfficeID").show();
+
+                        for (var i = 0; i < obj.length; i++) {
+                            $("#ADM_OfficeID").append("<option value='" + obj[i].OfficeID + "'>" + obj[i].OfficeID + "</option>");
+                        }
+
+                        $("#ADM_OfficeID").val(obj[0].OfficeID);
                     }
                     else {
-                        toastr.error('No ticket detail found. Please try again.');
+                        if (fetchID == 1) // FETCH BY TICKET ID
+                        {
+                            /*
+                             * IF FETCH BY TICKET ID AND TICKET DETAIL NOT FOUND
+                             * THEN ENABLE OFFICE ID AND TICKET AMOUNT
+                             */
 
-                        ClearControlsADM();
+                            $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
+                            $("#ADM_OfficeID, #ADM_OfficeIDManual").removeAttr('disabled');
 
-                        $("#OfficeIDTextDanger, #TicketAmountTextDanger").show();
-                        $("#ADM_OfficeID").removeAttr('disabled');
-                        $("#ADM_TicketAmount").removeAttr('disabled');
+                            $("#ADM_OfficeIDManual").show();
+                            $("#ADM_OfficeID").hide();
+
+                            $("#ADM_TicketAmount").removeAttr('disabled');
+
+                            $("#ADM_OfficeID, #ADM_TicketAmount").val('');
+                        }
+
+                        $("#ADMIDP").val(0);
+                        $("#ADM_ReasonIDF").val(0);
+                        $('#ADM_ReasonIDF').trigger('change');
+
+                        toastr.error('No ticket detail found. Enter office id and ticket amount manually.');
                     }
-                    $("#ADM_DetailButton").html('<i class="fas fa-search"></i>');
+
+                    if (fetchID == 1)
+                        $("#ADM_DetailButton1").html('<i class="fas fa-search"></i>');
+                    else if (fetchID == 2)
+                        $("#ADM_DetailButton2").html('<i class="fas fa-search"></i>');
                 }
             });
         }
@@ -1148,6 +1270,7 @@
                     ADM_ADMNumber: "required",
                     ADM_ADMAmount: "required",
                     ADM_OfficeID: "required",
+                    ADM_OfficeIDManual: "required",
                     ADM_BranchID: "required",
                     ADM_TicketIssueBranchID: "required",
                     ADM_TicketAmount: "required",
@@ -1163,14 +1286,16 @@
                     //}
                 },
                 groups: {
-                    mygroup: "ADM_TicketID ADM_IATANumber"
+                    mygroup: "ADM_TicketID ADM_IATANumber",
+                    officeGroup: "Please select/enter Office id."
                 },
                 messages: {
                     ADM_TicketID: "Please enter Ticket No or IATA No.",
                     ADM_IATANumber: "Please enter Ticket No or IATA No.",
                     ADM_ADMNumber: "Please enter ADM No.",
                     ADM_ADMAmount: "Please enter ADM Amount.",
-                    ADM_OfficeID: "Please enter Office id.",
+                    ADM_OfficeID: "Please select Office id.",
+                    ADM_OfficeIDManual: "Please enter Office id.",
                     ADM_BranchID: "Please enter Branch id.",
                     ADM_TicketIssueBranchID: "Please enter Ticket issue branch id.",
                     ADM_TicketAmount: "Please enter Ticket Amount.",
@@ -1213,7 +1338,12 @@
                         fileData.append('ADMNumber', $("#ADM_ADMNumber").val());
                         fileData.append('ADMAmount', $("#ADM_ADMAmount").val());
                         fileData.append('TicketID', $("#ADM_TicketID").val());
-                        fileData.append('OfficeID', $("#ADM_OfficeID").val());
+
+                        if ($("#ADM_OfficeID").val().length > 0)
+                            fileData.append('OfficeID', $("#ADM_OfficeID").val());
+                        else
+                            fileData.append('OfficeID', $("#ADM_OfficeIDManual").val());
+
                         fileData.append('BranchID', $("#ADM_BranchID").val());
                         fileData.append('TicketIssueBranchID', $("#ADM_TicketIssueBranchID").val());
                         fileData.append('TicketAmount', $("#ADM_TicketAmount").val());
@@ -1256,38 +1386,52 @@
 
         function DisplayDebitOption() {
             var StatusIDF = $("#StatusIDF").val();
+            var PartialStatusIDF = $("#FU_ACMStatusIDF").val();
 
-            if (StatusIDF == 5 || StatusIDF == 10) // Agent
+            if (StatusIDF == 7) // ACM Received
+            {
+                $("#DebitToRiya, #DebitToSubAgent").hide();
+                $("#divFUACM, #divFUACM_Status").show();
+            }
+            else if (StatusIDF == 5) // Agent
+            {
+                $("#DebitToSubAgent").show();
+                $("#DebitToRiya, #divFUACM, #divFUACM_Status").hide();
+            }
+            else if (StatusIDF == 4) // Riya
+            {
+                $("#DebitToRiya").show();
+                $("#DebitToSubAgent, #divFUACM, #divFUACM_Status").hide();
+            }
+            else {
+                $("#DebitToRiya, #DebitToSubAgent, #divFUACM, #divFUACM_Status").hide();
+            }
+
+            if (StatusIDF == 7 && PartialStatusIDF == 10) // Agent
             {
                 $("#DebitToRiya").hide();
                 $("#DebitToSubAgent").show();
-                $("#divFUACM").hide();
             }
-            else if (StatusIDF == 4 || StatusIDF == 9) // Riya
+            else if (StatusIDF == 7 && PartialStatusIDF == 9) // Riya
             {
                 $("#DebitToRiya").show();
                 $("#DebitToSubAgent").hide();
-                $("#divFUACM").hide();
-            }
-            else if (StatusIDF == 7) // ACM Received
-            {
-                $("#DebitToRiya").hide();
-                $("#DebitToSubAgent").hide();
-                $("#divFUACM").show();
             }
         }
 
         function DisplayDebitToOption() {
             var DebitToType = $("#DebitToType").val();
 
-            if (DebitToType == 1) { // Staff
+            if (DebitToType == 1) // Staff
+            {
                 $("#DebitTo").val("");
                 $("#divDebitToRiya").show();
             }
-            else if (DebitToType == 2) { // Riya
+            else if (DebitToType == 2) // Riya
+            {
                 $("#DebitTo").val("Company Account");
                 $("#divDebitToRiya").hide();
             }
         }
     </script>
-}
+} 

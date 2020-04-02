@@ -20,8 +20,8 @@ namespace SQLClass
         public int DebitToType { get; set; }
         public string DebitTo { get; set; }
         public string DebitToSubAgentName { get; set; }
-
         public string FU_ACMNo { get; set; }
         public float FU_ACMAmount { get; set; }
+        public int FU_ACMStatusIDF { get; set; }
     }
 }

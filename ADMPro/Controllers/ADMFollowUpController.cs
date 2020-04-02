@@ -12,7 +12,7 @@ namespace ADMPro.Controllers
 {
     public class ADMFollowUpController : Controller
     {
-        // GET: ADMFollowUp
+        // GET: ADMFollowUp - 28.02.2020
         public ActionResult Index(long id)
         {
             if (GeneralClass.Role == null || GeneralClass.Role == string.Empty)
