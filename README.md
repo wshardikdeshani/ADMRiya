@@ -223,3 +223,75 @@ Branch manager rights are added new follow-ups and view follow-ups added by othe
 ###### Branch User
 
 Branch user can see their branch tickets and manage tickets. Also, add new follow-ups and see other users' follow-ups.
+
+## Website Screenshots
+
+###### 1. ADM Dashboard Count Display
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/DashboardCount.png)
+
+In the above screenshot, role and branch wise display count of the status.
+
+Also, When the user clicks on any status count on the same page we filter records of that status.
+
+###### 2. ADM Dashboard Search Box
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/DashboardSearchBox.png)
+
+In the above screenshot, role and branch wise display search box. Here use can filter records using Ticket No, From and To Date, Status, Reason, and Branch wise.
+
+Also, If a user from the branch (Note: Role is 3 = Branch Manager or 4 = Branch User) then we do not display a branch search box.
+
+###### 3. ADM Dashboard All Tickets
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/DashboardAllADMTable.png)
+
+In the above screenshot, role wise display table data
+
+e.g.
+
+  1. If the user role is 1 = Audit Manager or 2 = Audit user they can see all tickets.
+
+  2. If the user role is 3 = Branch Manager or 4 = Branch user they can see his branch tickets.
+
+Also, 1 = Audit Manager and 2 = Audit user have permission to add new ADM and 3 = Branch Manager and 4 = Branch user can not add new ADM that's we do not display button of add new ADM in a Branch Manager role and branch user role (in 3 and 4).
+
+###### 4. ADM Dashboard Add New ADM
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/DashboardAddNewADMDialog.png)
+
+In the above screenshot, 1 = Audit Manager and 2 = Audit User only can add new ADM.
+
+In this dialog, the user can search ticket detail using Ticket No or IATA number (IATA full form is International Air Transport Association. Please refer to this wiki link https://en.wikipedia.org/wiki/International_Air_Transport_Association). When a user clicks on search at that time we use 3 databases of RIYA that collect this ticket detail from his sources.
+
+  1. DBAIR
+  2. DSR_ERP
+  3. TicketAudit
+
+We take Office ID, Branch ID, Ticket Amount from above sources and display dialog's field.
+
+Once we get detail audit user or manager add ADM No, ADM Amount and IATA ADM Date (This field used for in which day ADM Raised. Why we use this field because get some delay fro getting ADM to us) and Reason with some remarks by audit user or manager. Also, we give one file upload option.
+
+After the above steps when the user clicks on save we get that branch emails and send this ADM detail mail to that branch. and this ADM starts displaying in the Audit User and Manager dashboard with that specific branch user and manager's dashboard with the status "NEW".
+
+###### 5. ADM Dashboard Add New Followup
+
+![alt text](https://raw.githubusercontent.com/wshardikdeshani/ADMRiya/master/ADMPro/WebImageAndDoc/DashboardAddNewFollowup.png)
+
+In the above screenshot, Except for the audit manager, all users can add a new followup.
+
+In this dialog, the user can see audit user or manager's remarks and they can add his remarks next follow update and status.
+
+When users add new followup they can select any status. Now here I discuss status again in the short description.
+
+    1. New - Display when audit user and manager add new ADM.
+    2. Pending - When a user adds a new followup and the ADM not resolved. Then they can select a pending status for further process ADM.
+    3. Debit to Riya - If ADM is not resolved and the amount not gets a refund then they select this status. There one simple logic here if you select Debit to Riya we display one box. Who is responsible for this ADM staff or Riya. If select Riya then it's done here and if selected staff then they need to add staff name in another open box.
+    4. Debit to Sub Agent - If ADM is not resolved and the amount not gets a refund then they select this status. Also, here one logic if the user selects this status then they need to add Agent name in open box. Because for this ADM sub-agent is responsible for this ADM.
+    5. Dispute - Means there some issue with the ADM so they select this status.
+    6. ACM Received - Means ADM is resolved and the amount gets refund then the user selects this status. When selecting this status we display the ADM amount, ACM No, ADM Amount and the diff of the ADM and ACM amount. If the ACM diff is greater then 0 means ACM does not refund the full amount at that time we display Partial status.
+    
+      a. Partial ACM Received - Debit to Riya - Please refer "Partial ACM Received - Debit to Riya" here I add detail and example of why select this status.
+      b. Partial ACM Received - Debit to Sub Agent - Please refer "Partial ACM Received - Debit to Sub Agent"  here I add detail and example of why select this status.
+
+###### 6. ADM Deleted - Means ADM is currently not used full so they select this status. In this status, we are not deleting the record just change the status.
